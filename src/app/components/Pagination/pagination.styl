@@ -1,0 +1,39 @@
+.pagination
+    height: 22px
+    width: 100%
+    position relative
+
+    .box
+        display: flex
+        position absolute
+        transform: translate(-50%, -50%)
+        top: 50%
+        left: 50%
+
+    .text
+        font-size: 16px
+        height: 22px
+        line-height: 22px
+        overflow: hidden
+
+    .prev, .next
+        background-repeat: no-repeat
+        background-size: 100% 100%
+        size(14px, 10px)
+        user-select: none
+        cursor: pointer
+        margin: 5px 10px
+
+    .prev
+        background-image: url('./img/left.png')
+
+    .next
+        background-image: url('./img/right.png')
+
+    .prevDisable
+        background-image: url('./img/leftDisable.png')
+        cursor: not-allowed
+
+    .nextDisable
+        background-image: url('./img/rightDisable.png')
+        cursor: not-allowed

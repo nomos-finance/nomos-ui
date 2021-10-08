@@ -1,0 +1,1 @@
+export const baseService = '/api'

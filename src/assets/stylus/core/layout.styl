@@ -1,0 +1,54 @@
+::-webkit-input-placeholder /* WebKit browsers */
+    color: #6A6D76
+    font-size: 12px
+    font-family: 'Poppins-Regular'
+
+::-moz-placeholder /* Mozilla Firefox 19+ */
+    color: #6A6D76
+    font-size: 12px
+    font-family: 'Poppins-Regular'
+
+:-ms-input-placeholder /* Internet Explorer 10+ */
+    color: #6A6D76
+    font-size: 12px
+    font-family: 'Poppins-Regular'
+
+
+:root
+    --var-bg: #fefefe
+    --var-text-color: #222
+    --var-main-color: #ffd94d
+    --var-block-bg: #fff
+
+    .dark
+        --var-bg: #1F2127
+        --var-text-color: #fff
+        --var-main-color: #ffd94d
+        --var-block-bg: rgba(#000, 0.2)
+
+
+html, body, #root
+    height: auto
+    min-width: 1400px
+    font-size: 12px !important
+    display: flex
+    flex-direction: column
+    flex: 1 1 0%
+    overflow: hidden
+    position: relative
+
+.lt-spin
+    position: fixed
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+
+.lt-main
+    min-width: 1400px
+    background: var(--var-bg)
+    flex: 1
+    display: flex
+    color: var(--var-text-color)
+    
+    .lt-content
+        flex: 1
