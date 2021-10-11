@@ -10,7 +10,6 @@ const project = require('../project.config.js')
 const isEsLint = project.eslint
 const SRC_DIR = path.join(project.basePath, project.srcDir)
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
-const { TurnedIn } = require('@material-ui/icons')
 
 const isProduction = process.env.NODE_ENV === 'production'
 

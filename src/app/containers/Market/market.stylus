@@ -1,0 +1,9 @@
+.page-market
+    .totalBlock
+        display: flex
+
+        .block
+            background: var(--var-block-bg)
+            flex: 1
+            padding: 20px
+            border-radius: 15px

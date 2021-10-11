@@ -19,17 +19,20 @@
     --var-text-color: #222
     --var-main-color: #ffd94d
     --var-block-bg: #fff
+    --var-block-shadow: #d3cbb2
+    --var-dialog-bg: #fff
 
     .dark
         --var-bg: #1F2127
         --var-text-color: #fff
         --var-main-color: #ffd94d
-        --var-block-bg: rgba(#000, 0.2)
+        --var-block-bg: rgba(#000, 0.1)
+        --var-block-shadow: #d3cbb2
+        --var-dialog-bg: #42454D
 
 
 html, body, #root
     height: auto
-    min-width: 1400px
     font-size: 12px !important
     display: flex
     flex-direction: column
@@ -44,11 +47,11 @@ html, body, #root
     transform: translate(-50%, -50%)
 
 .lt-main
-    min-width: 1400px
     background: var(--var-bg)
     flex: 1
     display: flex
     color: var(--var-text-color)
-    
+    padding: 0 60px
+
     .lt-content
         flex: 1

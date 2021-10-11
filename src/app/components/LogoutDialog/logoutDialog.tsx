@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { Modal } from 'antd'
 import React, { forwardRef, useImperativeHandle, useState } from 'react'
 
-import { NETWORK_PREFIX } from '@/app/connectors'
+import { NETWORK } from '@/app/connectors'
 
 import copy from '../../utils/copy'
 import storage from '../../utils/storage'
@@ -49,7 +49,11 @@ const LongDialog = forwardRef((props, ref) => {
                             <div className="address">{getShortenAddress(account)}</div>
                             <div className="link">
                                 <i onClick={() => copy(account)}>Copy Address</i>
-                                <a href={`https://${!chainId || chainId === 1 ? '' : `${NETWORK_PREFIX[chainId]}.`}etherscan.io/address/${account}`}>
+                                <a
+                                    href={`https://${
+                                        !chainId || chainId === 1 ? '' : `${Object.values(NETWORK).filter(item => item.chainId)[0].chainName}.`
+                                    }etherscan.io/address/${account}`}
+                                >
                                     View on Etherscan
                                 </a>
                             </div>
