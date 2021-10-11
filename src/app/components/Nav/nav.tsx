@@ -31,11 +31,15 @@ export default (): React.ReactElement => {
                     <span>Position</span>
                 </Link>
             </div>
-            <div>
-                <div className="github">xx</div>
+            <div className="doc">
+                <div className="item">Announcement</div>
+                <div className="item">file</div>
             </div>
-            <div>
-                <div className="github">xx</div>
+            <div className="medium">
+                <div className="github">github</div>
+                <div className="github">github</div>
+                <div className="github">github</div>
+                <div className="github">github</div>
             </div>
         </nav>
     )
