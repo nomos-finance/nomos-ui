@@ -90,102 +90,102 @@ export const injected = new InjectedConnector({
     supportedChainIds
 })
 
-// export function getWeb3Connector(connectorName: string, currentNetwork: string): AbstractConnector {
-//     const networkConfig = NETWORK[currentNetwork]
-//     const networkId = networkConfig.chainId
+export function getWeb3Connector(connectorName: string, currentNetwork: string): AbstractConnector {
+    const networkConfig = NETWORK[currentNetwork]
+    const networkId = networkConfig.chainId
 
-//     switch (connectorName) {
-//         case 'browser':
-//             const supportedChainIds: Array<number> = []
+    switch (connectorName) {
+        case 'browser':
+            const supportedChainIds: Array<number> = []
 
-//             Object.values(NETWORK).forEach(item => {
-//                 supportedChainIds.push(item.chainId)
-//             })
-//             return new InjectedConnector({
-//                 supportedChainIds
-//             })
-//         // TODO
-//         // case 'ledger':
-//         //     return new LedgerConnector({
-//         //         chainId: networkId,
-//         //         url: networkConfig.privateJsonRPCUrl || networkConfig.publicJsonRPCUrl,
-//         //         pollingInterval: 12000,
-//         //         baseDerivationPath: connectorConfig.ledgerBaseDerivationPath,
-//         //         accountsOffset: connectorConfig.accountsOffset,
-//         //         accountsLength: connectorConfig.accountsLength
-//         //     })
-//         case 'wallet-link':
-//             const APP_NAME = 'Aave'
-//             const APP_LOGO_URL = 'https://aave.com/favicon.ico'
-//             return new WalletLinkConnector({
-//                 appName: APP_NAME,
-//                 appLogoUrl: APP_LOGO_URL,
-//                 url: networkConfig.privateJsonRPCUrl || networkConfig.publicJsonRPCUrl
-//             })
-//         // TODO
-//         // case 'wallet-connect':
-//         //     return new WalletConnectConnector({
-//         //         rpc: supportedNetworks.reduce((acc, network) => {
-//         //             const config = NETWORK[network]
-//         //             acc[NETWORK[network].chainId] = config.privateJsonRPCUrl || config.publicJsonRPCUrl
-//         //             return acc
-//         //         }, {} as { [networkId: number]: string }),
-//         //         bridge: 'https://aave.bridge.walletconnect.org',
-//         //         qrcode: true,
-//         //         pollingInterval: POLLING_INTERVAL,
-//         //         preferredNetworkId: networkId
-//         //     })
-//         case 'fortmatic':
-//             return new FortmaticConnector({
-//                 chainId: networkId,
-//                 apiKey: ''
-//             })
-//         case 'mew-wallet':
-//             return new MewConnectConnector({
-//                 url:
-//                     networkConfig.privateJsonRPCWSUrl ||
-//                     networkConfig.privateJsonRPCUrl ||
-//                     networkConfig.publicJsonRPCWSUrl ||
-//                     networkConfig.publicJsonRPCUrl,
-//                 windowClosedError: true
-//             })
-//         // case 'authereum': {
-//         //     if (currentNetwork !== 'mainnet') {
-//         //         raiseUnsupportedNetworkError(currentNetwork, connectorName)
-//         //     }
-//         //     return new AuthereumConnector({
-//         //         chainId: networkId,
-//         //         config: {
-//         //             networkName: currentNetwork,
-//         //             rpcUri: networkConfig.privateJsonRPCUrl || networkConfig.publicJsonRPCUrl,
-//         //             apiKey: AUTHEREUM_API_KEY
-//         //         }
-//         //     })
-//         // }
-//         case 'torus':
-//             return new TorusConnector({
-//                 chainId: networkId,
-//                 initOptions: {
-//                     network: {
-//                         host: currentNetwork === NETWORK['polygon'].chainName ? 'matic' : currentNetwork
-//                     },
-//                     showTorusButton: false,
-//                     enableLogging: false,
-//                     enabledVerifiers: false
-//                 }
-//             })
-//         // case 'portis': {
-//         //     if (!PORTIS_DAPP_ID) throw new Error('Portis DAPP id not specified')
-//         //     return new PortisConnector({
-//         //         dAppId: PORTIS_DAPP_ID,
-//         //         networks: [networkId]
-//         //     })
-//         // }
-//         // case 'gnosis-safe': {
-//         //     return new SafeAppConnector()
-//         // }
-//         default: {
-//             throw new Error(`unsupported connector name: ${connectorName}`)
-//         }
-//     }
-// }
+            Object.values(NETWORK).forEach(item => {
+                supportedChainIds.push(item.chainId)
+            })
+            return new InjectedConnector({
+                supportedChainIds
+            })
+        // TODO
+        // case 'ledger':
+        //     return new LedgerConnector({
+        //         chainId: networkId,
+        //         url: networkConfig.privateJsonRPCUrl || networkConfig.publicJsonRPCUrl,
+        //         pollingInterval: 12000,
+        //         baseDerivationPath: connectorConfig.ledgerBaseDerivationPath,
+        //         accountsOffset: connectorConfig.accountsOffset,
+        //         accountsLength: connectorConfig.accountsLength
+        //     })
+        case 'wallet-link':
+            const APP_NAME = 'Aave'
+            const APP_LOGO_URL = 'https://aave.com/favicon.ico'
+            return new WalletLinkConnector({
+                appName: APP_NAME,
+                appLogoUrl: APP_LOGO_URL,
+                url: networkConfig.privateJsonRPCUrl || networkConfig.publicJsonRPCUrl
+            })
+        // TODO
+        // case 'wallet-connect':
+        //     return new WalletConnectConnector({
+        //         rpc: supportedNetworks.reduce((acc, network) => {
+        //             const config = NETWORK[network]
+        //             acc[NETWORK[network].chainId] = config.privateJsonRPCUrl || config.publicJsonRPCUrl
+        //             return acc
+        //         }, {} as { [networkId: number]: string }),
+        //         bridge: 'https://aave.bridge.walletconnect.org',
+        //         qrcode: true,
+        //         pollingInterval: POLLING_INTERVAL,
+        //         preferredNetworkId: networkId
+        //     })
+        case 'fortmatic':
+            return new FortmaticConnector({
+                chainId: networkId,
+                apiKey: ''
+            })
+        // case 'mew-wallet':
+        //     return new MewConnectConnector({
+        //         url:
+        //             networkConfig.privateJsonRPCWSUrl ||
+        //             networkConfig.privateJsonRPCUrl ||
+        //             networkConfig.publicJsonRPCWSUrl ||
+        //             networkConfig.publicJsonRPCUrl,
+        //         windowClosedError: true
+        //     })
+        // case 'authereum': {
+        //     if (currentNetwork !== 'mainnet') {
+        //         raiseUnsupportedNetworkError(currentNetwork, connectorName)
+        //     }
+        //     return new AuthereumConnector({
+        //         chainId: networkId,
+        //         config: {
+        //             networkName: currentNetwork,
+        //             rpcUri: networkConfig.privateJsonRPCUrl || networkConfig.publicJsonRPCUrl,
+        //             apiKey: AUTHEREUM_API_KEY
+        //         }
+        //     })
+        // }
+        case 'torus':
+            return new TorusConnector({
+                chainId: networkId,
+                initOptions: {
+                    network: {
+                        host: currentNetwork === NETWORK['polygon'].chainName ? 'matic' : currentNetwork
+                    },
+                    showTorusButton: false,
+                    enableLogging: false,
+                    enabledVerifiers: false
+                }
+            })
+        // case 'portis': {
+        //     if (!PORTIS_DAPP_ID) throw new Error('Portis DAPP id not specified')
+        //     return new PortisConnector({
+        //         dAppId: PORTIS_DAPP_ID,
+        //         networks: [networkId]
+        //     })
+        // }
+        // case 'gnosis-safe': {
+        //     return new SafeAppConnector()
+        // }
+        default: {
+            throw new Error(`unsupported connector name: ${connectorName}`)
+        }
+    }
+}

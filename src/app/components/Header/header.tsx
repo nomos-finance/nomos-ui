@@ -17,7 +17,6 @@ import { getShortenAddress } from '../../utils/tool'
 import ErrorDialog, { IErrorDialog } from '../ErrorDialog'
 import LoginDialog from '../LoginDialog'
 import LogoutDialog, { ILogoutDialog } from '../LogoutDialog'
-import useTopData from './hook/useTopData'
 
 export default (): React.ReactElement => {
     const history = useHistory()

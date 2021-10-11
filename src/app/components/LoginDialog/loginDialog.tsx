@@ -10,7 +10,7 @@ import { NETWORK, SupportedNetworks } from '@/app/connectors'
 import EventEmitter from '@/app/utils/events'
 import { useThemeContext } from '@/theme'
 
-// import { getWeb3Connector } from '../../connectors'
+import { getWeb3Connector } from '../../connectors'
 import copy from '../../utils/copy'
 import storage from '../../utils/storage'
 import { getShortenAddress } from '../../utils/tool'
@@ -83,9 +83,9 @@ export default (): JSX.Element | null => {
         setLogoutDialogOpen(true)
     })
 
-    // const onLogin = () => {
-    //     active(getWeb3Connector('', 'npm'))
-    // }
+    const onLogin = (providerName: string, network: string): void => {
+        activate(getWeb3Connector(providerName, network))
+    }
 
     return (
         <Modal
@@ -109,7 +109,7 @@ export default (): JSX.Element | null => {
                     {wallets
                         .filter(wallet => !wallet.notSupported)
                         .map((item, index) => (
-                            <div className="item" key={index}>
+                            <div className="item" key={index} onClick={() => onLogin(item.providerName, preferredNetwork)}>
                                 <img src={item.icon} alt="" />
                                 {item.providerName}
                             </div>
