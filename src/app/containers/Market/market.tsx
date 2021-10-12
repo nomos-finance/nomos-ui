@@ -9,12 +9,14 @@ import { Link, useHistory } from 'react-router-dom'
 import Layout from '@/app/components/Layout'
 import { getProvider } from '@/app/contracts/getProvider'
 import IPoolDataProviderContract from '@/app/contracts/IPoolDataProviderContract'
+import Icon from '@/assets/icons'
 import { useThemeContext } from '@/theme'
 
 export default (): React.ReactElement => {
     // const { library, account } = useWeb3React()
     // const history = useHistory()
     // const c = useThemeContext()
+    const [tab, setTab] = useState('deposit')
     const contract = IPoolDataProviderContract('0x04110Dc40B04b99B94840E53B2a33bE45E45A8Ed', getProvider('kovan'))
     const fetchData = async () => {
         const d = await contract.getReservesData('0xcF08ebFF887D91AbA3Afc47f2eBFe720525B4C8E', '0x04110Dc40B04b99B94840E53B2a33bE45E45A8Ed')
@@ -29,19 +31,29 @@ export default (): React.ReactElement => {
             <div className="totalBlock">
                 <div className="block">
                     <div className="text">
-                        <span>总流动性</span>
+                        <span>
+                            <Icon name="allLiquidity" />
+                            <Icon name="question" className="question" />
+                            总流动性
+                        </span>
                     </div>
                     <div className="number">$50,000.00</div>
                 </div>
                 <div className="block">
                     <div className="text">
-                        <span>总存款</span>
+                        <span>
+                            <Icon name="allDeposit" />
+                            总存款
+                        </span>
                     </div>
                     <div className="number">$50,000.00</div>
                 </div>
                 <div className="block">
                     <div className="text">
-                        <span>总贷款</span>
+                        <span>
+                            <Icon name="allLoan" />
+                            总贷款
+                        </span>
                     </div>
                     <div className="number">$50,000.00</div>
                 </div>
@@ -52,18 +64,22 @@ export default (): React.ReactElement => {
                     <div className="block">
                         <div className="main">
                             <div className="item">
+                                <Icon name="deposit" />
                                 <div className="text">我的存款</div>
                                 <div className="number">$50,000.00</div>
                             </div>
                             <div className="item">
+                                <Icon name="loan" />
                                 <div className="text">我的贷款</div>
                                 <div className="number">$50,000.00</div>
                             </div>
                             <div className="item">
+                                <Icon name="rate" />
                                 <div className="text">总收益年利率</div>
                                 <div className="number">$50,000.00</div>
                             </div>
                             <div className="item">
+                                <Icon name="reward" />
                                 <div className="text">可领取奖励NOMO</div>
                                 <div className="number">$50,000.00</div>
                             </div>
@@ -71,8 +87,22 @@ export default (): React.ReactElement => {
                         <div className="btn">领取奖励</div>
                     </div>
                     <div className="block">
-                        <Progress width={130} type="circle" showInfo={false} trailColor={'#4E5159'} strokeColor={'#44C27F'} percent={50} />
-                        <div>健康因子</div>
+                        <Progress
+                            width={130}
+                            type="circle"
+                            trailColor={'#ffe7cd'}
+                            strokeColor={{
+                                '0%': '#fd9303',
+                                '100%': '#f9bd00'
+                            }}
+                            percent={80}
+                            format={percent => (
+                                <>
+                                    <div>{percent}%</div>
+                                    <div>健康因子</div>
+                                </>
+                            )}
+                        />
                         <div>贷款上限 $1000.00</div>
                     </div>
                 </div>
@@ -84,8 +114,12 @@ export default (): React.ReactElement => {
             <div className="assetBlock">
                 <div className="header">
                     <div className="tab">
-                        <div className="tabItem">我的存款</div>
-                        <div className="tabItem">我的存款</div>
+                        <div className={classnames('tabItem', { cur: tab === 'deposit' })} onClick={() => setTab('deposit')}>
+                            我的存款
+                        </div>
+                        <div className={classnames('tabItem', { cur: tab === 'loan' })} onClick={() => setTab('loan')}>
+                            我的存款
+                        </div>
                     </div>
                     <div className="text">想把抵押资产换成其他资产，不用赎回，一键可完成</div>
                 </div>

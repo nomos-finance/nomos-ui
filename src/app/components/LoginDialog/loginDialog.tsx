@@ -114,7 +114,7 @@ export default forwardRef((props, ref) => {
                         .map((item, index) => (
                             <div className="item" key={index} onClick={() => onLogin(item.providerName, preferredNetwork)}>
                                 <img src={item.icon} alt="" />
-                                {item.providerName}
+                                {item.title}
                             </div>
                         ))}
                 </div>

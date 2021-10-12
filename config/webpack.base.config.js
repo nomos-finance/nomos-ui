@@ -170,10 +170,6 @@ const base = {
                 options: { cacheDirectory: true },
                 exclude: /node_modules/
             },
-            // {
-            //     test: /\.svg$/,
-            //     use: 'svg-sprite-loader'
-            // },
             {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
                 issuer: {
@@ -189,13 +185,19 @@ const base = {
                 ]
             },
             {
-                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                issuer: {
-                    test: /\.(styl|less|scss|css)?$/
-                },
+                test: /\.svg$/,
                 use: [
+                    { loader: 'svg-sprite-loader', options: {} },
                     {
-                        loader: 'url-loader'
+                        loader: 'svgo-loader',
+                        options: {
+                            plugins: [
+                                {
+                                    name: 'removeAttrs',
+                                    params: { attrs: 'fill' }
+                                }
+                            ]
+                        }
                     }
                 ]
             },

@@ -7,6 +7,7 @@ import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useHistory } from 'react-router-dom'
 
+import Icon from '@/assets/icons'
 import { useThemeContext } from '@/theme'
 
 import { useEagerConnect, useInactiveListener } from '../../hooks/web3'
@@ -36,7 +37,12 @@ export default (): React.ReactElement => {
 
     return (
         <header className={classnames('lt-header', currentThemeName)}>
-            <div className="notice">温馨提示：出于安全考虑，MDX的抵押率为零，不可用于抵押。BAGS不可用于存借，即将下线。</div>
+            <div className="notice">
+                <span>
+                    <Icon name="allLoan" />
+                    温馨提示：出于安全考虑，MDX的抵押率为零，不可用于抵押。BAGS不可用于存借，即将下线。
+                </span>
+            </div>
             <div className={classnames('theme', currentThemeName)} onClick={() => changeTheme(currentThemeName === 'default' ? 'dark' : 'default')} />
             <Dropdown
                 overlay={

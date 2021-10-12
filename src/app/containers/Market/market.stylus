@@ -39,6 +39,20 @@
             .text
                 font-size: 18px
 
+                span
+                    position: relative
+                    padding: 0 25px
+
+                    .icon
+                        position: absolute
+                        top: 50%
+                        transform: translateY(-50%)
+                        left: 0
+
+                        &.question
+                            left: auto
+                            right: 0
+
             .number
                 font-size: 40px
 
@@ -53,6 +67,8 @@
             display: flex
 
             .block
+                padding: 30px
+
                 &:first-child
                     flex: 1
                     margin: 0 50px 0 0
@@ -64,8 +80,13 @@
                             flex: 1
                             text-align: center
 
+                            .icon
+                                size(70px)
+
                             .text
                                 font-size: 18px
+                                margin: 25px 0 10px
+                                color: #666
 
                             .number
                                 font-size: 30px
@@ -78,7 +99,7 @@
                         background: #f9bd00
                         text-align: center
                         border-radius: 15px
-                        margin: 0 auto
+                        margin: 30px auto 0
                         font-size: 18px
 
     .voteBlock
@@ -111,9 +132,24 @@
             .tab
                 display: flex
                 font-size: 18px
+                border-bottom: 1px solid #dddddd
+
                 .tabItem
                     width: 120px
                     text-align: center
+                    cursor: pointer
+
+                    &.cur
+                        position: relative
+
+                        &:after
+                            display: block
+                            content: ' '
+                            position: absolute
+                            bottom: -1px
+                            height: 2px
+                            background: #f9bd00
+                            width: 100%
 
         .block
             padding: 20px

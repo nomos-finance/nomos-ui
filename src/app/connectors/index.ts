@@ -1,5 +1,5 @@
 // import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react'
-import { MewConnectConnector } from '@myetherwallet/mewconnect-connector'
+// import { MewConnectConnector } from '@myetherwallet/mewconnect-connector'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 // import { AuthereumConnector } from '@web3-react/authereum-connector'
 import { FortmaticConnector } from '@web3-react/fortmatic-connector'
@@ -87,6 +87,7 @@ export const NETWORK = {
     },
     arbitrum_rinkeby: {
         chainId: 421611,
+        publicJsonRPCUrl: 'https://rinkeby.arbitrum.io/rpc',
         chainKey: 'arbitrum_rinkeby',
         chainName: 'Arbitrum Rinkeby'
     }
