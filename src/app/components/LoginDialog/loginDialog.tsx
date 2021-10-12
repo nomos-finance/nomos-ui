@@ -11,21 +11,18 @@ import EventEmitter from '@/app/utils/events'
 import { useThemeContext } from '@/theme'
 
 import { getWeb3Connector } from '../../connectors'
-import copy from '../../utils/copy'
-import storage from '../../utils/storage'
-import { getShortenAddress } from '../../utils/tool'
 import * as icons from './img'
 
-export interface ILogoutDialog {
+export interface IDialog {
     show(): void
     hide(): void
 }
 
-export default (): JSX.Element | null => {
+export default forwardRef((props, ref) => {
     const { currentThemeName } = useThemeContext()
-    const [LogoutDialogOpen, setLogoutDialogOpen] = useState(false)
+    const [dialogOpen, setDialogOpen] = useState(false)
     const { account, activate, active, error, chainId } = useWeb3React()
-    const [preferredNetwork, setPreferredNetwork] = useState<string>('Mainnet')
+    const [preferredNetwork, setPreferredNetwork] = useState<string>('mainnet')
     const isImToken = !!window.imToken
     const wallets = [
         {
@@ -72,25 +69,31 @@ export default (): JSX.Element | null => {
     const preferredMenu = (
         <Menu>
             {SupportedNetworks.map(item => (
-                <Menu.Item key={item.chainId} onClick={() => setPreferredNetwork(item.chainName)}>
+                <Menu.Item key={item.chainId} onClick={() => setPreferredNetwork(item.chainKey)}>
                     {item.chainName}
                 </Menu.Item>
             ))}
         </Menu>
     )
 
-    EventEmitter.on('login', () => {
-        setLogoutDialogOpen(true)
-    })
-
     const onLogin = (providerName: string, network: string): void => {
         activate(getWeb3Connector(providerName, network))
+        setDialogOpen(false)
     }
+
+    useImperativeHandle(ref, () => ({
+        show: () => {
+            setDialogOpen(true)
+        },
+        hide: () => {
+            setDialogOpen(false)
+        }
+    }))
 
     return (
         <Modal
-            visible={LogoutDialogOpen}
-            onCancel={() => setLogoutDialogOpen(false)}
+            visible={dialogOpen}
+            onCancel={() => setDialogOpen(false)}
             footer={null}
             wrapClassName={classNames('loginDialog', currentThemeName)}
             centered
@@ -103,7 +106,7 @@ export default (): JSX.Element | null => {
             <div className="modalMain">
                 <div>Select preferred network</div>
                 <Dropdown overlay={preferredMenu}>
-                    <div className="box">{preferredNetwork}</div>
+                    <div className="box">{NETWORK[preferredNetwork].chainName}</div>
                 </Dropdown>
                 <div className="wallet">
                     {wallets
@@ -118,4 +121,4 @@ export default (): JSX.Element | null => {
             </div>
         </Modal>
     )
-}
+})

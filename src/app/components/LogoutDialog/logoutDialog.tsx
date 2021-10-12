@@ -66,6 +66,7 @@ const LongDialog = forwardRef((props, ref) => {
                         onClick={() => {
                             deactivate()
                             storage.set('isLogout', true)
+                            setLogoutDialogOpen(false)
                         }}
                     >
                         Disconnect

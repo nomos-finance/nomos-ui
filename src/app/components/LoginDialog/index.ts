@@ -1,2 +1,2 @@
-export type { ILogoutDialog } from './loginDialog'
+export type { IDialog } from './loginDialog'
 export { default } from './loginDialog'

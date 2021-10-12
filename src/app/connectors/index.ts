@@ -10,70 +10,84 @@ import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 export const NETWORK = {
     mainnet: {
         chainId: 1,
+        chainKey: 'mainnet',
         chainName: 'Mainnet',
         publicJsonRPCUrl: 'https://eth-mainnet.alchemyapi.io/v2/demo',
         publicJsonRPCWSUrl: 'wss://eth-mainnet.alchemyapi.io/v2/demo'
     },
     ropsten: {
         chainId: 3,
+        chainKey: 'ropsten',
         chainName: 'Ropsten'
     },
     rinkeby: {
         chainId: 4,
+        chainKey: 'rinkeby',
         chainName: 'Rinkeby'
     },
     gorli: {
         chainId: 5,
+        chainKey: 'gorli',
         chainName: 'Görli'
     },
     kovan: {
         chainId: 42,
+        chainKey: 'kovan',
         chainName: 'Kovan',
         publicJsonRPCUrl: 'https://kovan.poa.network'
     },
     polygon: {
         chainId: 137,
+        chainKey: 'polygon',
         chainName: 'Polygon',
         publicJsonRPCUrl: 'https://polygon-rpc.com',
         publicJsonRPCWSUrl: 'wss://polygon-rpc.com'
     },
     fork: {
         chainId: 1337,
+        chainKey: 'fork',
         chainName: 'Fork',
         privateJsonRPCUrl: 'http://127.0.0.1:8545',
         privateJsonRPCWSUrl: 'ws://127.0.0.1:8545'
     },
     mumbai: {
         chainId: 80001,
+        chainKey: 'mumbai',
         chainName: 'Mumbai',
         publicJsonRPCUrl: 'https://rpc-mumbai.matic.today',
         publicJsonRPCWSUrl: 'wss://rpc-mumbai.matic.today'
     },
     polygon_fork: {
         chainId: 1338,
+        chainKey: 'polygon_fork',
         chainName: 'Polygon Fork'
     },
     avalanche: {
         chainId: 43114,
+        chainKey: 'avalanche',
         chainName: 'Avalanche'
     },
     avalanche_fork: {
         chainId: 1337,
+        chainKey: 'avalanche_fork',
         chainName: 'Avalanche Fork'
     },
     fuji: {
         chainId: 43113,
+        chainKey: 'fuji',
         chainName: 'Fuji',
         publicJsonRPCUrl: 'https://api.avax-test.network/ext/bc/C/rpc',
         publicJsonRPCWSUrl: 'wss://api.avax-test.network/ext/bc/C/rpc'
     },
     arbitrum_one: {
         chainId: 42161,
+        chainKey: 'arbitrum_one',
         chainName: 'Arbitrum One',
         publicJsonRPCUrl: 'https://arb1.arbitrum.io/rpc'
     },
     arbitrum_rinkeby: {
         chainId: 421611,
+        chainKey: 'arbitrum_rinkeby',
         chainName: 'Arbitrum Rinkeby'
     }
 }

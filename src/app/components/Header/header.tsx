@@ -7,21 +7,21 @@ import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useHistory } from 'react-router-dom'
 
-import EventEmitter from '@/app/utils/events'
 import { useThemeContext } from '@/theme'
 
-import { getWeb3Connector } from '../../connectors'
 import { useEagerConnect, useInactiveListener } from '../../hooks/web3'
 import storage from '../../utils/storage'
 import { getShortenAddress } from '../../utils/tool'
 import ErrorDialog, { IErrorDialog } from '../ErrorDialog'
-import LoginDialog from '../LoginDialog'
+import LoginDialog, { IDialog as ILoginDialog } from '../LoginDialog'
 import LogoutDialog, { ILogoutDialog } from '../LogoutDialog'
 
 export default (): React.ReactElement => {
     const history = useHistory()
     const ErrorDialogRef = useRef<IErrorDialog>()
     const LogoutDialogRef = useRef<ILogoutDialog>()
+    const LoginDialogRef = useRef<ILoginDialog>()
+
     const { account, activate, active, error, chainId } = useWeb3React()
     const triedEager = useEagerConnect()
     const { changeTheme, currentThemeName } = useThemeContext()
@@ -33,25 +33,6 @@ export default (): React.ReactElement => {
     }
 
     useInactiveListener(!triedEager)
-
-    // useEffect(() => {
-    //     if (error) {
-    //         console.log(error)
-    //         // ErrorDialogRef.current?.show()
-    //     }
-    //     return () => {}
-    // }, [error])
-
-    // useEffect(() => {
-    //     if (!storage.get('isLogout')) {
-    //         activate(injected)
-    //     }
-    //     return () => {}
-    // }, [])
-
-    const handleShowLogin = (): void => {
-        EventEmitter.emit('login')
-    }
 
     return (
         <header className={classnames('lt-header', currentThemeName)}>
@@ -72,19 +53,13 @@ export default (): React.ReactElement => {
                 <div className="box">{i18n.language === 'zh_CN' ? 'English' : '中文'}</div>
             </Dropdown>
             <div className="account">
-                {active ? (
-                    <div className="connect" onClick={() => LogoutDialogRef.current?.show()}>
-                        <span>{getShortenAddress(account)}</span>
-                    </div>
-                ) : (
-                    <div className="connect" onClick={() => handleShowLogin()}>
-                        <span>Connect wallet</span>
-                    </div>
-                )}
+                <div className="connect unLogin" onClick={() => (active ? LogoutDialogRef.current?.show() : LoginDialogRef.current?.show())}>
+                    <span>{active ? getShortenAddress(account) : 'Connect wallet'}</span>
+                </div>
             </div>
             <ErrorDialog ref={ErrorDialogRef} chainId={chainId} />
             <LogoutDialog ref={LogoutDialogRef} />
-            <LoginDialog />
+            <LoginDialog ref={LoginDialogRef} />
         </header>
     )
 }
