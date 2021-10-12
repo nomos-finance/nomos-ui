@@ -93,7 +93,7 @@ export const NETWORK = {
     }
 }
 
-export const SupportedNetworks = [NETWORK['mainnet'], NETWORK['polygon']]
+export const SupportedNetworks = [NETWORK['mainnet'], NETWORK['arbitrum_one']]
 
 const supportedChainIds: Array<number> = []
 

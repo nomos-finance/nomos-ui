@@ -1,9 +1,9 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { Web3ReactProvider } from '@web3-react/core'
 import { Spin } from 'antd'
 import React, { Suspense } from 'react'
 import { useDispatch } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
-import Web3 from 'web3'
 
 import { ThemeProvider } from '@/theme'
 
@@ -31,7 +31,7 @@ export default (props): JSX.Element => {
 
     return (
         <ThemeProvider>
-            <Web3ReactProvider getLibrary={provider => new Web3(provider)}>
+            <Web3ReactProvider getLibrary={provider => new Web3Provider(provider)}>
                 <ScrollToTop>
                     <Suspense fallback={<Loading />}>
                         <Switch>

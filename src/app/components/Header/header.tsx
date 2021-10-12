@@ -23,7 +23,7 @@ export default (): React.ReactElement => {
     const LogoutDialogRef = useRef<ILogoutDialog>()
     const LoginDialogRef = useRef<ILoginDialog>()
 
-    const { account, activate, active, error, chainId } = useWeb3React()
+    const { account, activate, active, error, chainId, library } = useWeb3React()
     const triedEager = useEagerConnect()
     const { changeTheme, currentThemeName } = useThemeContext()
     const [t, i18n] = useTranslation()
@@ -34,6 +34,8 @@ export default (): React.ReactElement => {
     }
 
     useInactiveListener(!triedEager)
+
+    console.log(library)
 
     return (
         <header className={classnames('lt-header', currentThemeName)}>
