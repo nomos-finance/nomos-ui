@@ -16,10 +16,12 @@ export default (): React.ReactElement => {
     // const { library, account } = useWeb3React()
     // const history = useHistory()
     // const c = useThemeContext()
+    const [allAssets, setAllAssets] = useState()
     const [tab, setTab] = useState('deposit')
     const contract = IPoolDataProviderContract('0x04110Dc40B04b99B94840E53B2a33bE45E45A8Ed', getProvider('kovan'))
     const fetchData = async () => {
-        const d = await contract.getReservesData('0xcF08ebFF887D91AbA3Afc47f2eBFe720525B4C8E', '0x04110Dc40B04b99B94840E53B2a33bE45E45A8Ed')
+        const d = await contract.getReservesData('0xcF08ebFF887D91AbA3Afc47f2eBFe720525B4C8E', '0x0000000000000000000000000000000000000000')
+        setAllAssets(d[0])
         console.log(d)
     }
     useEffect(() => {
@@ -182,13 +184,15 @@ export default (): React.ReactElement => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                    <td>1</td>
-                                </tr>
+                                {allAssets?.map(item => (
+                                    <tr key={item[0]}>
+                                        <td>{item[2]}</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
