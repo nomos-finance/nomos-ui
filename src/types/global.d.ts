@@ -33,4 +33,5 @@ type PartialPick<T, K extends keyof T> = Partial<T> & Pick<T, K>
 interface Window {
     ethereum: any
     imToken: any
+    web3: any
 }
