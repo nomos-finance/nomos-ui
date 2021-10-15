@@ -1,44 +1,27 @@
 {
-    "version": "2.0.2",
-    "compilerOptions": {
-        "lib": [
-            "dom",
-            "dom.iterable",
-            "esnext"
-        ],
-        "target": "es5",
-        "module": "esnext",
-        "moduleResolution": "node",
-        "allowJs": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "strict": true,
-        "strictNullChecks": true,
-        "skipLibCheck": true,
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "noImplicitAny": false,
-        "rootDir": "./src",
-        "outDir": "./dist",
-        "sourceMap": true,
-        "jsx": "react",
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["src/*"]
-        }
-    },
-    "exclude": [
-        "node_modules",
-        "dist",
-        "dll",
-        "config",
-        ".history"
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
     ],
-    "include": [
-        "src/**/*",
-        "src/app/*.d.ts"
-    ]
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react-jsx",
+  },
+  "include": [
+    "src",
+    "node_modules/babel-plugin-react-intl-auto/**/*.d.ts"
+  ]
 }

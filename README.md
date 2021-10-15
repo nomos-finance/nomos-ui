@@ -1,13 +1,33 @@
-## nomos-ui
+```
+        .///.                .///.     //.            .//  `/////////////-
+       `++:++`              .++:++`    :++`          `++:  `++:......---.`
+      `/+: -+/`            `++- :+/`    /+/         `/+/   `++.
+      /+/   :+/            /+:   /+/    `/+/        /+/`   `++.
+  -::/++::`  /+:       -::/++::` `/+:    `++:      :++`    `++/:::::::::.
+  -:+++::-`  `/+:      --++/---`  `++-    .++-    -++.     `++/:::::::::.
+   -++.       .++-      -++`       .++.    .++.  .++-      `++.
+  .++-         -++.    .++.         -++.    -++``++-       `++.
+ `++:           :++`  .++-           :++`    :+//+:        `++:----------`
+ -/:             :/-  -/:             :/.     ://:         `/////////////-
+```
 
-### build
 
-    npm run dll // webpack dll 
+# Aave protocol interface :ghost:
 
-    npm run build:dev // development
+An open source interface for the decentralized liquidity protocol Aave.
+Enabling users to:
+- Manage and monitor their positions on the Aave Protocol, and the overall status of it.
+- Manage and monitor their positions on the Aave Safety module.
+- Participate on the Aave Governance.
 
-    npm run build:prod // production
+## IPFS deployment
+https://cloudflare-ipfs.com/ipfs/QmUGvvcpvnWX3bWhNrixNt3ojEu9TmR3gwAj52myAjwQ1U
 
-### development
+## Contribution
+For instructions on local deployment and configurations, see [Contributing](./CONTRIBUTING.md)
 
-    npm run start
+## License
+[BSD-3-Clause](./LICENSE.md)
+
+## Credits
+To all the Ethereum community
