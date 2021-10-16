@@ -4,7 +4,7 @@ import * as React from 'react';
 import Nav from '../Nav';
 import { useThemeContext } from '../../theme';
 
-// import Header from '../Header';
+import Header from '../Header';
 
 interface IProps {
   className?: string;
@@ -19,7 +19,7 @@ const Component = (props: IProps): React.ReactElement => {
     <div className={classnames('lt-main', currentThemeName, className)}>
       <Nav />
       <div className="lt-content">
-        {/* <Header /> */}
+        <Header />
         <div className="content">{props.children}</div>
       </div>
     </div>

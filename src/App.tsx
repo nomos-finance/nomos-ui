@@ -2,7 +2,6 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Layout from './app/components/Layout';
 import { useStaticPoolDataContext } from './libs/pool-data-provider';
-import { DarkModeSwitcher } from '@aave/aave-ui-kit';
 import { CURRENCY_ROUTE_PARAMS } from './helpers/router-types';
 import ScreensWrapper from './components/wrappers/ScreensWrapper';
 
@@ -27,7 +26,6 @@ import { governanceConfig, stakeConfig } from './ui-config';
 import { useProtocolDataContext } from './libs/protocol-data-provider';
 import { isFeatureEnabled } from './helpers/markets/markets-data';
 import Menu from './components/menu/Menu';
-import LangSwitcher from './components/basic/LangSwitcher';
 
 function ModulesWithMenu() {
   const { isUserHasDeposits, userId } = useStaticPoolDataContext();
@@ -86,14 +84,9 @@ function ModulesWithMenu() {
 const App: React.FC = () => {
   return (
     <Layout>
-      <Menu title="xxx" />
-      <DarkModeSwitcher />
-      <LangSwitcher />
-      <div className="lt-content">
-        <Switch>
-          <Route component={ModulesWithMenu} />
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/markets" component={Markets} />
+      </Switch>
     </Layout>
   );
 };

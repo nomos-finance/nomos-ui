@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { valueToBigNumber } from '@aave/protocol-js';
 import { useThemeContext } from '@aave/aave-ui-kit';
+import classnames from 'classnames';
 
 import {
   useDynamicPoolDataContext,
@@ -104,18 +105,185 @@ export default function Markets() {
     }
   }
 
+  const [tab, setTab] = useState('deposit');
+  const [allAssets, setAllAssets] = useState<Array<any>>();
+
   return (
-    <ScreenWrapper
-      pageTitle={intl.formatMessage(messages.pageTitle)}
-      className="Markets"
-      withMobileGrayBg={true}
-    >
-      <TopPanelWrapper isCollapse={true} withoutCollapseButton={true}>
-        <div className="Markets__top-content">
-          <TotalMarketsSize value={totalLockedInUsd.toNumber()} />
-          <SelectMarketPanel />
+    <div>
+      <div className="totalBlock">
+        <div className="block">
+          <div className="text">
+            <span>
+              {/* <Icon name="allLiquidity" />
+                            <Icon name="question" className="question" /> */}
+              总流动性
+            </span>
+          </div>
+          <div className="number">$50,000.00</div>
         </div>
-      </TopPanelWrapper>
+        <div className="block">
+          <div className="text">
+            <span>
+              {/* <Icon name="allDeposit" /> */}
+              总存款
+            </span>
+          </div>
+          <div className="number">$50,000.00</div>
+        </div>
+        <div className="block">
+          <div className="text">
+            <span>
+              {/* <Icon name="allLoan" /> */}
+              总贷款
+            </span>
+          </div>
+          <div className="number">$50,000.00</div>
+        </div>
+      </div>
+      <div className="userBlock">
+        <div className="title">我的账户</div>
+        <div className="userBlockMain">
+          <div className="block">
+            <div className="main">
+              <div className="item">
+                {/* <Icon name="deposit" /> */}
+                <div className="text">我的存款</div>
+                <div className="number">$50,000.00</div>
+              </div>
+              <div className="item">
+                {/* <Icon name="loan" /> */}
+                <div className="text">我的贷款</div>
+                <div className="number">$50,000.00</div>
+              </div>
+              <div className="item">
+                {/* <Icon name="rate" /> */}
+                <div className="text">总收益年利率</div>
+                <div className="number">$50,000.00</div>
+              </div>
+              <div className="item">
+                {/* <Icon name="reward" /> */}
+                <div className="text">可领取奖励NOMO</div>
+                <div className="number">$50,000.00</div>
+              </div>
+            </div>
+            <div className="btn">领取奖励</div>
+          </div>
+          <div className="block">
+            {/* <Progress
+                            width={130}
+                            type="circle"
+                            trailColor={'#ffe7cd'}
+                            strokeColor={{
+                                '0%': '#fd9303',
+                                '100%': '#f9bd00'
+                            }}
+                            percent={80}
+                            format={percent => (
+                                <>
+                                    <div>{percent}%</div>
+                                    <div>健康因子</div>
+                                </>
+                            )}
+                        /> */}
+            <div>贷款上限 $1000.00</div>
+          </div>
+        </div>
+      </div>
+      <div className="block voteBlock">
+        <div className="text">通过投票提高放大倍数来获取更高收益</div>
+        <div className="btn">投票</div>
+      </div>
+      <div className="assetBlock">
+        <div className="header">
+          <div className="tab">
+            <div
+              className={classnames('tabItem', { cur: tab === 'deposit' })}
+              onClick={() => setTab('deposit')}
+            >
+              我的存款
+            </div>
+            <div
+              className={classnames('tabItem', { cur: tab === 'loan' })}
+              onClick={() => setTab('loan')}
+            >
+              我的存款
+            </div>
+          </div>
+          <div className="text">想把抵押资产换成其他资产，不用赎回，一键可完成</div>
+        </div>
+        <div className="block">
+          <table>
+            <thead>
+              <tr>
+                <th>资产</th>
+                <th>存款APY</th>
+                <th>奖励APR</th>
+                <th>钱包余额</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="marketBlock">
+        <div className="main">
+          <div className="title">存款市场</div>
+          <div className="block">
+            <table>
+              <thead>
+                <tr>
+                  <th>资产</th>
+                  <th>存款APY</th>
+                  <th>奖励APR</th>
+                  <th>钱包余额</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="main">
+          <div className="title">贷款市场</div>
+          <div className="block">
+            <table>
+              <thead>
+                <tr>
+                  <th>存款资产</th>
+                  <th>存款数量</th>
+                  <th>存款APY</th>
+                  <th>奖励APR</th>
+                  <th>抵押品</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allAssets?.map((item: any) => (
+                  <tr key={item[0]}>
+                    <td>{item[2]}</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <div className="Markets__size">
         <TotalMarketsSize value={totalLockedInUsd.toNumber()} />
@@ -130,13 +298,6 @@ export default function Markets() {
             toggleLocalStorageClick(isPriceInUSD, setIsPriceInUSD, 'marketsIsPriceInUSD')
           }
         />
-      </div>
-
-      <div className="Markets__market-switcher">
-        <p className="Markets__marketSwitcher--title">
-          {intl.formatMessage(messages.selectMarket)}
-        </p>
-        <SelectMarketPanel />
       </div>
 
       <MarketTable
@@ -165,20 +326,6 @@ export default function Markets() {
           <MarketMobileCard {...item} key={index} />
         ))}
       </div>
-
-      <style jsx={true} global={true}>
-        {staticStyles}
-      </style>
-      <style jsx={true} global={true}>{`
-        .Markets {
-          &__top-content {
-            color: ${currentTheme.white.hex};
-          }
-          &__marketSwitcher--title {
-            color: ${currentTheme.textDarkBlue.hex};
-          }
-        }
-      `}</style>
-    </ScreenWrapper>
+    </div>
   );
 }
