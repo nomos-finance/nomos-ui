@@ -1,6 +1,5 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Layout from './app/components/Layout';
 import { useStaticPoolDataContext } from './libs/pool-data-provider';
 import { CURRENCY_ROUTE_PARAMS } from './helpers/router-types';
 import ScreensWrapper from './components/wrappers/ScreensWrapper';
@@ -26,6 +25,8 @@ import { governanceConfig, stakeConfig } from './ui-config';
 import { useProtocolDataContext } from './libs/protocol-data-provider';
 import { isFeatureEnabled } from './helpers/markets/markets-data';
 import Menu from './components/menu/Menu';
+
+import Market from './app/containers/market';
 
 function ModulesWithMenu() {
   const { isUserHasDeposits, userId } = useStaticPoolDataContext();
@@ -83,11 +84,9 @@ function ModulesWithMenu() {
 
 const App: React.FC = () => {
   return (
-    <Layout>
-      <Switch>
-        <Route path="/markets" component={Markets} />
-      </Switch>
-    </Layout>
+    <Switch>
+      <Route path="/markets" component={Market} />
+    </Switch>
   );
 };
 

@@ -30,7 +30,7 @@ export default function SelectPreferredNetwork({
   return (
     <div className="SelectPreferredNetwork">
       <p className="SelectPreferredNetwork__title">{intl.formatMessage(messages.title)}</p>
-
+      adfadddfasdfad
       <DropdownWrapper
         visible={visible}
         setVisible={setVisible}
@@ -80,7 +80,6 @@ export default function SelectPreferredNetwork({
           </button>
         ))}
       </DropdownWrapper>
-
       <style jsx={true} global={true}>
         {staticStyles}
       </style>
