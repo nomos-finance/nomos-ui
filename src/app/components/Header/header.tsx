@@ -4,9 +4,8 @@ import './header.scss';
 import classnames from 'classnames';
 import React, { useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import LangSwitcher from '../../../components/basic/LangSwitcher';
 import { DarkModeSwitcher } from '@aave/aave-ui-kit';
-import AddressInfo from '../../../components/menu/AddressInfo';
+import AddressInfo from './addressInfo';
 
 export default (): React.ReactElement => {
   const history = useHistory();
@@ -20,7 +19,6 @@ export default (): React.ReactElement => {
         </span>
       </div>
       <DarkModeSwitcher />
-      <LangSwitcher />
       <AddressInfo />
     </header>
   );
