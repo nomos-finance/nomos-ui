@@ -29,10 +29,13 @@ import { PermissionProvider } from './libs/use-permissions/usePermissions';
 import { DynamicPoolDataProvider } from './libs/pool-data-provider';
 import { ConnectionStatusProvider } from './libs/connection-status-provider';
 
+// app
+import { ThemeProvider as ThemeProvider2 } from './app/theme';
+
 Modal.setAppElement('#root');
 
 ReactDOM.render(
-  <>
+  <ThemeProvider2>
     <HashRouter>
       <ReferralHandler>
         <LanguageProvider>
@@ -77,7 +80,7 @@ ReactDOM.render(
     <style jsx={true} global={true}>
       {globalStyle}
     </style>
-  </>,
+  </ThemeProvider2>,
   document.getElementById('root')
 );
 

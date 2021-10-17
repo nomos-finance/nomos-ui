@@ -1,74 +1,39 @@
-import React, { ReactNode, useContext, useState } from 'react'
-
-// import { useWindowWidth } from '@react-hook/window-size';
-import { Themes, themes } from './themes'
-
-export const gradient = (angle: number, from: string, percentFrom: number, to: string, percentTo: number) =>
-    `linear-gradient(${angle}deg, rgba(${from}) ${percentFrom}%, rgba(${to}) ${percentTo}%)`
-
-export const rgba = (color: string) => `rgba(${color})`
-
-export enum ThemeNames {
-    default = 'default',
-    dark = 'dark'
-}
-
+import React, { ReactNode, useContext, useState } from 'react';
 interface ThemeContextProps {
-    currentTheme: Themes[ThemeNames]
-    currentThemeName: string
-    changeTheme: (name: string) => void
-    isCurrentThemeDark: boolean
-    // xl: boolean;
-    // lg: boolean;
-    // md: boolean;
-    // sm: boolean;
-    // xs: boolean;
+  currentThemeName: string;
+  changeTheme: (name: string) => void;
+  isCurrentThemeDark: boolean;
 }
 
-const ThemeContext = React.createContext({} as ThemeContextProps)
+const ThemeContext = React.createContext({} as ThemeContextProps);
 
 interface ThemeProviderProps {
-    children: ReactNode
+  children: ReactNode;
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-    const [currentThemeName, setCurrentThemeName] = useState(localStorage.getItem('theme') || ThemeNames.default)
+  const [currentThemeName, setCurrentThemeName] = useState(
+    localStorage.getItem('theme') || 'default'
+  );
 
-    const changeTheme = (name: string) => {
-        localStorage.setItem('theme', name)
-        setCurrentThemeName(name)
-    }
+  const changeTheme = (name: string) => {
+    localStorage.setItem('theme', name);
+    setCurrentThemeName(name);
+  };
 
-    // const width = useWindowWidth();
-    // const xl = width < 1800;
-    // const lg = width < 1400;
-    // const md = width < 1024;
-    // const sm = width < 768;
-    // const xs = width < 480;
+  const isCurrentThemeDark = currentThemeName === 'dark';
 
-    const arrayOfThemes = [ThemeNames.default, ThemeNames.dark]
-
-    const currentTheme: Themes[ThemeNames] = themes[arrayOfThemes.find(theme => theme === currentThemeName) || ThemeNames.default]
-
-    const isCurrentThemeDark = currentThemeName === ThemeNames.dark
-
-    return (
-        <ThemeContext.Provider
-            value={{
-                currentTheme,
-                currentThemeName,
-                changeTheme,
-                isCurrentThemeDark
-                // xl,
-                // lg,
-                // md,
-                // sm,
-                // xs,
-            }}
-        >
-            {children}
-        </ThemeContext.Provider>
-    )
+  return (
+    <ThemeContext.Provider
+      value={{
+        currentThemeName,
+        changeTheme,
+        isCurrentThemeDark,
+      }}
+    >
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 
-export const useThemeContext = () => useContext(ThemeContext)
+export const useThemeContext = () => useContext(ThemeContext);

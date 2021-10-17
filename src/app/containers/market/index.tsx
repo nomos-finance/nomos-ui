@@ -266,11 +266,10 @@ export default function Markets() {
                 </tr>
               </thead>
               <tbody>
-                {allAssets?.map((item: any) => (
-                  <tr key={item[0]}>
-                    <td>{item[2]}</td>
-                    <td>1</td>
-                    <td>1</td>
+                {sortedData.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.currencySymbol}</td>
+                    <td>{item.stableBorrowRate}</td>
                     <td>1</td>
                     <td>1</td>
                   </tr>
