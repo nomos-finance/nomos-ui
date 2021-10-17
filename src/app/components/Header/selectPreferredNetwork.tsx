@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import { useIntl } from 'react-intl';
 import { AnimationArrow, DropdownWrapper, useThemeContext } from '@aave/aave-ui-kit';
 import { Network } from '@aave/protocol-js';
-
-import messages from './messages';
-import staticStyles from './style';
-import { networkConfigs } from '../../../../ui-config';
 
 interface SelectPreferredNetworkProps {
   preferredNetwork: Network;
@@ -18,18 +13,15 @@ export default function SelectPreferredNetwork({
   onSelectPreferredNetwork,
   supportedNetworks,
 }: SelectPreferredNetworkProps) {
-  const intl = useIntl();
   const { currentTheme } = useThemeContext();
 
   const [visible, setVisible] = useState(false);
 
   const formattedNetwork = (network: Network) =>
     network === Network.mainnet ? 'Ethereum' : network;
-  const isTestnet = (network: Network) => networkConfigs[network].isTestnet;
 
   return (
     <div className="SelectPreferredNetwork">
-      <p className="SelectPreferredNetwork__title">{intl.formatMessage(messages.title)}</p>
       <DropdownWrapper
         visible={visible}
         setVisible={setVisible}
@@ -39,12 +31,7 @@ export default function SelectPreferredNetwork({
             type="button"
             onClick={() => setVisible(true)}
           >
-            <span>
-              {intl.formatMessage(
-                isTestnet(preferredNetwork) ? messages.testNetwork : messages.mainnet,
-                { network: formattedNetwork(preferredNetwork) }
-              )}
-            </span>
+            <span>{formattedNetwork(preferredNetwork)}</span>
             <AnimationArrow
               className="SelectPreferredNetwork__select-arrow"
               active={visible}
@@ -71,40 +58,10 @@ export default function SelectPreferredNetwork({
             key={network}
             disabled={network === preferredNetwork}
           >
-            <span>
-              {intl.formatMessage(isTestnet(network) ? messages.testNetwork : messages.mainnet, {
-                network: formattedNetwork(network),
-              })}
-            </span>
+            <span>{formattedNetwork(network)}</span>
           </button>
         ))}
       </DropdownWrapper>
-      <style jsx={true} global={true}>
-        {staticStyles}
-      </style>
-      <style jsx={true}>{`
-        .SelectPreferredNetwork {
-          &__select {
-            background: ${currentTheme.whiteItem.hex};
-            color: ${currentTheme.textDarkBlue.hex};
-            &:hover {
-              border-color: ${currentTheme.textDarkBlue.hex};
-            }
-          }
-
-          &__option {
-            color: ${currentTheme.darkBlue.hex};
-            &:after {
-              background: ${currentTheme.darkBlue.hex};
-            }
-            &:hover,
-            &:disabled {
-              background: ${currentTheme.mainBg.hex};
-              color: ${currentTheme.textDarkBlue.hex};
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 }
