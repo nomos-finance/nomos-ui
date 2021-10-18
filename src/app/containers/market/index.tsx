@@ -1,32 +1,20 @@
 import './market.scss';
-import React, { useState } from 'react';
-import { useIntl } from 'react-intl';
+import React, { useState, useRef } from 'react';
 import { valueToBigNumber } from '@aave/protocol-js';
-import { useThemeContext } from '@aave/aave-ui-kit';
 import classnames from 'classnames';
+
 import Layout from '../../components/Layout';
+import ChangeDialog, { IDialog } from '../../components/ChangeDialog';
 
 import {
   useDynamicPoolDataContext,
   useStaticPoolDataContext,
 } from '../../../libs/pool-data-provider';
-import { useProtocolDataContext } from '../../../libs/protocol-data-provider';
-// import MarketTable from '../components/MarketTable';
-// import MarketTableItem from '../../components/MarketTableItem';
-// import TotalMarketsSize from '../../components/TotalMarketsSize';
-// import BorrowRatesHelpModal from '../../../../components/HelpModal/BorrowRatesHelpModal';
-// import MarketMobileCard from '../../components/MarketMobileCard';
 
 export default function Markets() {
-  const intl = useIntl();
-  const { currentTheme } = useThemeContext();
+  const SwapDialogRef = useRef<IDialog>();
   const { marketRefPriceInUsd } = useStaticPoolDataContext();
   const { reserves } = useDynamicPoolDataContext();
-  const { currentMarketData } = useProtocolDataContext();
-
-  const [isPriceInUSD, setIsPriceInUSD] = useState(
-    localStorage.getItem('marketsIsPriceInUSD') === 'true'
-  );
 
   const [sortName, setSortName] = useState('');
   const [sortDesc, setSortDesc] = useState(false);
@@ -100,7 +88,6 @@ export default function Markets() {
   }
 
   const [tab, setTab] = useState('deposit');
-  const [allAssets, setAllAssets] = useState<Array<any>>();
 
   return (
     <Layout className="page-market">
@@ -203,7 +190,9 @@ export default function Markets() {
               我的存款
             </div>
           </div>
-          <div className="text">想把抵押资产换成其他资产，不用赎回，一键可完成</div>
+          <div className="text" onClick={() => SwapDialogRef.current?.show()}>
+            想把抵押资产换成其他资产，不用赎回，一键可完成
+          </div>
         </div>
         <div className="block">
           <table>
@@ -279,48 +268,7 @@ export default function Markets() {
           </div>
         </div>
       </div>
-
-      {/* <div className="Markets__size">
-        <TotalMarketsSize value={totalLockedInUsd.toNumber()} />
-      </div>
-
-      <div className="Markets__price-switcher">
-        <LabeledSwitcher
-          value={!isPriceInUSD}
-          leftOption="USD"
-          rightOption={intl.formatMessage(messages.native)}
-          onToggle={() =>
-            toggleLocalStorageClick(isPriceInUSD, setIsPriceInUSD, 'marketsIsPriceInUSD')
-          }
-        />
-      </div>
-
-      <MarketTable
-        sortName={sortName}
-        setSortName={setSortName}
-        sortDesc={sortDesc}
-        setSortDesc={setSortDesc}
-      >
-        {sortedData.map((item, index) => (
-          <MarketTableItem {...item} isPriceInUSD={isPriceInUSD} key={index} />
-        ))}
-      </MarketTable>
-
-      <div className="Markets__mobile--cards">
-        {currentMarketData.enabledFeatures?.incentives && (
-          <div className="Markets__help--modalInner">
-            <BorrowRatesHelpModal
-              className="Markets__help--modal"
-              text={intl.formatMessage(messages.rewardsInformation)}
-              iconSize={14}
-            />
-          </div>
-        )}
-
-        {sortedData.map((item, index) => (
-          <MarketMobileCard {...item} key={index} />
-        ))}
-      </div> */}
+      <ChangeDialog type="Swap" ref={SwapDialogRef} />
     </Layout>
   );
 }

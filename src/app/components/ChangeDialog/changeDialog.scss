@@ -1,0 +1,12 @@
+.changeDialog{
+    .ant-modal-body{
+        padding: 0
+    }
+    .ant-modal-content{
+        background: var(--var-dialog-bg);
+        border-radius: 15px;
+        padding: 20px;
+        color: var(--var-text-color);
+    }
+
+}

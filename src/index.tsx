@@ -31,56 +31,61 @@ import { ConnectionStatusProvider } from './libs/connection-status-provider';
 
 // app
 import { ThemeProvider as ThemeProvider2 } from './app/theme';
+import './app/utils/i18n';
+import { Provider } from 'react-redux';
+import store, { history } from './app/store';
 
 Modal.setAppElement('#root');
 
 ReactDOM.render(
-  <ThemeProvider2>
-    <HashRouter>
-      <ReferralHandler>
-        <LanguageProvider>
-          <ThemeProvider>
-            <ProtocolDataProvider>
-              <WrappedApolloProvider>
-                <ConnectionStatusProvider>
-                  <MenuProvider>
-                    <Web3ReactProvider
-                      getLibrary={(provider) => new ethers.providers.Web3Provider(provider)}
-                    >
-                      <ErrorBoundary>
-                        <Web3Provider
-                          defaultNetwork={getDefaultNetworkName()}
-                          supportedNetworks={getSupportedNetworks()}
-                          preloader={UnlockWalletPreloader}
-                          connectWalletModal={ConnectWalletModal}
-                        >
-                          <PermissionProvider>
-                            <WalletBalanceProvider>
-                              <StaticPoolDataProviderWrapper>
-                                <DynamicPoolDataProvider>
-                                  <TxBuilderProvider>
-                                    <App />
-                                  </TxBuilderProvider>
-                                </DynamicPoolDataProvider>
-                              </StaticPoolDataProviderWrapper>
-                            </WalletBalanceProvider>
-                          </PermissionProvider>
-                        </Web3Provider>
-                      </ErrorBoundary>
-                    </Web3ReactProvider>
-                  </MenuProvider>
-                </ConnectionStatusProvider>
-              </WrappedApolloProvider>
-            </ProtocolDataProvider>
-          </ThemeProvider>
-        </LanguageProvider>
-      </ReferralHandler>
-    </HashRouter>
+  <Provider store={store}>
+    <ThemeProvider2>
+      <HashRouter>
+        <ReferralHandler>
+          <LanguageProvider>
+            <ThemeProvider>
+              <ProtocolDataProvider>
+                <WrappedApolloProvider>
+                  <ConnectionStatusProvider>
+                    <MenuProvider>
+                      <Web3ReactProvider
+                        getLibrary={(provider) => new ethers.providers.Web3Provider(provider)}
+                      >
+                        <ErrorBoundary>
+                          <Web3Provider
+                            defaultNetwork={getDefaultNetworkName()}
+                            supportedNetworks={getSupportedNetworks()}
+                            preloader={UnlockWalletPreloader}
+                            connectWalletModal={ConnectWalletModal}
+                          >
+                            <PermissionProvider>
+                              <WalletBalanceProvider>
+                                <StaticPoolDataProviderWrapper>
+                                  <DynamicPoolDataProvider>
+                                    <TxBuilderProvider>
+                                      <App />
+                                    </TxBuilderProvider>
+                                  </DynamicPoolDataProvider>
+                                </StaticPoolDataProviderWrapper>
+                              </WalletBalanceProvider>
+                            </PermissionProvider>
+                          </Web3Provider>
+                        </ErrorBoundary>
+                      </Web3ReactProvider>
+                    </MenuProvider>
+                  </ConnectionStatusProvider>
+                </WrappedApolloProvider>
+              </ProtocolDataProvider>
+            </ThemeProvider>
+          </LanguageProvider>
+        </ReferralHandler>
+      </HashRouter>
 
-    <style jsx={true} global={true}>
-      {globalStyle}
-    </style>
-  </ThemeProvider2>,
+      <style jsx={true} global={true}>
+        {globalStyle}
+      </style>
+    </ThemeProvider2>
+  </Provider>,
   document.getElementById('root')
 );
 

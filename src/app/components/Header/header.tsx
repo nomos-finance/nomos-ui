@@ -2,19 +2,45 @@
 import './header.scss';
 
 import classnames from 'classnames';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
+import { Dropdown, Menu } from 'antd';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 
-import AddressInfo from './addressInfo';
+// import AddressInfo from './addressInfo';
 import LoginDialog, { IDialog as ILoginDialog } from '../LoginDialog';
+import LogoutDialog, { IDialog as ILogoutDialog } from '../LogoutDialog';
 import { useThemeContext } from '../../theme';
 import Tips from './img/tips.svg';
 import { getShortenAddress } from '../../utils/tool';
+import storage from '../../utils/storage';
 
 export default (): React.ReactElement => {
+  const history = useHistory();
   const LoginDialogRef = useRef<ILoginDialog>();
-  const { account, active } = useWeb3React();
+  const LogoutDialogRef = useRef<ILogoutDialog>();
+  const { account, chainId } = useWeb3React();
+  const storedAccount = storage.get('account');
+  const [currentAccount, setCurrentAccount] = useState<string>();
   const { changeTheme, currentThemeName } = useThemeContext();
+  const [t, i18n] = useTranslation();
+
+  const changLng = (l: string): void => {
+    i18n.changeLanguage(l);
+    history.replace(`?lng=${l}`);
+  };
+
+  useEffect(() => {
+    if (account) {
+      setCurrentAccount(account);
+    } else if (storedAccount) {
+      setCurrentAccount(storedAccount);
+    }
+    return () => {
+      setCurrentAccount(undefined);
+    };
+  }, [account]);
 
   return (
     <header className={classnames('lt-header', currentThemeName)}>
@@ -27,20 +53,35 @@ export default (): React.ReactElement => {
       <div
         className={classnames('theme', currentThemeName)}
         onClick={() => changeTheme(currentThemeName === 'default' ? 'dark' : 'default')}
-      />
+      >
+        {currentThemeName}
+      </div>
+      <Dropdown
+        overlay={
+          <Menu>
+            <Menu.Item key="zh_CN">
+              <div onClick={() => changLng('zh_CN')}>中文简体</div>
+            </Menu.Item>
+            <Menu.Item key="en_US">
+              <div onClick={() => changLng('en_US')}>English</div>
+            </Menu.Item>
+          </Menu>
+        }
+      >
+        <div className="box">{i18n.language === 'zh_CN' ? 'English' : '中文'}</div>
+      </Dropdown>
       <div className="account">
         <div
           className="connect unLogin"
-          // onClick={() =>
-          //   active ? LogoutDialogRef.current?.show() : LoginDialogRef.current?.show()
-          // }
-          onClick={() => LoginDialogRef.current?.show()}
+          onClick={() =>
+            currentAccount ? LogoutDialogRef.current?.show() : LoginDialogRef.current?.show()
+          }
         >
-          <span>{active ? getShortenAddress(account) : 'Connect wallet'}</span>
+          <span>{currentAccount ? getShortenAddress(currentAccount) : 'Connect wallet'}</span>
         </div>
       </div>
-      <AddressInfo />
       <LoginDialog ref={LoginDialogRef} />
+      <LogoutDialog ref={LogoutDialogRef} />
     </header>
   );
 };

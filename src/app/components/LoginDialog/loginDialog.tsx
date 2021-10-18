@@ -6,11 +6,12 @@ import classNames from 'classnames';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
 import { NETWORK, SupportedNetworks } from '../../connectors';
-// import { useThemeContext } from '@/theme';
+import { useThemeContext } from '../../theme';
 
 import { getWeb3Connector } from '../../connectors';
 import * as icons from './img';
-
+import storage from '../../utils/storage';
+import useInactiveListener from './hooks/useInactiveListener';
 export interface IDialog {
   show(): void;
   hide(): void;
@@ -39,11 +40,12 @@ export interface Wallet {
 }
 
 export default forwardRef((props, ref) => {
-  //   const { currentThemeName } = useThemeContext();
-  const currentThemeName = '';
+  const { currentThemeName } = useThemeContext();
   const [dialogOpen, setDialogOpen] = useState(false);
   const { account, activate, active, error, chainId } = useWeb3React();
   const [preferredNetwork, setPreferredNetwork] = useState<string>('mainnet');
+  const providerName = storage.get('providerName');
+  const network = storage.get('network');
   const isImToken = !!window.imToken;
 
   const wallets: Wallet[] = [
@@ -124,8 +126,11 @@ export default forwardRef((props, ref) => {
     </Menu>
   );
 
-  const onLogin = (providerName: string, network: string): void => {
-    activate(getWeb3Connector(providerName, network));
+  const onLogin = async (providerName: string, network: string): Promise<void> => {
+    await activate(getWeb3Connector(providerName, network));
+    storage.set('providerName', providerName);
+    storage.set('network', network);
+    storage.set('isLogout', '');
     setDialogOpen(false);
   };
 
@@ -138,12 +143,30 @@ export default forwardRef((props, ref) => {
     },
   }));
 
+  useInactiveListener(
+    providerName ? getWeb3Connector(providerName, network) : undefined,
+    !storage.get('account')
+  );
+
+  useEffect(() => {
+    if (account) {
+      storage.set('account', account);
+    }
+  }, [account]);
+
+  useEffect(() => {
+    if (!storage.get('isLogout') && providerName && network) {
+      activate(getWeb3Connector(providerName, network));
+    }
+    return () => {};
+  }, []);
+
   return (
     <Modal
       visible={dialogOpen}
       onCancel={() => setDialogOpen(false)}
       footer={null}
-      wrapClassName={classNames('loginDialog', currentThemeName)}
+      wrapClassName={classNames('customDialog', 'loginDialog', currentThemeName)}
       centered
       destroyOnClose={true}
       closable={false}
