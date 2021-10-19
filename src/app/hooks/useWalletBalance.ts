@@ -44,6 +44,8 @@ const useWalletBalance = async (
   const fetchData = async () => {
     if (!walletBalanceProvider || !account || !network) return;
     try {
+      const c = await WalletBalanceProviderContract(walletBalanceProvider, network);
+      console.log(c);
       const { 0: reserves, 1: balances }: WalletBalanceContractData =
         await WalletBalanceProviderContract(walletBalanceProvider, network).getUserWalletBalances(
           providerAddress,

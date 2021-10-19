@@ -42,8 +42,6 @@ export default (): React.ReactElement => {
     };
   }, [account]);
 
-  console.log(active, account, currentAccount);
-
   return (
     <header className={classnames('lt-header', currentThemeName)}>
       <div className="notice">

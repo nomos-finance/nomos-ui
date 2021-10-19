@@ -48,7 +48,7 @@ export const NETWORK: INetwork = {
     chainKey: 'kovan',
     chainName: 'Kovan',
     publicJsonRPCUrl: 'https://kovan.poa.network',
-    walletBalanceProvider: '',
+    walletBalanceProvider: '0x16870ee700a556fE25F17345EF5E72324aCa3711',
     uiPoolDataProvider: '0xcF08ebFF887D91AbA3Afc47f2eBFe720525B4C8E',
     baseUniswapAdapter: '',
     rewardTokenAddress: '',

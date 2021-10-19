@@ -1,8 +1,9 @@
 import './market.scss';
-import React, { useState, useRef } from 'react';
-import { valueToBigNumber } from '@aave/protocol-js';
+import React, { useState, useRef, useEffect } from 'react';
+import { valueToBigNumber, normalize } from '@aave/protocol-js';
 import classnames from 'classnames';
 import { ethers } from 'ethers';
+import { formatReserves, ComputedReserveData } from '@aave/protocol-js';
 
 import Layout from '../../components/Layout';
 import ChangeDialog, { IDialog } from '../../components/ChangeDialog';
@@ -10,12 +11,17 @@ import useProtocolDataWithRpc from '../../hooks/usePoolData';
 import useNetworkInfo from '../../hooks/useNetworkInfo';
 import useWalletBalance from '../../hooks/useWalletBalance';
 import { useWeb3React } from '@web3-react/core';
+import { formatDecimal } from '../../utils/tool';
 
 export default function Markets() {
   const { account, chainId } = useWeb3React();
+  const [totalLiquidity, setTotalLiquidity] = useState('');
   const SwapDialogRef = useRef<IDialog>();
   const [tab, setTab] = useState('deposit');
   const [networkInfo] = useNetworkInfo();
+  const [formatReservesData, setFormatReservesData] = useState<ComputedReserveData[]>([]);
+  let totalLockedInUsd = valueToBigNumber('0');
+  let marketRefPriceInUsd = normalize(1, 10);
 
   const { error, loading, data, refresh } = useProtocolDataWithRpc(
     networkInfo?.uiPoolDataProvider,
@@ -25,13 +31,71 @@ export default function Markets() {
   );
 
   useWalletBalance(
-    networkInfo?.uiPoolDataProvider,
+    networkInfo?.walletBalanceProvider,
     account,
     networkInfo?.chainKey,
     networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
   );
 
-  // console.log(data);
+  useEffect(() => {
+    if (!data) return;
+    let r = formatReserves(data.reserves);
+    // r.filter((res) => res.isActive).map((reserve) => {
+    //   totalLockedInUsd = totalLockedInUsd.plus(
+    //     valueToBigNumber(reserve.totalLiquidity)
+    //       .multipliedBy(reserve.price.priceInEth)
+    //       .dividedBy(marketRefPriceInUsd)
+    //   );
+
+    //   const totalLiquidity = Number(reserve.totalLiquidity);
+    //   const totalLiquidityInUSD = valueToBigNumber(reserve.totalLiquidity)
+    //     .multipliedBy(reserve.price.priceInEth)
+    //     .dividedBy(marketRefPriceInUsd)
+    //     .toNumber();
+
+    //   const totalBorrows = Number(reserve.totalDebt);
+    //   const totalBorrowsInUSD = valueToBigNumber(reserve.totalDebt)
+    //     .multipliedBy(reserve.price.priceInEth)
+    //     .dividedBy(marketRefPriceInUsd)
+    //     .toNumber();
+
+    //   return {
+    //     totalLiquidity,
+    //     totalLiquidityInUSD,
+    //     totalBorrows: reserve.borrowingEnabled ? totalBorrows : -1,
+    //     totalBorrowsInUSD: reserve.borrowingEnabled ? totalBorrowsInUSD : -1,
+    //     id: reserve.id,
+    //     underlyingAsset: reserve.underlyingAsset,
+    //     currencySymbol: reserve.symbol,
+    //     depositAPY: reserve.borrowingEnabled ? Number(reserve.liquidityRate) : -1,
+    //     avg30DaysLiquidityRate: Number(reserve.avg30DaysLiquidityRate),
+    //     stableBorrowRate:
+    //       reserve.stableBorrowRateEnabled && reserve.borrowingEnabled
+    //         ? Number(reserve.stableBorrowRate)
+    //         : -1,
+    //     variableBorrowRate: reserve.borrowingEnabled ? Number(reserve.variableBorrowRate) : -1,
+    //     avg30DaysVariableRate: Number(reserve.avg30DaysVariableBorrowRate),
+    //     borrowingEnabled: reserve.borrowingEnabled,
+    //     stableBorrowRateEnabled: reserve.stableBorrowRateEnabled,
+    //     isFreezed: reserve.isFrozen,
+    //     aIncentivesAPY: reserve.aIncentivesAPY,
+    //     vIncentivesAPY: reserve.vIncentivesAPY,
+    //     sIncentivesAPY: reserve.sIncentivesAPY,
+    //   };
+    // });
+    setFormatReservesData(r);
+    let availableLiquidity = valueToBigNumber(0);
+    r.forEach((item) => {
+      const u = valueToBigNumber(item.availableLiquidity)
+        .multipliedBy(item.price.priceInEth)
+        .dividedBy(marketRefPriceInUsd);
+      availableLiquidity.plus(u);
+    });
+    setTotalLiquidity(availableLiquidity.toString());
+    return () => {};
+  }, [data]);
+
+  console.log(formatReservesData);
 
   return (
     <Layout className="page-market">
@@ -44,7 +108,7 @@ export default function Markets() {
               总流动性
             </span>
           </div>
-          <div className="number">$50,000.00</div>
+          <div className="number">${totalLiquidity}</div>
         </div>
         <div className="block">
           <div className="text">
@@ -173,11 +237,11 @@ export default function Markets() {
                 </tr>
               </thead>
               <tbody>
-                {data?.reserves.map((item) => (
+                {formatReservesData.map((item) => (
                   <tr key={item.id}>
                     <td>{item.symbol}</td>
                     <td>{item.borrowingEnabled ? Number(item.liquidityRate) : -1}</td>
-                    <td>1</td>
+                    <td>{item.aIncentivesAPY}</td>
                     <td>1</td>
                   </tr>
                 ))}
@@ -198,14 +262,16 @@ export default function Markets() {
                 </tr>
               </thead>
               <tbody>
-                {/* {sortedData.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.currencySymbol}</td>
-                    <td>{item.stableBorrowRate}</td>
-                    <td>1</td>
-                    <td>1</td>
-                  </tr>
-                ))} */}
+                {formatReservesData
+                  .filter((res) => res.isActive)
+                  .map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.symbol}</td>
+                      <td>{item.borrowingEnabled ? Number(item.variableBorrowRate) : -1}</td>
+                      <td>{item.vIncentivesAPY}</td>
+                      <td>1</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

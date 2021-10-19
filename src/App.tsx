@@ -6,7 +6,7 @@ import Market from './app/containers/market';
 const App: React.FC = () => {
   return (
     <Switch>
-      <Route path="/markets" component={Market} />
+      <Route path="/" component={Market} />
     </Switch>
   );
 };
