@@ -20,7 +20,7 @@ export default (): React.ReactElement => {
   const history = useHistory();
   const LoginDialogRef = useRef<ILoginDialog>();
   const LogoutDialogRef = useRef<ILogoutDialog>();
-  const { account, chainId } = useWeb3React();
+  const { active, account, chainId } = useWeb3React();
   const storedAccount = storage.get('account');
   const [currentAccount, setCurrentAccount] = useState<string>();
   const { changeTheme, currentThemeName } = useThemeContext();
@@ -41,6 +41,8 @@ export default (): React.ReactElement => {
       setCurrentAccount(undefined);
     };
   }, [account]);
+
+  console.log(active, account, currentAccount);
 
   return (
     <header className={classnames('lt-header', currentThemeName)}>

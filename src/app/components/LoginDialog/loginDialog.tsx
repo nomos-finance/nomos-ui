@@ -4,14 +4,18 @@ import { useWeb3React } from '@web3-react/core';
 import { Dropdown, Menu, Modal } from 'antd';
 import classNames from 'classnames';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import { NETWORK, SupportedNetworks } from '../../connectors';
+import { NETWORK, SupportedNetworks } from '../../config';
 import { useThemeContext } from '../../theme';
 
-import { getWeb3Connector } from '../../connectors';
+import { getWeb3Connector } from '../../connector';
 import * as icons from './img';
 import storage from '../../utils/storage';
 import useInactiveListener from './hooks/useInactiveListener';
+
+import { setNetwork, setProviderName } from '../../actions/baseAction';
+
 export interface IDialog {
   show(): void;
   hide(): void;
@@ -40,9 +44,10 @@ export interface Wallet {
 }
 
 export default forwardRef((props, ref) => {
+  const dispatch = useDispatch();
   const { currentThemeName } = useThemeContext();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const { account, activate, active, error, chainId } = useWeb3React();
+  const { account, activate } = useWeb3React();
   const [preferredNetwork, setPreferredNetwork] = useState<string>('mainnet');
   const providerName = storage.get('providerName');
   const network = storage.get('network');
@@ -127,11 +132,19 @@ export default forwardRef((props, ref) => {
   );
 
   const onLogin = async (providerName: string, network: string): Promise<void> => {
+    console.log(getWeb3Connector(providerName, network));
     await activate(getWeb3Connector(providerName, network));
     storage.set('providerName', providerName);
     storage.set('network', network);
     storage.set('isLogout', '');
     setDialogOpen(false);
+    dispatch(setNetwork(network));
+    dispatch(setProviderName(network));
+  };
+
+  const onSelectSupperNetwork = (network: string): void => {
+    dispatch(setProviderName(network));
+    storage.set('providerName', providerName);
   };
 
   useImperativeHandle(ref, () => ({
@@ -177,7 +190,12 @@ export default forwardRef((props, ref) => {
       <div className="modalMain">
         <div>Select preferred network</div>
         <Dropdown overlay={preferredMenu}>
-          <div className="box">{NETWORK[preferredNetwork].chainName}</div>
+          <div
+            className="box"
+            onClick={() => onSelectSupperNetwork(NETWORK[preferredNetwork].chainName)}
+          >
+            {NETWORK[preferredNetwork].chainName}
+          </div>
         </Dropdown>
         <div className="wallet">
           {wallets

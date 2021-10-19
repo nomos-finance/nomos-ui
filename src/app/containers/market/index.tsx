@@ -2,92 +2,36 @@ import './market.scss';
 import React, { useState, useRef } from 'react';
 import { valueToBigNumber } from '@aave/protocol-js';
 import classnames from 'classnames';
+import { ethers } from 'ethers';
 
 import Layout from '../../components/Layout';
 import ChangeDialog, { IDialog } from '../../components/ChangeDialog';
-
-import {
-  useDynamicPoolDataContext,
-  useStaticPoolDataContext,
-} from '../../../libs/pool-data-provider';
+import useProtocolDataWithRpc from '../../hooks/usePoolData';
+import useNetworkInfo from '../../hooks/useNetworkInfo';
+import useWalletBalance from '../../hooks/useWalletBalance';
+import { useWeb3React } from '@web3-react/core';
 
 export default function Markets() {
+  const { account, chainId } = useWeb3React();
   const SwapDialogRef = useRef<IDialog>();
-  const { marketRefPriceInUsd } = useStaticPoolDataContext();
-  const { reserves } = useDynamicPoolDataContext();
-
-  const [sortName, setSortName] = useState('');
-  const [sortDesc, setSortDesc] = useState(false);
-
-  let totalLockedInUsd = valueToBigNumber('0');
-
-  let sortedData = reserves
-    .filter((res) => res.isActive)
-    .map((reserve) => {
-      totalLockedInUsd = totalLockedInUsd.plus(
-        valueToBigNumber(reserve.totalLiquidity)
-          .multipliedBy(reserve.price.priceInEth)
-          .dividedBy(marketRefPriceInUsd)
-      );
-
-      const totalLiquidity = Number(reserve.totalLiquidity);
-      const totalLiquidityInUSD = valueToBigNumber(reserve.totalLiquidity)
-        .multipliedBy(reserve.price.priceInEth)
-        .dividedBy(marketRefPriceInUsd)
-        .toNumber();
-
-      const totalBorrows = Number(reserve.totalDebt);
-      const totalBorrowsInUSD = valueToBigNumber(reserve.totalDebt)
-        .multipliedBy(reserve.price.priceInEth)
-        .dividedBy(marketRefPriceInUsd)
-        .toNumber();
-
-      return {
-        totalLiquidity,
-        totalLiquidityInUSD,
-        totalBorrows: reserve.borrowingEnabled ? totalBorrows : -1,
-        totalBorrowsInUSD: reserve.borrowingEnabled ? totalBorrowsInUSD : -1,
-        id: reserve.id,
-        underlyingAsset: reserve.underlyingAsset,
-        currencySymbol: reserve.symbol,
-        depositAPY: reserve.borrowingEnabled ? Number(reserve.liquidityRate) : -1,
-        avg30DaysLiquidityRate: Number(reserve.avg30DaysLiquidityRate),
-        stableBorrowRate:
-          reserve.stableBorrowRateEnabled && reserve.borrowingEnabled
-            ? Number(reserve.stableBorrowRate)
-            : -1,
-        variableBorrowRate: reserve.borrowingEnabled ? Number(reserve.variableBorrowRate) : -1,
-        avg30DaysVariableRate: Number(reserve.avg30DaysVariableBorrowRate),
-        borrowingEnabled: reserve.borrowingEnabled,
-        stableBorrowRateEnabled: reserve.stableBorrowRateEnabled,
-        isFreezed: reserve.isFrozen,
-        aIncentivesAPY: reserve.aIncentivesAPY,
-        vIncentivesAPY: reserve.vIncentivesAPY,
-        sIncentivesAPY: reserve.sIncentivesAPY,
-      };
-    });
-
-  if (sortDesc) {
-    if (sortName === 'currencySymbol') {
-      sortedData.sort((a, b) =>
-        b.currencySymbol.toUpperCase() < a.currencySymbol.toUpperCase() ? -1 : 0
-      );
-    } else {
-      // @ts-ignore
-      sortedData.sort((a, b) => a[sortName] - b[sortName]);
-    }
-  } else {
-    if (sortName === 'currencySymbol') {
-      sortedData.sort((a, b) =>
-        a.currencySymbol.toUpperCase() < b.currencySymbol.toUpperCase() ? -1 : 0
-      );
-    } else {
-      // @ts-ignore
-      sortedData.sort((a, b) => b[sortName] - a[sortName]);
-    }
-  }
-
   const [tab, setTab] = useState('deposit');
+  const [networkInfo] = useNetworkInfo();
+
+  const { error, loading, data, refresh } = useProtocolDataWithRpc(
+    networkInfo?.uiPoolDataProvider,
+    ethers.constants.AddressZero,
+    networkInfo?.chainKey,
+    networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
+  );
+
+  useWalletBalance(
+    networkInfo?.uiPoolDataProvider,
+    account,
+    networkInfo?.chainKey,
+    networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
+  );
+
+  // console.log(data);
 
   return (
     <Layout className="page-market">
@@ -229,10 +173,10 @@ export default function Markets() {
                 </tr>
               </thead>
               <tbody>
-                {sortedData.map((item) => (
+                {data?.reserves.map((item) => (
                   <tr key={item.id}>
-                    <td>{item.currencySymbol}</td>
-                    <td>{item.depositAPY}</td>
+                    <td>{item.symbol}</td>
+                    <td>{item.borrowingEnabled ? Number(item.liquidityRate) : -1}</td>
                     <td>1</td>
                     <td>1</td>
                   </tr>
@@ -247,22 +191,21 @@ export default function Markets() {
             <table>
               <thead>
                 <tr>
-                  <th>存款资产</th>
-                  <th>存款数量</th>
-                  <th>存款APY</th>
+                  <th>资产</th>
+                  <th>贷款APY</th>
                   <th>奖励APR</th>
-                  <th>抵押品</th>
+                  <th>钱包余额</th>
                 </tr>
               </thead>
               <tbody>
-                {sortedData.map((item) => (
+                {/* {sortedData.map((item) => (
                   <tr key={item.id}>
                     <td>{item.currencySymbol}</td>
                     <td>{item.stableBorrowRate}</td>
                     <td>1</td>
                     <td>1</td>
                   </tr>
-                ))}
+                ))} */}
               </tbody>
             </table>
           </div>
