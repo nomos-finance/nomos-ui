@@ -7,7 +7,14 @@ import { formatReserves, ComputedReserveData } from '@aave/protocol-js';
 import { Progress } from 'antd';
 
 import Layout from '../../components/Layout';
-import ChangeDialog, { IDialog } from '../../components/ChangeDialog';
+import {
+  Borrow,
+  Deposit,
+  Swap,
+  IBorrowDialog,
+  IDepositDialog,
+  ISwapDialog,
+} from '../../components/ChangeDialog/';
 import useProtocolDataWithRpc from '../../hooks/usePoolData';
 import useNetworkInfo from '../../hooks/useNetworkInfo';
 import useWalletBalance from '../../hooks/useWalletBalance';
@@ -17,7 +24,9 @@ import { formatDecimal } from '../../utils/tool';
 export default function Markets() {
   const { account, chainId } = useWeb3React();
   const [totalLiquidity, setTotalLiquidity] = useState('');
-  const SwapDialogRef = useRef<IDialog>();
+  const BorrowDialogRef = useRef<IBorrowDialog>();
+  const DepositDialogRef = useRef<IDepositDialog>();
+  const SwapDialogRef = useRef<ISwapDialog>();
   const [tab, setTab] = useState('deposit');
   const [networkInfo] = useNetworkInfo();
   const [formatReservesData, setFormatReservesData] = useState<ComputedReserveData[]>([]);
@@ -25,13 +34,14 @@ export default function Markets() {
   let marketRefPriceInUsd = normalize(1, 10);
 
   const { error, loading, data, refresh } = useProtocolDataWithRpc(
-    networkInfo?.uiPoolDataProvider,
-    ethers.constants.AddressZero,
+    networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER,
+    // ethers.constants.AddressZero,
+    account,
     networkInfo?.chainKey,
-    networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
+    networkInfo?.uiPoolDataProvider
   );
 
-  useWalletBalance(
+  const [balance] = useWalletBalance(
     networkInfo?.walletBalanceProvider,
     account,
     networkInfo?.chainKey,
@@ -95,8 +105,6 @@ export default function Markets() {
     setTotalLiquidity(availableLiquidity.toString());
     return () => {};
   }, [data]);
-
-  console.log(formatReservesData);
 
   return (
     <Layout className="page-market">
@@ -193,36 +201,59 @@ export default function Markets() {
               我的存款
             </div>
             <div
-              className={classnames('tabItem', { cur: tab === 'loan' })}
-              onClick={() => setTab('loan')}
+              className={classnames('tabItem', { cur: tab === 'borrow' })}
+              onClick={() => setTab('borrow')}
             >
-              我的存款
+              我的贷款
             </div>
           </div>
           <div className="text" onClick={() => SwapDialogRef.current?.show()}>
             想把抵押资产换成其他资产，不用赎回，一键可完成
           </div>
         </div>
-        <div className="block">
-          <table>
-            <thead>
-              <tr>
-                <th>资产</th>
-                <th>存款APY</th>
-                <th>奖励APR</th>
-                <th>钱包余额</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>1</td>
-                <td>1</td>
-                <td>1</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        {tab === 'deposit' ? (
+          <div className="block">
+            <table>
+              <thead>
+                <tr>
+                  <th>资产</th>
+                  <th>存款APY</th>
+                  <th>奖励APR</th>
+                  <th>钱包余额</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onClick={() => DepositDialogRef.current?.show({ type: 'Cash' })}>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="block">
+            <table>
+              <thead>
+                <tr>
+                  <th>资产</th>
+                  <th>贷款APY</th>
+                  <th>奖励APR</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onClick={() => BorrowDialogRef.current?.show({ type: 'Repay' })}>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
       <div className="marketBlock">
         <div className="main">
@@ -239,11 +270,14 @@ export default function Markets() {
               </thead>
               <tbody>
                 {formatReservesData.map((item) => (
-                  <tr key={item.id}>
+                  <tr
+                    key={item.id}
+                    onClick={() => DepositDialogRef.current?.show({ type: 'Save' })}
+                  >
                     <td>{item.symbol}</td>
                     <td>{item.borrowingEnabled ? Number(item.liquidityRate) : -1}</td>
                     <td>{item.aIncentivesAPY}</td>
-                    <td>1</td>
+                    <td>{balance[item.underlyingAsset]?.toString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -265,7 +299,10 @@ export default function Markets() {
                 {formatReservesData
                   .filter((res) => res.isActive)
                   .map((item) => (
-                    <tr key={item.id}>
+                    <tr
+                      key={item.id}
+                      onClick={() => BorrowDialogRef.current?.show({ type: 'Loan' })}
+                    >
                       <td>{item.symbol}</td>
                       <td>{item.borrowingEnabled ? Number(item.variableBorrowRate) : -1}</td>
                       <td>{item.vIncentivesAPY}</td>
@@ -276,7 +313,9 @@ export default function Markets() {
           </div>
         </div>
       </div>
-      <ChangeDialog type="Swap" ref={SwapDialogRef} />
+      <Borrow ref={BorrowDialogRef} />
+      <Deposit ref={DepositDialogRef} />
+      <Swap ref={SwapDialogRef} />
     </Layout>
   );
 }

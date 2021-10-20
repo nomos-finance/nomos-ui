@@ -44,7 +44,7 @@ interface PoolReservesWithRPC {
 
 function useProtocolDataWithRpc(
   poolAddress?: string,
-  rawCurrentAccount?: string,
+  rawCurrentAccount?: string | null,
   network?: string,
   batchPoolDataProviderAddress?: string
 ): PoolReservesWithRPC {
@@ -63,10 +63,8 @@ function useProtocolDataWithRpc(
   ) => {
     if (!poolAddress || !userAddress || !network || !poolDataProvider) return;
     try {
-      const result = await IUiPoolDataProviderFactory(poolDataProvider, network).getReservesData(
-        poolAddress,
-        userAddress
-      );
+      const Contracts = IUiPoolDataProviderFactory(poolDataProvider, network);
+      const result = await Contracts.getReservesData(poolAddress, userAddress);
 
       const { 0: rawReservesData, 1: userReserves, 2: usdPriceEth, 3: rawRewardsData } = result;
 
