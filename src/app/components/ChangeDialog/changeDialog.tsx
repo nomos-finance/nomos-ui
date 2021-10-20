@@ -16,22 +16,11 @@ interface IProps {
   type: 'Borrow' | 'Deposit' | 'Swap';
 }
 
-interface IModules {
-  Borrow: () => React.ReactElement<any, string | React.JSXElementConstructor<any>>;
-  Deposit: () => React.ReactElement<any, string | React.JSXElementConstructor<any>>;
-  Swap: () => React.ReactElement<any, string | React.JSXElementConstructor<any>>;
-}
-
-const modules: IModules = {
-  Borrow,
-  Deposit,
-  Swap,
-};
-
 const ChangeDialog = forwardRef((props: IProps, ref) => {
   const [show, setShow] = useState(false);
   const { account } = useWeb3React();
   const { currentThemeName } = useThemeContext();
+  const [species, setSpecies] = useState(props.type !== 'Swap' ? props.type : 'Deposit');
 
   useImperativeHandle(ref, () => ({
     show: () => {
@@ -52,7 +41,31 @@ const ChangeDialog = forwardRef((props: IProps, ref) => {
       destroyOnClose={true}
       closable={false}
     >
-      {modules[props.type]()}
+      {props.type === 'Swap' ? (
+        <Swap close={() => setShow(false)} />
+      ) : (
+        <>
+          <div className="tab">
+            <div
+              className={classNames('tabItem', { cur: species === 'Deposit' })}
+              onClick={() => setSpecies('Deposit')}
+            >
+              存款
+            </div>
+            <div
+              className={classNames('tabItem', { cur: species === 'Borrow' })}
+              onClick={() => setSpecies('Deposit')}
+            >
+              贷款
+            </div>
+          </div>
+          {props.type === 'Deposit' ? (
+            <Deposit close={() => setShow(false)} />
+          ) : (
+            <Borrow close={() => setShow(false)} />
+          )}
+        </>
+      )}
     </Modal>
   ) : null;
 });

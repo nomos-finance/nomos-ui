@@ -4,6 +4,7 @@ import { valueToBigNumber, normalize } from '@aave/protocol-js';
 import classnames from 'classnames';
 import { ethers } from 'ethers';
 import { formatReserves, ComputedReserveData } from '@aave/protocol-js';
+import { Progress } from 'antd';
 
 import Layout from '../../components/Layout';
 import ChangeDialog, { IDialog } from '../../components/ChangeDialog';
@@ -158,22 +159,22 @@ export default function Markets() {
             <div className="btn">领取奖励</div>
           </div>
           <div className="block">
-            {/* <Progress
-                            width={130}
-                            type="circle"
-                            trailColor={'#ffe7cd'}
-                            strokeColor={{
-                                '0%': '#fd9303',
-                                '100%': '#f9bd00'
-                            }}
-                            percent={80}
-                            format={percent => (
-                                <>
-                                    <div>{percent}%</div>
-                                    <div>健康因子</div>
-                                </>
-                            )}
-                        /> */}
+            <Progress
+              width={130}
+              type="circle"
+              trailColor={'#ffe7cd'}
+              strokeColor={{
+                '0%': '#fd9303',
+                '100%': '#f9bd00',
+              }}
+              percent={80}
+              format={(percent) => (
+                <>
+                  <div>{percent}%</div>
+                  <div>健康因子</div>
+                </>
+              )}
+            />
             <div>贷款上限 $1000.00</div>
           </div>
         </div>
@@ -258,7 +259,6 @@ export default function Markets() {
                   <th>资产</th>
                   <th>贷款APY</th>
                   <th>奖励APR</th>
-                  <th>钱包余额</th>
                 </tr>
               </thead>
               <tbody>
@@ -269,7 +269,6 @@ export default function Markets() {
                       <td>{item.symbol}</td>
                       <td>{item.borrowingEnabled ? Number(item.variableBorrowRate) : -1}</td>
                       <td>{item.vIncentivesAPY}</td>
-                      <td>1</td>
                     </tr>
                   ))}
               </tbody>
