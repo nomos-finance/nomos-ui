@@ -73,31 +73,43 @@ function useProtocolDataWithRpc(
         emissionEndTimestamp: rawRewardsData.emissionEndTimestamp?.toNumber(),
       };
 
-      const formattedReservesData = rawReservesData.map((rawReserve: any) => {
-        const formattedReserve = formatObjectWithBNFields(rawReserve);
-        formattedReserve.symbol = rawReserve.symbol.toUpperCase();
-        formattedReserve.id = (rawReserve.underlyingAsset + poolAddress).toLowerCase();
-        formattedReserve.underlyingAsset = rawReserve.underlyingAsset.toLowerCase();
-        formattedReserve.price = { priceInEth: rawReserve.priceInEth?.toString() };
-        return formattedReserve;
-      });
+      const formattedReservesData = rawReservesData
+        .map((rawReserve: any) => {
+          const formattedReserve = formatObjectWithBNFields(rawReserve);
+          formattedReserve.symbol = rawReserve.symbol.toUpperCase();
+          formattedReserve.id = (rawReserve.underlyingAsset + poolAddress).toLowerCase();
+          formattedReserve.underlyingAsset = rawReserve.underlyingAsset.toLowerCase();
+          formattedReserve.price = { priceInEth: rawReserve.priceInEth?.toString() };
+          return formattedReserve;
+        })
+        .map((reserve: any) => {
+          if (reserve.symbol.toUpperCase() === `AWETH`) {
+            // TODO
+            return {
+              ...reserve,
+              symbol: 'ETH',
+              underlyingAsset: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'.toLowerCase(),
+            };
+          }
+          return reserve;
+        });
 
       const formattedUserReserves = userReserves.map((rawUserReserve: any) => {
         const reserve = formattedReservesData.find(
           (res: any) => res.underlyingAsset === rawUserReserve.underlyingAsset.toLowerCase()
         );
         const formattedUserReserve = formatObjectWithBNFields(rawUserReserve);
-        formattedUserReserve.id = (userAddress + reserve.id).toLowerCase();
+        formattedUserReserve.id = (userAddress + reserve?.id).toLowerCase();
 
         formattedUserReserve.reserve = {
-          id: reserve.id,
-          underlyingAsset: reserve.underlyingAsset,
-          name: reserve.name,
-          symbol: reserve.symbol,
-          decimals: reserve.decimals,
-          liquidityRate: reserve.liquidityRate,
-          reserveLiquidationBonus: reserve.reserveLiquidationBonus,
-          lastUpdateTimestamp: reserve.lastUpdateTimestamp,
+          id: reserve?.id,
+          underlyingAsset: reserve?.underlyingAsset,
+          name: reserve?.name,
+          symbol: reserve?.symbol.toUpperCase(),
+          decimals: reserve?.decimals,
+          liquidityRate: reserve?.liquidityRate,
+          reserveLiquidationBonus: reserve?.reserveLiquidationBonus,
+          lastUpdateTimestamp: reserve?.lastUpdateTimestamp,
         };
         return formattedUserReserve;
       });

@@ -1,26 +1,35 @@
 import BigNumber from 'bignumber.js';
 
-export const formatDecimal = (number: string, decimal: number): string => {
-  if (isNaN(Number(number))) return '-';
-  const index = number.indexOf('.');
+export function pow10(num: number | string | undefined, decimals = 18): string {
+  if (!num) return '0';
+  return new BigNumber(num).dividedBy(new BigNumber(10).pow(decimals)).toFixed();
+}
+
+export function original(num: number | string | undefined, decimals = 18): string {
+  if (!num) return '0';
+  return new BigNumber(num).multipliedBy(new BigNumber(10).pow(decimals)).toFixed();
+}
+
+export const formatDecimal = (number: number, decimal: number): string => {
+  let num = number.toString();
+  const index = num.indexOf('.');
   if (index !== -1) {
-    number = number.substring(0, decimal + index + 1);
+    num = num.substring(0, decimal + index + 1);
   } else {
-    number = number.substring(0);
+    num = num.substring(0);
   }
-  return new BigNumber(new BigNumber(number).toFixed(decimal)).toFixed();
+  return parseFloat(num).toFixed(decimal);
 };
 
-export const formatMoney = (value: string | number, n = 18): number | string => {
-  if (isNaN(Number(value)) || !Number(value)) return 0;
+export const formatMoney = (value: string | number, n: number = 2): number | string => {
+  if (isNaN(Number(value))) return Number(0).toFixed(n > 0 ? n : 0);
   const isNegative = value < 0;
-  const validLength = !Math.floor(Math.abs(+value)) ? n : 6;
-  const v = formatDecimal(new BigNumber(value).abs().toFixed(), validLength > 0 ? validLength : 0);
+  const v = formatDecimal(Math.abs(Number(value)), n > 0 ? n : 0);
   const l = v.split('.')[0].split('').reverse();
   const r = v.split('.')[1];
   let t = '';
   for (let i = 0; i < l.length; i++) {
-    t += l[i] + ((i + 1) % 3 == 0 && i + 1 != l.length ? ',' : '');
+    t += l[i] + ((i + 1) % 3 === 0 && i + 1 !== l.length ? ',' : '');
   }
   const res = t.split('').reverse().join('') + `${r ? '.' + r : ''}`;
   return `${isNegative ? '-' : ''}${res}`;

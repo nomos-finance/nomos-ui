@@ -19,7 +19,7 @@ import useProtocolDataWithRpc from '../../hooks/usePoolData';
 import useNetworkInfo from '../../hooks/useNetworkInfo';
 import useWalletBalance from '../../hooks/useWalletBalance';
 import { useWeb3React } from '@web3-react/core';
-import { formatDecimal } from '../../utils/tool';
+import { formatMoney, pow10 } from '../../utils/tool';
 
 export default function Markets() {
   const { account, chainId } = useWeb3React();
@@ -47,6 +47,8 @@ export default function Markets() {
     networkInfo?.chainKey,
     networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
   );
+
+  console.log(balance, data);
 
   useEffect(() => {
     if (!data) return;
@@ -272,12 +274,18 @@ export default function Markets() {
                 {formatReservesData.map((item) => (
                   <tr
                     key={item.id}
-                    onClick={() => DepositDialogRef.current?.show({ type: 'Save' })}
+                    onClick={() =>
+                      DepositDialogRef.current?.show({
+                        type: 'Save',
+                        data: item,
+                        balance: balance[item.underlyingAsset],
+                      })
+                    }
                   >
                     <td>{item.symbol}</td>
                     <td>{item.borrowingEnabled ? Number(item.liquidityRate) : -1}</td>
                     <td>{item.aIncentivesAPY}</td>
-                    <td>{balance[item.underlyingAsset]?.toString()}</td>
+                    <td>{formatMoney(pow10(balance[item.underlyingAsset], item.decimals))}</td>
                   </tr>
                 ))}
               </tbody>

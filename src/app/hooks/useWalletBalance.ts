@@ -8,7 +8,7 @@ type WalletBalanceContractData = {
 };
 
 interface IBalance {
-  [key: string]: BigNumber;
+  [key: string]: string;
 }
 
 const useWalletBalance = (
@@ -30,7 +30,7 @@ const useWalletBalance = (
         );
       let obj: IBalance = {};
       reserves.forEach((item, index) => {
-        obj[item.toLowerCase()] = balances[index];
+        obj[item.toLowerCase()] = balances[index].toString();
       });
       setBalance(obj);
     } catch (error) {
