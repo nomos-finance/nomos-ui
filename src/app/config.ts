@@ -131,14 +131,13 @@ export const NETWORK: INetwork = {
   },
 };
 
-const { REACT_APP_DEFAULT_ETHEREUM_NETWORK } = process.env;
-const isTest = REACT_APP_DEFAULT_ETHEREUM_NETWORK === 'kovan';
-
 export const SupportedNetworks = [
-  NETWORK[isTest ? 'kovan' : 'mainnet'],
+  // NETWORK[isTest ? 'kovan' : 'mainnet'],
+  NETWORK['kovan'],
   NETWORK['polygon'],
   NETWORK['avalanche'],
-  NETWORK[isTest ? 'arbitrum_rinkeby' : 'arbitrum_one'],
+  NETWORK['arbitrum_rinkeby'],
+  // NETWORK[isTest ? 'arbitrum_rinkeby' : 'arbitrum_one'],
 ];
 
 export const supportedChainIds = (() => {

@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle } from 'react';
 import { Modal } from 'antd';
 import { useThemeContext } from '../../../theme';
+import useLendingPoolContract from '../../../hooks/useLendingPoolContract';
 
 interface IProps {
   type: 'Loan' | 'Repay';

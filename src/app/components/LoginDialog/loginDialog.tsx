@@ -1,4 +1,4 @@
-import './loginDialog.styl';
+import './loginDialog.scss';
 
 import { useWeb3React } from '@web3-react/core';
 import { Dropdown, Menu, Modal } from 'antd';
@@ -185,18 +185,20 @@ export default forwardRef((props, ref) => {
       closable={false}
     >
       <div className="modalTitle">
-        <div className="title">Account</div>
+        <div className="title">Connect your wallet</div>
       </div>
       <div className="modalMain">
-        <div>Select preferred network</div>
-        <Dropdown overlay={preferredMenu}>
-          <div
-            className="box"
-            onClick={() => onSelectSupperNetwork(NETWORK[preferredNetwork].chainName)}
-          >
-            {NETWORK[preferredNetwork].chainName}
-          </div>
-        </Dropdown>
+        <div className="walletHeader">
+          <div>Select preferred network</div>
+          <Dropdown overlay={preferredMenu}>
+            <div
+              className="select"
+              onClick={() => onSelectSupperNetwork(NETWORK[preferredNetwork].chainName)}
+            >
+              {NETWORK[preferredNetwork].chainName}
+            </div>
+          </Dropdown>
+        </div>
         <div className="wallet">
           {wallets
             .filter((wallet) => !wallet.notSupported)
