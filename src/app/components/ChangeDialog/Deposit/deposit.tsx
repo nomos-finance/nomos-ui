@@ -6,7 +6,11 @@ import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle } from 'react';
 import { Modal, Input } from 'antd';
 import { useThemeContext } from '../../../theme';
-import { ComputedReserveData, transactionType } from '@aave/protocol-js';
+import {
+  ComputedReserveData,
+  transactionType,
+  EthereumTransactionTypeExtended,
+} from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { useWeb3React } from '@web3-react/core';
 import { pow10, formatMoney, filterInput } from '../../../utils/tool';
@@ -33,6 +37,7 @@ export default forwardRef((props, ref) => {
   const [lendingPool] = useTxBuilder();
 
   const [saveValidationMessage, setSaveValidationMessage] = useState('');
+  const [withdrawValidationMessage, setWithdrawValidationMessage] = useState('');
   const [saveAmount, setSaveAmount] = useState<string | number>('');
   const [withdrawAmount, setWithdrawAmount] = useState<string | number>('');
 
@@ -49,6 +54,72 @@ export default forwardRef((props, ref) => {
     },
     hide,
   }));
+
+  const handleSend = async (txs: EthereumTransactionTypeExtended[]): Promise<void> => {
+    const approvalTx = txs.find((tx) => tx.txType === 'ERC20_APPROVAL');
+    const actionTx = txs.find((tx) =>
+      [
+        'DLP_ACTION',
+        'GOVERNANCE_ACTION',
+        'STAKE_ACTION',
+        'GOV_DELEGATION_ACTION',
+        'REWARD_ACTION',
+        'FAUCET_MINT',
+      ].includes(tx.txType)
+    );
+
+    let extendedTxData: transactionType = {};
+
+    console.log(approvalTx, actionTx, approvalTx?.tx);
+
+    if (approvalTx) {
+      try {
+        extendedTxData = await approvalTx.tx();
+      } catch (e) {
+        console.log('tx building error', e);
+        return;
+      }
+    }
+    if (actionTx) {
+      try {
+        extendedTxData = await actionTx.tx();
+      } catch (e) {
+        console.log('tx building error', e);
+        return;
+      }
+    }
+
+    const { from, ...txData } = extendedTxData;
+    const signer = provider.getSigner(from);
+    let txResponse: TransactionResponse | undefined;
+    try {
+      txResponse = await signer.sendTransaction({
+        ...txData,
+        value: txData.value ? BigNumber.from(txData.value) : undefined,
+      });
+    } catch (e) {
+      console.error('send-ethereum-tx', e);
+      return;
+    }
+    const txHash = txResponse?.hash;
+    console.log(txHash);
+    if (txResponse) {
+      try {
+        const txReceipt = await txResponse.wait(1);
+        console.log(txReceipt);
+      } catch (e) {
+        // let error = 'network error has occurred, please check tx status in an explorer';
+        // try {
+        // let tx = await provider.getTransaction(txResponse.hash);
+        // // @ts-ignore TODO: need think about "tx" type
+        // const code = await provider.call(tx, tx.blockNumber);
+        // error = hexToAscii(code.substr(138));
+        // } catch (e) {
+        //   console.log('network error', e);
+        // }
+      }
+    }
+  };
 
   const handleSaveAmountChange = (amount: string): void => {
     const val = filterInput(amount);
@@ -70,151 +141,40 @@ export default forwardRef((props, ref) => {
       amount: `${saveAmount}`,
       referralCode: storage.get('referralCode') || undefined,
     });
-
-    const approvalTx = txs.find((tx) => tx.txType === 'ERC20_APPROVAL');
-    const actionTx = txs.find((tx) =>
-      [
-        'DLP_ACTION',
-        'GOVERNANCE_ACTION',
-        'STAKE_ACTION',
-        'GOV_DELEGATION_ACTION',
-        'REWARD_ACTION',
-        'FAUCET_MINT',
-      ].includes(tx.txType)
-    );
-
-    let extendedTxData: transactionType = {};
-
-    if (approvalTx) {
-      try {
-        extendedTxData = await approvalTx.tx();
-      } catch (e) {
-        console.log('tx building error', e);
-        return;
-      }
-    }
-    if (actionTx) {
-      try {
-        extendedTxData = await actionTx.tx();
-      } catch (e) {
-        console.log('tx building error', e);
-        return;
-      }
-    }
-
-    const { from, ...txData } = extendedTxData;
-    const signer = provider.getSigner(from);
-    let txResponse: TransactionResponse | undefined;
-    try {
-      txResponse = await signer.sendTransaction({
-        ...txData,
-        value: txData.value ? BigNumber.from(txData.value) : undefined,
-      });
-    } catch (e) {
-      console.error('send-ethereum-tx', e);
-      return;
-    }
-    const txHash = txResponse?.hash;
-    console.log(txHash);
-    if (txResponse) {
-      try {
-        const txReceipt = await txResponse.wait(1);
-        console.log(txReceipt);
-      } catch (e) {
-        // let error = 'network error has occurred, please check tx status in an explorer';
-        // try {
-        // let tx = await provider.getTransaction(txResponse.hash);
-        // // @ts-ignore TODO: need think about "tx" type
-        // const code = await provider.call(tx, tx.blockNumber);
-        // error = hexToAscii(code.substr(138));
-        // } catch (e) {
-        //   console.log('network error', e);
-        // }
-      }
-    }
+    console.log(txs);
+    handleSend(txs);
   };
 
   const handleWithdrawAmountChange = (amount: string): void => {
     const val = filterInput(amount);
-    setSaveAmount(val);
-    if (Number(val) <= 0) {
-      setSaveValidationMessage('Amount must be > 0');
-    } else if (Number(val) > Number(val) + Number(params?.balance)) {
-      setSaveValidationMessage('Amount must be <= balance');
-    } else {
-      setSaveValidationMessage('');
-    }
+    setWithdrawAmount(val);
+    // if (Number(val) <= 0) {
+    //   setWithdrawValidationMessage('Amount must be > 0');
+    // } else if (Number(val) > Number(val) + Number(params?.balance)) {
+    //   setWithdrawValidationMessage('Amount must be <= balance');
+    // } else {
+    //   setWithdrawValidationMessage('');
+    // }
   };
 
   const handleWithdrawSubmit = async () => {
-    if (!lendingPool || !params?.data || !account || !saveAmount) return;
-    const txs = await lendingPool.deposit({
-      user: account,
-      reserve: params.data.underlyingAsset,
-      amount: `${saveAmount}`,
-      referralCode: storage.get('referralCode') || undefined,
-    });
-
-    const approvalTx = txs.find((tx) => tx.txType === 'ERC20_APPROVAL');
-    const actionTx = txs.find((tx) =>
-      [
-        'DLP_ACTION',
-        'GOVERNANCE_ACTION',
-        'STAKE_ACTION',
-        'GOV_DELEGATION_ACTION',
-        'REWARD_ACTION',
-        'FAUCET_MINT',
-      ].includes(tx.txType)
-    );
-
-    let extendedTxData: transactionType = {};
-
-    if (approvalTx) {
-      try {
-        extendedTxData = await approvalTx.tx();
-      } catch (e) {
-        console.log('tx building error', e);
-        return;
-      }
-    }
-    if (actionTx) {
-      try {
-        extendedTxData = await actionTx.tx();
-      } catch (e) {
-        console.log('tx building error', e);
-        return;
-      }
-    }
-
-    const { from, ...txData } = extendedTxData;
-    const signer = provider.getSigner(from);
-    let txResponse: TransactionResponse | undefined;
+    if (!lendingPool || !params?.data || !account || !withdrawAmount) return;
     try {
-      txResponse = await signer.sendTransaction({
-        ...txData,
-        value: txData.value ? BigNumber.from(txData.value) : undefined,
+      console.log({
+        user: account,
+        reserve: params.data.underlyingAsset,
+        amount: `${withdrawAmount}`,
+        aTokenAddress: params.data.aTokenAddress,
       });
-    } catch (e) {
-      console.error('send-ethereum-tx', e);
-      return;
-    }
-    const txHash = txResponse?.hash;
-    console.log(txHash);
-    if (txResponse) {
-      try {
-        const txReceipt = await txResponse.wait(1);
-        console.log(txReceipt);
-      } catch (e) {
-        // let error = 'network error has occurred, please check tx status in an explorer';
-        // try {
-        // let tx = await provider.getTransaction(txResponse.hash);
-        // // @ts-ignore TODO: need think about "tx" type
-        // const code = await provider.call(tx, tx.blockNumber);
-        // error = hexToAscii(code.substr(138));
-        // } catch (e) {
-        //   console.log('network error', e);
-        // }
-      }
+      const txs = await lendingPool.withdraw({
+        user: account,
+        reserve: params.data.underlyingAsset,
+        amount: `${withdrawAmount}`,
+        aTokenAddress: params.data.aTokenAddress,
+      });
+      handleSend(txs);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -285,6 +245,7 @@ export default forwardRef((props, ref) => {
       ) : (
         <div className="tabMain">
           <div>
+            <div onClick={() => setWithdrawAmount('-1')}>MAX</div>
             <Input
               // bordered={false}
               value={withdrawAmount}

@@ -48,7 +48,7 @@ export default function Markets() {
     networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
   );
 
-  // console.log(balance, data);
+  console.log(balance, data);
 
   useEffect(() => {
     if (!data) return;

@@ -31,11 +31,6 @@ const useLendingPoolContract = (): [LendingPoolInterfaceV2 | undefined] => {
 
       const lendingPool = txBuilder.getLendingPool('proto_kovan');
 
-      console.log({
-        lendingPool: lendingPoolConfig,
-        incentives,
-      });
-
       setContract(lendingPool);
     }
   };

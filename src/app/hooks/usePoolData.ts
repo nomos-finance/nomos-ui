@@ -120,6 +120,8 @@ function useProtocolDataWithRpc(
         .div(usdPriceEth?.toString())
         .toFixed(0, BigNumber.ROUND_DOWN);
 
+      // console.log(formattedReservesData);
+
       setPoolData({
         reserves: formattedReservesData,
         userReserves: userAddress !== ethers.constants.AddressZero ? formattedUserReserves : [],
