@@ -1,22 +1,16 @@
 import './deposit.scss';
 /*eslint-disable import/no-anonymous-default-export */
-
+import { BigNumber } from 'ethers';
+import { TransactionResponse } from '@ethersproject/abstract-provider';
 import classnames from 'classnames';
-import React, { useEffect, forwardRef, useState, useImperativeHandle } from 'react';
+import React, { forwardRef, useState, useImperativeHandle } from 'react';
 import { Modal, Input } from 'antd';
 import { useThemeContext } from '../../../theme';
-import { ComputedReserveData } from '@aave/protocol-js';
-import useLendingPoolContract from '../../../hooks/useLendingPoolContract';
+import { ComputedReserveData, transactionType } from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { useWeb3React } from '@web3-react/core';
-import { pow10, formatMoney, original } from '../../../utils/tool';
+import { pow10, formatMoney, filterInput } from '../../../utils/tool';
 import storage from '../../../utils/storage';
-
-import {
-  EthTransactionData,
-  sendEthTransaction,
-  TxStatusType,
-} from '../../../helpers/send-ethereum-tx';
 
 interface IProps {
   type: 'Save' | 'Cash';
@@ -34,7 +28,6 @@ export default forwardRef((props, ref) => {
   const [type, setType] = useState(params ? params.type : 'Save');
   const [show, setShow] = useState(false);
   const { currentThemeName } = useThemeContext();
-  const [contract] = useLendingPoolContract();
   const { account, library: provider } = useWeb3React();
 
   const [lendingPool] = useTxBuilder();
@@ -42,21 +35,6 @@ export default forwardRef((props, ref) => {
   const [saveValidationMessage, setSaveValidationMessage] = useState('');
   const [saveAmount, setSaveAmount] = useState<string | number>('');
   const [withdrawAmount, setWithdrawAmount] = useState<string | number>('');
-
-  const [uncheckedApproveTxData, setApproveTxData] = useState({} as EthTransactionData);
-  const [uncheckedActionTxData, setActionTxData] = useState({} as EthTransactionData);
-  const [customGasPrice, setCustomGasPrice] = useState<string | null>(null);
-
-  const approveTxData = uncheckedApproveTxData.unsignedData
-    ? (uncheckedApproveTxData as EthTransactionData & {
-        unsignedData: EthTransactionData;
-      })
-    : undefined;
-  const actionTxData = uncheckedActionTxData.unsignedData
-    ? (uncheckedActionTxData as EthTransactionData & {
-        unsignedData: EthTransactionData;
-      })
-    : undefined;
 
   const hide = () => {
     setShow(false);
@@ -73,12 +51,11 @@ export default forwardRef((props, ref) => {
   }));
 
   const handleSaveSubmit = async () => {
-    if (!lendingPool || !params?.data || !account) return;
-    console.log(params.data.underlyingAsset, original(saveAmount, 18), account, '0');
+    if (!lendingPool || !params?.data || !account || !saveAmount) return;
     const txs = await lendingPool.deposit({
       user: account,
       reserve: params.data.underlyingAsset,
-      amount: original(saveAmount, 18),
+      amount: `${saveAmount}`,
       referralCode: storage.get('referralCode') || undefined,
     });
 
@@ -94,78 +71,59 @@ export default forwardRef((props, ref) => {
       ].includes(tx.txType)
     );
 
-    console.log(approvalTx, txs);
+    let extendedTxData: transactionType = {};
 
     if (approvalTx) {
-      setApproveTxData({
-        txType: approvalTx.txType,
-        unsignedData: approvalTx.tx,
-        gas: approvalTx.gas,
-        name: '',
-      });
+      try {
+        extendedTxData = await approvalTx.tx();
+      } catch (e) {
+        console.log('tx building error', e);
+        return;
+      }
     }
     if (actionTx) {
-      setActionTxData({
-        txType: actionTx.txType,
-        unsignedData: actionTx.tx,
-        gas: actionTx.gas,
-        name: '',
-      });
+      try {
+        extendedTxData = await actionTx.tx();
+      } catch (e) {
+        console.log('tx building error', e);
+        return;
+      }
     }
 
-    // try {
-    //   await (contract as any).deposit(
-    //     params.data.underlyingAsset,
-    //     original(saveAmount, 18),
-    //     account,
-    //     '0'
-    //     // storage.get('referralCode') || 0
-    //   );
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    const { from, ...txData } = extendedTxData;
+    const signer = provider.getSigner(from);
+    let txResponse: TransactionResponse | undefined;
+    try {
+      txResponse = await signer.sendTransaction({
+        ...txData,
+        value: txData.value ? BigNumber.from(txData.value) : undefined,
+      });
+    } catch (e) {
+      console.error('send-ethereum-tx', e);
+      return;
+    }
+    const txHash = txResponse?.hash;
+    console.log(txHash);
+    if (txResponse) {
+      try {
+        const txReceipt = await txResponse.wait(1);
+        console.log(txReceipt);
+      } catch (e) {
+        // let error = 'network error has occurred, please check tx status in an explorer';
+        // try {
+        // let tx = await provider.getTransaction(txResponse.hash);
+        // // @ts-ignore TODO: need think about "tx" type
+        // const code = await provider.call(tx, tx.blockNumber);
+        // error = hexToAscii(code.substr(138));
+        // } catch (e) {
+        //   console.log('network error', e);
+        // }
+      }
+    }
   };
 
-  useEffect(() => {
-    console.log(uncheckedApproveTxData.unsignedData);
-    if (uncheckedApproveTxData.unsignedData) {
-      sendEthTransaction(
-        uncheckedApproveTxData.unsignedData,
-        provider,
-        setApproveTxData,
-        customGasPrice,
-        {
-          onConfirmation: () => {},
-        }
-      );
-    }
-    return () => {};
-  }, [uncheckedApproveTxData]);
-
-  useEffect(() => {
-    if (uncheckedActionTxData.unsignedData) {
-      sendEthTransaction(
-        uncheckedActionTxData.unsignedData,
-        provider,
-        setActionTxData,
-        customGasPrice,
-        {
-          onExecution: () => {},
-          onConfirmation: () => {},
-        }
-      );
-    }
-    return () => {};
-  }, [uncheckedActionTxData]);
-
   const handleSaveAmountChange = (amount: string): void => {
-    const val = amount
-      .replace('-', '')
-      .replace(/^\.+|[^\d.]/g, '')
-      .replace(/^0\d+\./g, '0.')
-      .replace(/\.{2,}/, '')
-      .replace(/^0(\d)/, '$1')
-      .replace(/^(\-)*(\d+)\.(\d{0,2}).*$/, '$1$2.$3');
+    const val = filterInput(amount);
     setSaveAmount(val);
     if (Number(val) <= 0) {
       setSaveValidationMessage('Amount must be > 0');
