@@ -99,18 +99,19 @@ function useProtocolDataWithRpc(
           (res: any) => res.underlyingAsset === rawUserReserve.underlyingAsset.toLowerCase()
         );
         const formattedUserReserve = formatObjectWithBNFields(rawUserReserve);
-        formattedUserReserve.id = (userAddress + reserve?.id).toLowerCase();
+        // formattedUserReserve.id = (userAddress + reserve?.id).toLowerCase();
+        formattedUserReserve.id = userAddress;
 
-        formattedUserReserve.reserve = {
-          id: reserve?.id,
-          underlyingAsset: reserve?.underlyingAsset,
-          name: reserve?.name,
-          symbol: reserve?.symbol.toUpperCase(),
-          decimals: reserve?.decimals,
-          liquidityRate: reserve?.liquidityRate,
-          reserveLiquidationBonus: reserve?.reserveLiquidationBonus,
-          lastUpdateTimestamp: reserve?.lastUpdateTimestamp,
-        };
+        // formattedUserReserve.reserve = {
+        //   id: reserve?.id,
+        //   underlyingAsset: reserve?.underlyingAsset,
+        //   name: reserve?.name,
+        //   symbol: reserve?.symbol.toUpperCase(),
+        //   decimals: reserve?.decimals,
+        //   liquidityRate: reserve?.liquidityRate,
+        //   reserveLiquidationBonus: reserve?.reserveLiquidationBonus,
+        //   lastUpdateTimestamp: reserve?.lastUpdateTimestamp,
+        // };
         return formattedUserReserve;
       });
 

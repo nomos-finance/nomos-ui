@@ -2,14 +2,21 @@ import './deposit.scss';
 /*eslint-disable import/no-anonymous-default-export */
 
 import classnames from 'classnames';
-import React, { forwardRef, useState, useImperativeHandle } from 'react';
+import React, { useEffect, forwardRef, useState, useImperativeHandle } from 'react';
 import { Modal, Input } from 'antd';
 import { useThemeContext } from '../../../theme';
 import { ComputedReserveData } from '@aave/protocol-js';
 import useLendingPoolContract from '../../../hooks/useLendingPoolContract';
+import useTxBuilder from '../../../hooks/useTxBuilder';
 import { useWeb3React } from '@web3-react/core';
 import { pow10, formatMoney, original } from '../../../utils/tool';
 import storage from '../../../utils/storage';
+
+import {
+  EthTransactionData,
+  sendEthTransaction,
+  TxStatusType,
+} from '../../../helpers/send-ethereum-tx';
 
 interface IProps {
   type: 'Save' | 'Cash';
@@ -28,11 +35,28 @@ export default forwardRef((props, ref) => {
   const [show, setShow] = useState(false);
   const { currentThemeName } = useThemeContext();
   const [contract] = useLendingPoolContract();
-  const { account } = useWeb3React();
+  const { account, library: provider } = useWeb3React();
+
+  const [lendingPool] = useTxBuilder();
 
   const [saveValidationMessage, setSaveValidationMessage] = useState('');
   const [saveAmount, setSaveAmount] = useState<string | number>('');
   const [withdrawAmount, setWithdrawAmount] = useState<string | number>('');
+
+  const [uncheckedApproveTxData, setApproveTxData] = useState({} as EthTransactionData);
+  const [uncheckedActionTxData, setActionTxData] = useState({} as EthTransactionData);
+  const [customGasPrice, setCustomGasPrice] = useState<string | null>(null);
+
+  const approveTxData = uncheckedApproveTxData.unsignedData
+    ? (uncheckedApproveTxData as EthTransactionData & {
+        unsignedData: EthTransactionData;
+      })
+    : undefined;
+  const actionTxData = uncheckedActionTxData.unsignedData
+    ? (uncheckedActionTxData as EthTransactionData & {
+        unsignedData: EthTransactionData;
+      })
+    : undefined;
 
   const hide = () => {
     setShow(false);
@@ -49,20 +73,90 @@ export default forwardRef((props, ref) => {
   }));
 
   const handleSaveSubmit = async () => {
-    if (!contract || !params?.data) return;
+    if (!lendingPool || !params?.data || !account) return;
     console.log(params.data.underlyingAsset, original(saveAmount, 18), account, '0');
-    try {
-      await (contract as any).deposit(
-        params.data.underlyingAsset,
-        original(saveAmount, 18),
-        account,
-        '0'
-        // storage.get('referralCode') || 0
-      );
-    } catch (error) {
-      console.log(error);
+    const txs = await lendingPool.deposit({
+      user: account,
+      reserve: params.data.underlyingAsset,
+      amount: original(saveAmount, 18),
+      referralCode: storage.get('referralCode') || undefined,
+    });
+
+    const approvalTx = txs.find((tx) => tx.txType === 'ERC20_APPROVAL');
+    const actionTx = txs.find((tx) =>
+      [
+        'DLP_ACTION',
+        'GOVERNANCE_ACTION',
+        'STAKE_ACTION',
+        'GOV_DELEGATION_ACTION',
+        'REWARD_ACTION',
+        'FAUCET_MINT',
+      ].includes(tx.txType)
+    );
+
+    console.log(approvalTx, txs);
+
+    if (approvalTx) {
+      setApproveTxData({
+        txType: approvalTx.txType,
+        unsignedData: approvalTx.tx,
+        gas: approvalTx.gas,
+        name: '',
+      });
     }
+    if (actionTx) {
+      setActionTxData({
+        txType: actionTx.txType,
+        unsignedData: actionTx.tx,
+        gas: actionTx.gas,
+        name: '',
+      });
+    }
+
+    // try {
+    //   await (contract as any).deposit(
+    //     params.data.underlyingAsset,
+    //     original(saveAmount, 18),
+    //     account,
+    //     '0'
+    //     // storage.get('referralCode') || 0
+    //   );
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
+
+  useEffect(() => {
+    console.log(uncheckedApproveTxData.unsignedData);
+    if (uncheckedApproveTxData.unsignedData) {
+      sendEthTransaction(
+        uncheckedApproveTxData.unsignedData,
+        provider,
+        setApproveTxData,
+        customGasPrice,
+        {
+          onConfirmation: () => {},
+        }
+      );
+    }
+    return () => {};
+  }, [uncheckedApproveTxData]);
+
+  useEffect(() => {
+    if (uncheckedActionTxData.unsignedData) {
+      sendEthTransaction(
+        uncheckedActionTxData.unsignedData,
+        provider,
+        setActionTxData,
+        customGasPrice,
+        {
+          onExecution: () => {},
+          onConfirmation: () => {},
+        }
+      );
+    }
+    return () => {};
+  }, [uncheckedActionTxData]);
 
   const handleSaveAmountChange = (amount: string): void => {
     const val = amount

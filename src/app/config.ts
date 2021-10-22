@@ -20,6 +20,10 @@ export interface INetworkData {
     FAUCET?: string;
     PERMISSION_MANAGER?: string;
   };
+  incentives?: {
+    INCENTIVES_CONTROLLER: string;
+    INCENTIVES_CONTROLLER_REWARD_TOKEN: string;
+  };
 }
 export interface INetwork {
   [key: string]: INetworkData;
@@ -63,6 +67,10 @@ export const NETWORK: INetwork = {
       LENDING_POOL: '0xE0fBa4Fc209b4948668006B2bE61711b7f465bAe',
       WETH_GATEWAY: '0xA61ca04DF33B72b235a8A28CfB535bb7A5271B70',
       FAUCET: '0x600103d518cC5E8f3319D532eB4e5C268D32e604',
+    },
+    incentives: {
+      INCENTIVES_CONTROLLER: '0x01d83fe6a10d2f2b7af17034343746188272cac9',
+      INCENTIVES_CONTROLLER_REWARD_TOKEN: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
     },
   },
   polygon: {

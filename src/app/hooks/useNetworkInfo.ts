@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { NETWORK, INetworkData } from '../config';
+import { NETWORK, INetworkData, INetwork } from '../config';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../reducers/RootState';
 
-const useNetworkInfo = (): [INetworkData | undefined] => {
+const useNetworkInfo = (): [INetworkData | undefined, INetwork] => {
   const { network } = useSelector((store: IRootState) => store.base);
   const [networkInfo, setNetworkInfo] = useState<INetworkData>();
 
@@ -13,7 +13,7 @@ const useNetworkInfo = (): [INetworkData | undefined] => {
     setNetworkInfo(info);
   }, [network]);
 
-  return [networkInfo];
+  return [networkInfo, NETWORK];
 };
 
 export default useNetworkInfo;
