@@ -1,8 +1,8 @@
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { InjectedConnector } from '@web3-react/injected-connector';
-import { LedgerConnector } from '../../libs/web3-data-provider/web3-providers/connectors/ledger-connector';
+import { LedgerConnector } from '../../web3-data-provider/web3-providers/connectors/ledger-connector';
 // import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import { WalletConnectConnector } from '../../libs/web3-data-provider/web3-providers/connectors/wallet-connect-connector';
+import { WalletConnectConnector } from '../../web3-data-provider/web3-providers/connectors/wallet-connect-connector';
 import { WalletLinkConnector } from '@web3-react/walletlink-connector';
 import { FortmaticConnector } from '@web3-react/fortmatic-connector';
 import { AuthereumConnector } from '@web3-react/authereum-connector';
@@ -10,7 +10,7 @@ import { TorusConnector } from '@web3-react/torus-connector';
 import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react';
 
 import { MewConnectConnector } from '@myetherwallet/mewconnect-connector';
-import { PortisConnector } from '../../libs/web3-data-provider/web3-providers/connectors/portis-connector';
+import { PortisConnector } from '../../web3-data-provider/web3-providers/connectors/portis-connector';
 
 import { supportedChainIds, NETWORK } from '../config';
 

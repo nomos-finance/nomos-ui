@@ -50,6 +50,18 @@ export default forwardRef((props, ref) => {
     hide,
   }));
 
+  const handleSaveAmountChange = (amount: string): void => {
+    const val = filterInput(amount);
+    setSaveAmount(val);
+    if (Number(val) <= 0) {
+      setSaveValidationMessage('Amount must be > 0');
+    } else if (Number(val) > Number(val) + Number(params?.balance)) {
+      setSaveValidationMessage('Amount must be <= balance');
+    } else {
+      setSaveValidationMessage('');
+    }
+  };
+
   const handleSaveSubmit = async () => {
     if (!lendingPool || !params?.data || !account || !saveAmount) return;
     const txs = await lendingPool.deposit({
@@ -122,7 +134,7 @@ export default forwardRef((props, ref) => {
     }
   };
 
-  const handleSaveAmountChange = (amount: string): void => {
+  const handleWithdrawAmountChange = (amount: string): void => {
     const val = filterInput(amount);
     setSaveAmount(val);
     if (Number(val) <= 0) {
@@ -131,6 +143,78 @@ export default forwardRef((props, ref) => {
       setSaveValidationMessage('Amount must be <= balance');
     } else {
       setSaveValidationMessage('');
+    }
+  };
+
+  const handleWithdrawSubmit = async () => {
+    if (!lendingPool || !params?.data || !account || !saveAmount) return;
+    const txs = await lendingPool.deposit({
+      user: account,
+      reserve: params.data.underlyingAsset,
+      amount: `${saveAmount}`,
+      referralCode: storage.get('referralCode') || undefined,
+    });
+
+    const approvalTx = txs.find((tx) => tx.txType === 'ERC20_APPROVAL');
+    const actionTx = txs.find((tx) =>
+      [
+        'DLP_ACTION',
+        'GOVERNANCE_ACTION',
+        'STAKE_ACTION',
+        'GOV_DELEGATION_ACTION',
+        'REWARD_ACTION',
+        'FAUCET_MINT',
+      ].includes(tx.txType)
+    );
+
+    let extendedTxData: transactionType = {};
+
+    if (approvalTx) {
+      try {
+        extendedTxData = await approvalTx.tx();
+      } catch (e) {
+        console.log('tx building error', e);
+        return;
+      }
+    }
+    if (actionTx) {
+      try {
+        extendedTxData = await actionTx.tx();
+      } catch (e) {
+        console.log('tx building error', e);
+        return;
+      }
+    }
+
+    const { from, ...txData } = extendedTxData;
+    const signer = provider.getSigner(from);
+    let txResponse: TransactionResponse | undefined;
+    try {
+      txResponse = await signer.sendTransaction({
+        ...txData,
+        value: txData.value ? BigNumber.from(txData.value) : undefined,
+      });
+    } catch (e) {
+      console.error('send-ethereum-tx', e);
+      return;
+    }
+    const txHash = txResponse?.hash;
+    console.log(txHash);
+    if (txResponse) {
+      try {
+        const txReceipt = await txResponse.wait(1);
+        console.log(txReceipt);
+      } catch (e) {
+        // let error = 'network error has occurred, please check tx status in an explorer';
+        // try {
+        // let tx = await provider.getTransaction(txResponse.hash);
+        // // @ts-ignore TODO: need think about "tx" type
+        // const code = await provider.call(tx, tx.blockNumber);
+        // error = hexToAscii(code.substr(138));
+        // } catch (e) {
+        //   console.log('network error', e);
+        // }
+      }
     }
   };
 
@@ -200,8 +284,16 @@ export default forwardRef((props, ref) => {
         </div>
       ) : (
         <div className="tabMain">
-          <div>xx</div>
-          <div className="submit" onClick={() => handleSaveSubmit()}>
+          <div>
+            <Input
+              // bordered={false}
+              value={withdrawAmount}
+              onChange={(event) => {
+                handleWithdrawAmountChange(event.target.value);
+              }}
+            />
+          </div>
+          <div className="submit" onClick={() => handleWithdrawSubmit()}>
             提交
           </div>
         </div>
