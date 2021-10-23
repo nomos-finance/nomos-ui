@@ -34,7 +34,7 @@ export default forwardRef((props, ref) => {
   return (
     <Modal
       visible={show}
-      onCancel={() => setShow(false)}
+      onCancel={() => hide()}
       footer={null}
       wrapClassName={classnames('customDialog', 'changeDialog', currentThemeName)}
       centered

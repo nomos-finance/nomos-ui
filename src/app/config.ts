@@ -9,7 +9,10 @@ export interface INetworkData {
   walletBalanceProvider: string;
   uiPoolDataProvider: string;
   baseUniswapAdapter: string;
+  rewardTokenSymbol?: string;
   rewardTokenAddress: string;
+  rewardTokenDecimals: number;
+  incentivePrecision: number;
   // market
   addresses: {
     LENDING_POOL_ADDRESS_PROVIDER: string;
@@ -39,7 +42,10 @@ export const NETWORK: INetwork = {
     walletBalanceProvider: '',
     uiPoolDataProvider: '0xcF08ebFF887D91AbA3Afc47f2eBFe720525B4C8E',
     baseUniswapAdapter: '',
-    rewardTokenAddress: '',
+    rewardTokenSymbol: 'stkAAVE',
+    rewardTokenAddress: '0xb597cd8d3217ea6477232f9217fa70837ff667af',
+    rewardTokenDecimals: 18,
+    incentivePrecision: 18,
     addresses: {
       LENDING_POOL_ADDRESS_PROVIDER: '0x67FB118A780fD740C8936511947cC4bE7bb7730c',
       LENDING_POOL: '0x762E2a3BBe729240ea44D31D5a81EAB44d34ef01',
@@ -57,7 +63,10 @@ export const NETWORK: INetwork = {
     walletBalanceProvider: '0x07DC923859b68e9399d787bf52c4Aa9eBe3490aF',
     uiPoolDataProvider: '0x04110Dc40B04b99B94840E53B2a33bE45E45A8Ed',
     baseUniswapAdapter: '',
-    rewardTokenAddress: '',
+    rewardTokenSymbol: 'stkAAVE',
+    rewardTokenAddress: '0xb597cd8d3217ea6477232f9217fa70837ff667af',
+    rewardTokenDecimals: 18,
+    incentivePrecision: 18,
     addresses: {
       // LENDING_POOL_ADDRESS_PROVIDER: '0x04110Dc40B04b99B94840E53B2a33bE45E45A8Ed',
       // LENDING_POOL: '0x762E2a3BBe729240ea44D31D5a81EAB44d34ef01',
@@ -82,7 +91,10 @@ export const NETWORK: INetwork = {
     walletBalanceProvider: '',
     uiPoolDataProvider: '0xcF08ebFF887D91AbA3Afc47f2eBFe720525B4C8E',
     baseUniswapAdapter: '',
-    rewardTokenAddress: '',
+    rewardTokenSymbol: 'stkAAVE',
+    rewardTokenAddress: '0xb597cd8d3217ea6477232f9217fa70837ff667af',
+    rewardTokenDecimals: 18,
+    incentivePrecision: 18,
     addresses: {
       LENDING_POOL_ADDRESS_PROVIDER: '0x67FB118A780fD740C8936511947cC4bE7bb7730c',
       LENDING_POOL: '0x762E2a3BBe729240ea44D31D5a81EAB44d34ef01',
@@ -97,7 +109,10 @@ export const NETWORK: INetwork = {
     walletBalanceProvider: '',
     uiPoolDataProvider: '0xcF08ebFF887D91AbA3Afc47f2eBFe720525B4C8E',
     baseUniswapAdapter: '',
-    rewardTokenAddress: '',
+    rewardTokenSymbol: 'stkAAVE',
+    rewardTokenAddress: '0xb597cd8d3217ea6477232f9217fa70837ff667af',
+    rewardTokenDecimals: 18,
+    incentivePrecision: 18,
     addresses: {
       LENDING_POOL_ADDRESS_PROVIDER: '0x67FB118A780fD740C8936511947cC4bE7bb7730c',
       LENDING_POOL: '0x762E2a3BBe729240ea44D31D5a81EAB44d34ef01',
@@ -113,7 +128,10 @@ export const NETWORK: INetwork = {
     walletBalanceProvider: '',
     uiPoolDataProvider: '0xcF08ebFF887D91AbA3Afc47f2eBFe720525B4C8E',
     baseUniswapAdapter: '',
-    rewardTokenAddress: '',
+    rewardTokenSymbol: 'stkAAVE',
+    rewardTokenAddress: '0xb597cd8d3217ea6477232f9217fa70837ff667af',
+    rewardTokenDecimals: 18,
+    incentivePrecision: 18,
     addresses: {
       LENDING_POOL_ADDRESS_PROVIDER: '0x67FB118A780fD740C8936511947cC4bE7bb7730c',
       LENDING_POOL: '0x762E2a3BBe729240ea44D31D5a81EAB44d34ef01',
@@ -129,7 +147,10 @@ export const NETWORK: INetwork = {
     walletBalanceProvider: '',
     uiPoolDataProvider: '0xcF08ebFF887D91AbA3Afc47f2eBFe720525B4C8E',
     baseUniswapAdapter: '',
-    rewardTokenAddress: '',
+    rewardTokenSymbol: 'stkAAVE',
+    rewardTokenAddress: '0xb597cd8d3217ea6477232f9217fa70837ff667af',
+    rewardTokenDecimals: 18,
+    incentivePrecision: 18,
     addresses: {
       LENDING_POOL_ADDRESS_PROVIDER: '0x67FB118A780fD740C8936511947cC4bE7bb7730c',
       LENDING_POOL: '0x762E2a3BBe729240ea44D31D5a81EAB44d34ef01',

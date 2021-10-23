@@ -1,23 +1,19 @@
-import './deposit.scss';
 /*eslint-disable import/no-anonymous-default-export */
-import { BigNumber } from 'ethers';
-import { TransactionResponse } from '@ethersproject/abstract-provider';
+
+import './deposit.scss';
 import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle } from 'react';
 import { Modal, Input } from 'antd';
 import { useThemeContext } from '../../../theme';
-import {
-  ComputedReserveData,
-  transactionType,
-  EthereumTransactionTypeExtended,
-} from '@aave/protocol-js';
+import { ComputedReserveData } from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { useWeb3React } from '@web3-react/core';
 import { pow10, formatMoney, filterInput } from '../../../utils/tool';
 import storage from '../../../utils/storage';
+import { handleSend } from '../helper/txHelper';
 
 interface IProps {
-  type: 'Save' | 'Cash';
+  type: 'Deposit' | 'Withdraw';
   data?: ComputedReserveData;
   balance?: string;
 }
@@ -28,23 +24,27 @@ export interface IDialog {
 }
 
 export default forwardRef((props, ref) => {
-  const [params, setParams] = useState<IProps>();
-  const [type, setType] = useState(params ? params.type : 'Save');
-  const [show, setShow] = useState(false);
-  const { currentThemeName } = useThemeContext();
-  const { account, library: provider } = useWeb3React();
-
   const [lendingPool] = useTxBuilder();
-
-  const [saveValidationMessage, setSaveValidationMessage] = useState('');
+  const { currentThemeName } = useThemeContext();
+  const { account, library } = useWeb3React();
+  const [params, setParams] = useState<IProps>();
+  const [type, setType] = useState(params ? params.type : 'Deposit');
+  const [show, setShow] = useState(false);
+  const [depositValidationMessage, setDepositValidationMessage] = useState('');
   const [withdrawValidationMessage, setWithdrawValidationMessage] = useState('');
-  const [saveAmount, setSaveAmount] = useState<string | number>('');
+  const [depositAmount, setDepositAmount] = useState<string | number>('');
   const [withdrawAmount, setWithdrawAmount] = useState<string | number>('');
+  const [loading, setLoading] = useState(false);
 
   const hide = () => {
+    setType(params ? params.type : 'Deposit');
     setShow(false);
     setParams(undefined);
-    setSaveAmount(0);
+    setDepositAmount('');
+    setWithdrawAmount('');
+    setDepositValidationMessage('');
+    setWithdrawValidationMessage('');
+    setLoading(false);
   };
 
   useImperativeHandle(ref, () => ({
@@ -55,94 +55,36 @@ export default forwardRef((props, ref) => {
     hide,
   }));
 
-  const handleSend = async (txs: EthereumTransactionTypeExtended[]): Promise<void> => {
-    const approvalTx = txs.find((tx) => tx.txType === 'ERC20_APPROVAL');
-    const actionTx = txs.find((tx) =>
-      [
-        'DLP_ACTION',
-        'GOVERNANCE_ACTION',
-        'STAKE_ACTION',
-        'GOV_DELEGATION_ACTION',
-        'REWARD_ACTION',
-        'FAUCET_MINT',
-      ].includes(tx.txType)
-    );
-
-    let extendedTxData: transactionType = {};
-
-    console.log(approvalTx, actionTx, approvalTx?.tx);
-
-    if (approvalTx) {
-      try {
-        extendedTxData = await approvalTx.tx();
-      } catch (e) {
-        console.log('tx building error', e);
-        return;
-      }
-    }
-    if (actionTx) {
-      try {
-        extendedTxData = await actionTx.tx();
-      } catch (e) {
-        console.log('tx building error', e);
-        return;
-      }
-    }
-
-    const { from, ...txData } = extendedTxData;
-    const signer = provider.getSigner(from);
-    let txResponse: TransactionResponse | undefined;
-    try {
-      txResponse = await signer.sendTransaction({
-        ...txData,
-        value: txData.value ? BigNumber.from(txData.value) : undefined,
-      });
-    } catch (e) {
-      console.error('send-ethereum-tx', e);
-      return;
-    }
-    const txHash = txResponse?.hash;
-    console.log(txHash);
-    if (txResponse) {
-      try {
-        const txReceipt = await txResponse.wait(1);
-        console.log(txReceipt);
-      } catch (e) {
-        // let error = 'network error has occurred, please check tx status in an explorer';
-        // try {
-        // let tx = await provider.getTransaction(txResponse.hash);
-        // // @ts-ignore TODO: need think about "tx" type
-        // const code = await provider.call(tx, tx.blockNumber);
-        // error = hexToAscii(code.substr(138));
-        // } catch (e) {
-        //   console.log('network error', e);
-        // }
-      }
-    }
-  };
-
-  const handleSaveAmountChange = (amount: string): void => {
+  const handleDepositAmountChange = (amount: string): void => {
     const val = filterInput(amount);
-    setSaveAmount(val);
+    setDepositAmount(val);
     if (Number(val) <= 0) {
-      setSaveValidationMessage('Amount must be > 0');
+      setDepositValidationMessage('Amount must be > 0');
     } else if (Number(val) > Number(val) + Number(params?.balance)) {
-      setSaveValidationMessage('Amount must be <= balance');
+      setDepositValidationMessage('Amount must be <= balance');
     } else {
-      setSaveValidationMessage('');
+      setDepositValidationMessage('');
     }
   };
 
-  const handleSaveSubmit = async () => {
-    if (!lendingPool || !params?.data || !account || !saveAmount) return;
-    const txs = await lendingPool.deposit({
-      user: account,
-      reserve: params.data.underlyingAsset,
-      amount: `${saveAmount}`,
-      referralCode: storage.get('referralCode') || undefined,
-    });
-    console.log(txs);
-    handleSend(txs);
+  const handleDepositSubmit = async () => {
+    if (!lendingPool || !params?.data || !account || !depositAmount) return;
+    try {
+      setLoading(true);
+      const txs = await lendingPool.deposit({
+        user: account,
+        reserve: params.data.underlyingAsset,
+        amount: `${depositAmount}`,
+        referralCode: storage.get('referralCode') || undefined,
+      });
+      await handleSend(txs, library);
+      setLoading(false);
+      hide();
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      hide();
+    }
   };
 
   const handleWithdrawAmountChange = (amount: string): void => {
@@ -160,28 +102,25 @@ export default forwardRef((props, ref) => {
   const handleWithdrawSubmit = async () => {
     if (!lendingPool || !params?.data || !account || !withdrawAmount) return;
     try {
-      console.log({
-        user: account,
-        reserve: params.data.underlyingAsset,
-        amount: `${withdrawAmount}`,
-        aTokenAddress: params.data.aTokenAddress,
-      });
+      setLoading(true);
       const txs = await lendingPool.withdraw({
         user: account,
         reserve: params.data.underlyingAsset,
-        amount: `${withdrawAmount}`,
+        amount: `${withdrawAmount}`, // TODO: Max
         aTokenAddress: params.data.aTokenAddress,
       });
-      handleSend(txs);
+      await handleSend(txs, library);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
   return (
     <Modal
       visible={show}
-      onCancel={() => setShow(false)}
+      onCancel={() => hide()}
       footer={null}
       wrapClassName={classnames('customDialog', 'changeDialog', currentThemeName)}
       centered
@@ -191,19 +130,19 @@ export default forwardRef((props, ref) => {
       <div>{params?.data?.symbol}</div>
       <div className="tab">
         <div
-          className={classnames('tabItem', { cur: type === 'Save' })}
-          onClick={() => setType('Save')}
+          className={classnames('tabItem', { cur: type === 'Deposit' })}
+          onClick={() => setType('Deposit')}
         >
           存款
         </div>
         <div
-          className={classnames('tabItem', { cur: type === 'Cash' })}
-          onClick={() => setType('Cash')}
+          className={classnames('tabItem', { cur: type === 'Withdraw' })}
+          onClick={() => setType('Withdraw')}
         >
           取款
         </div>
       </div>
-      {type === 'Save' ? (
+      {type === 'Deposit' ? (
         <div className="tabMain">
           <div className="balance">
             <div>
@@ -211,16 +150,16 @@ export default forwardRef((props, ref) => {
               {formatMoney(pow10(params?.balance))}
               {params?.data?.symbol}
             </div>
-            <div className={classnames('input', { error: !!saveValidationMessage })}>
-              <div onClick={() => setSaveAmount(Number(pow10(params?.balance)))}>MAX</div>
+            <div className={classnames('input', { error: !!depositValidationMessage })}>
+              <div onClick={() => setDepositAmount(Number(pow10(params?.balance)))}>MAX</div>
               <Input
                 // bordered={false}
-                value={saveAmount}
+                value={depositAmount}
                 onChange={(event) => {
-                  handleSaveAmountChange(event.target.value);
+                  handleDepositAmountChange(event.target.value);
                 }}
               />
-              {saveAmount}
+              {depositAmount}
             </div>
           </div>
           <div>
@@ -238,7 +177,7 @@ export default forwardRef((props, ref) => {
           <div>
             <div>抵押品参数</div>
           </div>
-          <div className="submit" onClick={() => handleSaveSubmit()}>
+          <div className="submit" onClick={() => handleDepositSubmit()}>
             提交
           </div>
         </div>

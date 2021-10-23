@@ -1,9 +1,6 @@
 import './market.scss';
 import React, { useState, useRef, useEffect } from 'react';
-import { valueToBigNumber, normalize } from '@aave/protocol-js';
 import classnames from 'classnames';
-import { ethers } from 'ethers';
-import { formatReserves, ComputedReserveData } from '@aave/protocol-js';
 import { Progress } from 'antd';
 
 import Layout from '../../components/Layout';
@@ -20,26 +17,19 @@ import useNetworkInfo from '../../hooks/useNetworkInfo';
 import useWalletBalance from '../../hooks/useWalletBalance';
 import { useWeb3React } from '@web3-react/core';
 import { formatMoney, pow10 } from '../../utils/tool';
+import { useCurrentTimestamp } from '../../hooks/use-current-timestamp';
 
 export default function Markets() {
-  const { account, chainId } = useWeb3React();
+  const { account } = useWeb3React();
   const [totalLiquidity, setTotalLiquidity] = useState('');
   const BorrowDialogRef = useRef<IBorrowDialog>();
   const DepositDialogRef = useRef<IDepositDialog>();
   const SwapDialogRef = useRef<ISwapDialog>();
   const [tab, setTab] = useState('deposit');
   const [networkInfo] = useNetworkInfo();
-  const [formatReservesData, setFormatReservesData] = useState<ComputedReserveData[]>([]);
-  let totalLockedInUsd = valueToBigNumber('0');
-  let marketRefPriceInUsd = normalize(1, 10);
+  const currentTimestamp = useCurrentTimestamp(1);
 
-  const { error, loading, data, refresh } = useProtocolDataWithRpc(
-    networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-    // ethers.constants.AddressZero,
-    account,
-    networkInfo?.chainKey,
-    networkInfo?.uiPoolDataProvider
-  );
+  const { data, refresh } = useProtocolDataWithRpc(account, currentTimestamp);
 
   const [balance] = useWalletBalance(
     networkInfo?.walletBalanceProvider,
@@ -48,65 +38,7 @@ export default function Markets() {
     networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
   );
 
-  console.log(balance, data);
-
-  useEffect(() => {
-    if (!data) return;
-    let r = formatReserves(data.reserves);
-    // r.filter((res) => res.isActive).map((reserve) => {
-    //   totalLockedInUsd = totalLockedInUsd.plus(
-    //     valueToBigNumber(reserve.totalLiquidity)
-    //       .multipliedBy(reserve.price.priceInEth)
-    //       .dividedBy(marketRefPriceInUsd)
-    //   );
-
-    //   const totalLiquidity = Number(reserve.totalLiquidity);
-    //   const totalLiquidityInUSD = valueToBigNumber(reserve.totalLiquidity)
-    //     .multipliedBy(reserve.price.priceInEth)
-    //     .dividedBy(marketRefPriceInUsd)
-    //     .toNumber();
-
-    //   const totalBorrows = Number(reserve.totalDebt);
-    //   const totalBorrowsInUSD = valueToBigNumber(reserve.totalDebt)
-    //     .multipliedBy(reserve.price.priceInEth)
-    //     .dividedBy(marketRefPriceInUsd)
-    //     .toNumber();
-
-    //   return {
-    //     totalLiquidity,
-    //     totalLiquidityInUSD,
-    //     totalBorrows: reserve.borrowingEnabled ? totalBorrows : -1,
-    //     totalBorrowsInUSD: reserve.borrowingEnabled ? totalBorrowsInUSD : -1,
-    //     id: reserve.id,
-    //     underlyingAsset: reserve.underlyingAsset,
-    //     currencySymbol: reserve.symbol,
-    //     depositAPY: reserve.borrowingEnabled ? Number(reserve.liquidityRate) : -1,
-    //     avg30DaysLiquidityRate: Number(reserve.avg30DaysLiquidityRate),
-    //     stableBorrowRate:
-    //       reserve.stableBorrowRateEnabled && reserve.borrowingEnabled
-    //         ? Number(reserve.stableBorrowRate)
-    //         : -1,
-    //     variableBorrowRate: reserve.borrowingEnabled ? Number(reserve.variableBorrowRate) : -1,
-    //     avg30DaysVariableRate: Number(reserve.avg30DaysVariableBorrowRate),
-    //     borrowingEnabled: reserve.borrowingEnabled,
-    //     stableBorrowRateEnabled: reserve.stableBorrowRateEnabled,
-    //     isFreezed: reserve.isFrozen,
-    //     aIncentivesAPY: reserve.aIncentivesAPY,
-    //     vIncentivesAPY: reserve.vIncentivesAPY,
-    //     sIncentivesAPY: reserve.sIncentivesAPY,
-    //   };
-    // });
-    setFormatReservesData(r);
-    let availableLiquidity = valueToBigNumber(0);
-    r.forEach((item) => {
-      const u = valueToBigNumber(item.availableLiquidity)
-        .multipliedBy(item.price.priceInEth)
-        .dividedBy(marketRefPriceInUsd);
-      availableLiquidity.plus(u);
-    });
-    setTotalLiquidity(availableLiquidity.toString());
-    return () => {};
-  }, [data]);
+  // console.log(data);
 
   return (
     <Layout className="page-market">
@@ -221,16 +153,25 @@ export default function Markets() {
                   <th>资产</th>
                   <th>存款APY</th>
                   <th>奖励APR</th>
-                  <th>钱包余额</th>
+                  <th>存款余额</th>
                 </tr>
               </thead>
               <tbody>
-                <tr onClick={() => DepositDialogRef.current?.show({ type: 'Cash' })}>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                </tr>
+                {data?.user?.reservesData.map((item) => {
+                  if (Number(item?.scaledATokenBalance)) {
+                    return (
+                      <tr
+                        key={item.reserve.id}
+                        onClick={() => DepositDialogRef.current?.show({ type: 'Deposit' })}
+                      >
+                        <td>{item.reserve.symbol}</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>{item.scaledATokenBalance}</td>
+                      </tr>
+                    );
+                  }
+                })}
               </tbody>
             </table>
           </div>
@@ -241,17 +182,26 @@ export default function Markets() {
                 <tr>
                   <th>资产</th>
                   <th>贷款APY</th>
-                  <th>奖励APR</th>
-                  <th></th>
+                  <th>稳定利率</th>
+                  <th>债务</th>
                 </tr>
               </thead>
               <tbody>
-                <tr onClick={() => BorrowDialogRef.current?.show({ type: 'Repay' })}>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                </tr>
+                {data?.user?.reservesData.map((item) => {
+                  if (Number(item?.scaledVariableDebt)) {
+                    return (
+                      <tr
+                        key={item.reserve.id}
+                        onClick={() => BorrowDialogRef.current?.show({ type: 'Repay' })}
+                      >
+                        <td>{item.reserve.symbol}</td>
+                        <td>1</td>
+                        <td>{item.stableBorrowRate}</td>
+                        <td>{item.scaledVariableDebt}</td>
+                      </tr>
+                    );
+                  }
+                })}
               </tbody>
             </table>
           </div>
@@ -271,12 +221,12 @@ export default function Markets() {
                 </tr>
               </thead>
               <tbody>
-                {formatReservesData.map((item) => (
+                {data?.reserves.map((item) => (
                   <tr
                     key={item.id}
                     onClick={() =>
                       DepositDialogRef.current?.show({
-                        type: 'Save',
+                        type: 'Withdraw',
                         data: item,
                         balance: balance[item.underlyingAsset],
                       })
@@ -304,18 +254,16 @@ export default function Markets() {
                 </tr>
               </thead>
               <tbody>
-                {formatReservesData
-                  .filter((res) => res.isActive)
-                  .map((item) => (
-                    <tr
-                      key={item.id}
-                      onClick={() => BorrowDialogRef.current?.show({ type: 'Loan' })}
-                    >
-                      <td>{item.symbol}</td>
-                      <td>{item.borrowingEnabled ? Number(item.variableBorrowRate) : -1}</td>
-                      <td>{item.vIncentivesAPY}</td>
-                    </tr>
-                  ))}
+                {data?.reserves.map((item) => (
+                  <tr
+                    key={item.id}
+                    onClick={() => BorrowDialogRef.current?.show({ type: 'Borrow', data: item })}
+                  >
+                    <td>{item.symbol}</td>
+                    <td>{item.borrowingEnabled ? Number(item.variableBorrowRate) : -1}</td>
+                    <td>{item.vIncentivesAPY}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
