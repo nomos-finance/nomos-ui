@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
+import dayjs from 'dayjs';
 import {
   ReserveData,
   UserReserveData,
@@ -12,6 +13,8 @@ import {
   UserSummaryData,
 } from '@aave/protocol-js';
 import { assetsList, Asset, assetsOrder, STABLE_ASSETS } from '@aave/aave-ui-kit';
+import { useWeb3React } from '@web3-react/core';
+
 import IUiPoolDataProviderFactory from '../contracts/IPoolDataProviderContract';
 import useNetworkInfo from '../hooks/useNetworkInfo';
 
@@ -32,6 +35,7 @@ function formatObjectWithBNFields(obj: object): any {
 export interface DynamicPoolDataContextData {
   reserves: ComputedReserveData[];
   user?: UserSummaryData;
+  usdPriceEth: string;
 }
 
 interface PoolReservesWithRPC {
@@ -63,7 +67,6 @@ const handleFormatData = ({
   const formattedReservesData = rawReservesData
     .map((rawReserve: any) => {
       const formattedReserve = formatObjectWithBNFields(rawReserve);
-      console.log(formattedReserve);
       formattedReserve.symbol = rawReserve.symbol.toUpperCase();
       formattedReserve.id = (rawReserve.underlyingAsset + poolAddress).toLowerCase();
       formattedReserve.underlyingAsset = rawReserve.underlyingAsset.toLowerCase();
@@ -103,7 +106,6 @@ const handleFormatData = ({
       ...userReserve,
       reserve: {
         ...userReserve.reserve,
-        symbol: unPrefixSymbol(userReserve.reserve.symbol, 'A'),
       },
     }));
 
@@ -146,13 +148,11 @@ const unPrefixSymbol = (symbol: string, prefix: string) => {
   return symbol.toUpperCase().replace(new RegExp(`^(${prefix[0]}?${prefix.slice(1)})`), '');
 };
 
-function useProtocolDataWithRpc(
-  currentAccount: string | null | undefined,
-  currentTimestamp: number
-): PoolReservesWithRPC {
+function useProtocolDataWithRpc(): PoolReservesWithRPC {
   const [loading, setLoading] = useState(true);
   const [poolData, setPoolData] = useState<DynamicPoolDataContextData | undefined>(undefined);
   const [networkInfo] = useNetworkInfo();
+  const { account } = useWeb3React();
 
   const fetchData = async (
     poolAddress: string,
@@ -185,9 +185,10 @@ function useProtocolDataWithRpc(
       const rawReserves = formatData.formattedReservesData;
       const rawUserReserves = formatData.formattedUserReserves;
       const rewardsEmissionEndTimestamp = rewardsData.emissionEndTimestamp;
-      const userUnclaimedRewardsRaw = rewardsData.userUnclaimedRewards;
-      const userId = userAddress !== ethers.constants.AddressZero ? userAddress : undefined;
+      // const userUnclaimedRewardsRaw = rewardsData.userUnclaimedRewards;
+      // const userId = userAddress !== ethers.constants.AddressZero ? userAddress : undefined;
       const formattedUsdPriceEth = normalize(normalize(formatData.formattedUsdPriceEth, 18), -18);
+      const currentTimestamp = dayjs().unix();
 
       const rewardReserve = rawReserves.find(
         (reserve: any) =>
@@ -204,17 +205,19 @@ function useProtocolDataWithRpc(
       };
 
       const computedUserData =
-        userId && rawUserReserves
+        userAddress && rawUserReserves
           ? formatUserSummaryData(
               rawReserves,
               rawUserReserves,
-              userId,
+              userAddress,
               formattedUsdPriceEth,
               // networkConfig.usdMarket ? valueToBigNumber(1) : normalize(usdPriceEth, -18),
               currentTimestamp,
               rewardInfo
             )
           : undefined;
+
+      // console.log(userId, rawUserReserves);
 
       const formattedPoolReserves = formatReserves(
         rawReserves,
@@ -227,6 +230,7 @@ function useProtocolDataWithRpc(
       setPoolData({
         user: computedUserData,
         reserves: formattedPoolReserves,
+        usdPriceEth: normalize(formattedUsdPriceEth, 18),
       });
       setLoading(false);
     } catch (e) {
@@ -237,11 +241,10 @@ function useProtocolDataWithRpc(
 
   useEffect(() => {
     if (!networkInfo) return;
-    let account = currentAccount || ethers.constants.AddressZero;
 
     fetchData(
       networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-      account,
+      account || ethers.constants.AddressZero,
       networkInfo.chainKey,
       networkInfo.uiPoolDataProvider
     );
@@ -249,23 +252,23 @@ function useProtocolDataWithRpc(
       () =>
         fetchData(
           networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-          account,
+          account || ethers.constants.AddressZero,
           networkInfo.chainKey,
           networkInfo.uiPoolDataProvider
         ),
       30 * 1000
     );
     return () => clearInterval(intervalID);
-  }, [currentAccount, networkInfo]);
+  }, [account, networkInfo]);
 
   return {
     loading,
     data: poolData,
-    refresh: async (account: string) => {
+    refresh: async () => {
       if (!networkInfo) return;
       fetchData(
         networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-        account,
+        account || ethers.constants.AddressZero,
         networkInfo.chainKey,
         networkInfo.uiPoolDataProvider
       );

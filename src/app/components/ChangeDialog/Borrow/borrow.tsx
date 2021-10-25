@@ -116,7 +116,12 @@ export default forwardRef((props, ref) => {
         reserve: params.data.underlyingAsset,
         amount: `${repayAmount}`, // TODO: MAX
       });
-      console.log(txs);
+      console.log({
+        interestRateMode: interestRateMode as any,
+        user: account,
+        reserve: params.data.underlyingAsset,
+        amount: `${repayAmount}`, // TODO: MAX
+      });
       await handleSend(txs, library);
       setLoading(false);
       hide();
@@ -192,7 +197,7 @@ export default forwardRef((props, ref) => {
           </div>
           <div>健康因子</div>
           <div>存款收益</div>
-          <div>抵押品参数</div>
+          <div>抵押品参数1111</div>
           <Button loading={loading} className="submit" onClick={() => handleRepaySubmit()}>
             提交
           </Button>
