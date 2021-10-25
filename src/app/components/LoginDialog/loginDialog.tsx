@@ -5,6 +5,7 @@ import { Dropdown, Menu, Modal } from 'antd';
 import classNames from 'classnames';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { ethers } from 'ethers';
 
 import { NETWORK, SupportedNetworks } from '../../config';
 import { useThemeContext } from '../../theme';
@@ -15,7 +16,6 @@ import storage from '../../utils/storage';
 import useInactiveListener from './hooks/useInactiveListener';
 
 import { setNetwork, setProviderName } from '../../actions/baseAction';
-
 export interface IDialog {
   show(): void;
   hide(): void;
@@ -43,15 +43,24 @@ export interface Wallet {
   errorMessage?: string;
 }
 
+const isEthereumObjectOnWindow = (global: WindowWithEthereum) =>
+  global.ethereum && typeof global.ethereum === 'object';
+
+const getWeb3ProviderFromBrowser = (): ethers.providers.Web3Provider | undefined => {
+  const global = window as WindowWithEthereum;
+  return isEthereumObjectOnWindow(global) ? global.ethereum : global.web3 ? global.web3 : undefined;
+};
+
 export default forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const { currentThemeName } = useThemeContext();
   const [dialogOpen, setDialogOpen] = useState(false);
   const { account, activate } = useWeb3React();
-  const [preferredNetwork, setPreferredNetwork] = useState<string>('mainnet');
+  const [preferredNetwork, setPreferredNetwork] = useState<string>(SupportedNetworks[0].chainKey);
   const providerName = storage.get('providerName');
   const network = storage.get('network');
   const isImToken = !!window.imToken;
+  const browserWalletProvider = getWeb3ProviderFromBrowser();
 
   const wallets: Wallet[] = [
     {
@@ -59,8 +68,7 @@ export default forwardRef((props, ref) => {
       description: '(MetaMask, Trustwallet, Enjin)',
       providerName: 'browser',
       icon: isImToken ? icons.imToken : icons.browserWallets,
-      // disabled: !browserWalletProvider,
-      // errorMessage: intl.formatMessage(messages.noBrowserBrowserWallet),
+      disabled: !browserWalletProvider,
     },
     {
       title: 'Portis',
@@ -72,19 +80,21 @@ export default forwardRef((props, ref) => {
       title: 'Ledger',
       providerName: 'ledger',
       icon: icons.ledgerIcon,
-      // notSupported: preferredNetwork === Network.polygon || preferredNetwork === Network.avalanche,
+      notSupported:
+        preferredNetwork === NETWORK.polygon.chainKey ||
+        preferredNetwork === NETWORK.avalanche.chainKey,
     },
     {
       title: 'MEW wallet',
       providerName: 'mew-wallet',
       icon: icons.MEWIcon,
-      // notSupported: preferredNetwork !== Network.mainnet,
+      notSupported: preferredNetwork !== NETWORK.mainnet.chainKey,
     },
     {
       title: 'Coinbase',
       providerName: 'wallet-link',
       icon: icons.coinbaseIcon,
-      // notSupported: preferredNetwork === Network.avalanche,
+      notSupported: preferredNetwork === NETWORK.avalanche.chainKey,
     },
     {
       title: 'Authereum',
@@ -101,7 +111,7 @@ export default forwardRef((props, ref) => {
       title: 'Torus',
       providerName: 'torus',
       icon: icons.torusIcon,
-      // notSupported: preferredNetwork === Network.avalanche,
+      notSupported: preferredNetwork === NETWORK.avalanche.chainKey,
     },
     {
       title: 'Fortmatic',
@@ -116,8 +126,10 @@ export default forwardRef((props, ref) => {
       title: 'imToken',
       providerName: 'wallet-connect',
       icon: icons.imToken,
-      // notSupported:
-      //   isImToken || preferredNetwork === Network.polygon || preferredNetwork === Network.avalanche,
+      notSupported:
+        isImToken ||
+        preferredNetwork === NETWORK.polygon.chainKey ||
+        preferredNetwork === NETWORK.avalanche.chainKey,
     },
   ];
 
@@ -132,14 +144,17 @@ export default forwardRef((props, ref) => {
   );
 
   const onLogin = async (providerName: string, network: string): Promise<void> => {
-    console.log(getWeb3Connector(providerName, network));
-    await activate(getWeb3Connector(providerName, network));
-    storage.set('providerName', providerName);
-    storage.set('network', network);
-    storage.set('isLogout', '');
-    setDialogOpen(false);
-    dispatch(setNetwork(network));
-    dispatch(setProviderName(network));
+    try {
+      await activate(getWeb3Connector(providerName, network));
+      storage.set('providerName', providerName);
+      storage.set('network', network);
+      storage.set('isLogout', '');
+      setDialogOpen(false);
+      dispatch(setNetwork(network));
+      dispatch(setProviderName(network));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onSelectSupperNetwork = (network: string): void => {

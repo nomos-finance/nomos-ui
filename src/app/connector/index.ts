@@ -12,7 +12,7 @@ import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react';
 import { MewConnectConnector } from '@myetherwallet/mewconnect-connector';
 import { PortisConnector } from '../../web3-data-provider/web3-providers/connectors/portis-connector';
 
-import { supportedChainIds, NETWORK } from '../config';
+import { supportedChainIds, SupportedNetworks, NETWORK } from '../config';
 
 export enum LedgerDerivationPath {
   'Legacy' = "44'/60'/0'/x",
@@ -55,18 +55,20 @@ export function getWeb3Connector(
         appLogoUrl: APP_LOGO_URL,
         url: networkConfig?.privateJsonRPCUrl || networkConfig?.publicJsonRPCUrl || '',
       });
-    // case 'wallet-connect':
-    //   return new WalletConnectConnector({
-    //     rpc: supportedNetworks.reduce((acc, network) => {
-    //       const config = NETWORK[network];
-    //       acc[NETWORK[network].chainId] = config.privateJsonRPCUrl || config.publicJsonRPCUrl;
-    //       return acc;
-    //     }, {} as { [networkId: number]: string }),
-    //     bridge: 'https://aave.bridge.walletconnect.org',
-    //     qrcode: true,
-    //     pollingInterval: POLLING_INTERVAL,
-    //     preferredNetworkId: networkId,
-    //   });
+    case 'wallet-connect':
+      return new WalletConnectConnector({
+        rpc: SupportedNetworks.reduce((acc, item) => {
+          const rpc = item.publicJsonRPCUrl || item.privateJsonRPCUrl;
+          if (rpc) {
+            acc[item.chainId] = rpc;
+          }
+          return acc;
+        }, {} as { [networkId: number]: string }),
+        bridge: 'https://aave.bridge.walletconnect.org',
+        qrcode: true,
+        pollingInterval: 12000,
+        preferredNetworkId: networkId,
+      });
     case 'fortmatic':
       return new FortmaticConnector({
         chainId: networkId,
@@ -82,19 +84,19 @@ export function getWeb3Connector(
           '',
         windowClosedError: true,
       });
-    // case 'authereum': {
-    //     if (currentNetwork !== 'mainnet') {
-    //         raiseUnsupportedNetworkError(currentNetwork, connectorName)
-    //     }
-    //     return new AuthereumConnector({
-    //         chainId: networkId,
-    //         config: {
-    //             networkName: currentNetwork,
-    //             rpcUri: networkConfig.privateJsonRPCUrl || networkConfig.publicJsonRPCUrl,
-    //             apiKey: AUTHEREUM_API_KEY
-    //         }
-    //     })
-    // }
+    case 'authereum': {
+      if (currentNetwork !== 'mainnet') {
+        new Error(`${currentNetwork} is not supported by ${connectorName}`);
+      }
+      return new AuthereumConnector({
+        chainId: networkId,
+        config: {
+          networkName: currentNetwork,
+          rpcUri: networkConfig.privateJsonRPCUrl || networkConfig.publicJsonRPCUrl,
+          apiKey: undefined,
+        },
+      });
+    }
     case 'torus':
       return new TorusConnector({
         chainId: networkId,
@@ -108,9 +110,9 @@ export function getWeb3Connector(
         },
       });
     case 'portis': {
-      if (!process.env.REACT_APP_PORTIS_DAPP_ID) throw new Error('Portis DAPP id not specified');
+      if (!process.env?.REACT_APP_PORTIS_DAPP_ID) throw new Error('Portis DAPP id not specified');
       return new PortisConnector({
-        dAppId: process.env.REACT_APP_PORTIS_DAPP_ID,
+        dAppId: process.env?.REACT_APP_PORTIS_DAPP_ID,
         networks: [networkId],
       });
     }
@@ -121,4 +123,30 @@ export function getWeb3Connector(
       throw new Error(`unsupported connector name: ${connectorName}`);
     }
   }
+}
+
+export function disconnectWeb3Connector(): void {
+  const currentProvider = localStorage.getItem('currentProvider') as string | undefined;
+  switch (currentProvider) {
+    case 'wallet-connect': {
+      localStorage.removeItem('walletconnect');
+      break;
+    }
+    case 'wallet-link': {
+      localStorage.removeItem('__WalletLink__:https://www.walletlink.org:SessionId');
+      localStorage.removeItem('__WalletLink__:https://www.walletlink.org:Addresses');
+      break;
+    }
+    case 'ledger': {
+      localStorage.removeItem('ledgerPath');
+      localStorage.removeItem('selectedAccount');
+      break;
+    }
+    case 'torus': {
+      localStorage.removeItem('loglevel');
+      localStorage.removeItem('loglevel:torus-embed');
+      break;
+    }
+  }
+  localStorage.removeItem('currentProvider');
 }

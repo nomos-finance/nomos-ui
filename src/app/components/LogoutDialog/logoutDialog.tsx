@@ -6,6 +6,7 @@ import storage from '../../utils/storage';
 import { getShortenAddress } from '../../utils/tool';
 import { useThemeContext } from '../../theme';
 import classNames from 'classnames';
+import { disconnectWeb3Connector } from '../../connector';
 
 export interface IDialog {
   show(): void;
@@ -53,6 +54,7 @@ const LongDialog = forwardRef((props, ref) => {
             className="btn"
             onClick={() => {
               deactivate();
+              disconnectWeb3Connector();
               storage.set('isLogout', true);
               storage.set('account', '');
               setLogoutDialogOpen(false);
