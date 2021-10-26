@@ -1,3 +1,4 @@
+import './index.stylus';
 import './market.scss';
 import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';

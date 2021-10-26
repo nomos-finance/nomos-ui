@@ -4,6 +4,7 @@ import './nav.scss';
 import classnames from 'classnames';
 import React, { useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import Icon from '../../../assets/icons';
 
 export default (): React.ReactElement => {
   const history = useHistory();
@@ -17,7 +18,9 @@ export default (): React.ReactElement => {
           className={classnames('item', { cur: pathname === '/' || /market/.test(pathname) })}
           to="/"
         >
-          <i>{/* <Icon name="market" /> */}</i>
+          <i>
+            <Icon name="market" />
+          </i>
           <span>Market</span>
         </Link>
         <Link className={classnames('item', { cur: /dao/.test(pathname) })} to="/dao">

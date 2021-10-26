@@ -1,4 +1,5 @@
-const { useBabelRc, override, fixBabelImports } = require('customize-cra');
+const { useBabelRc, override, fixBabelImports, addWebpackModuleRule } = require('customize-cra');
+const path = require('path');
 
 module.exports = override(
   useBabelRc(),
@@ -6,5 +7,42 @@ module.exports = override(
     libraryName: 'antd',
     libraryDirectory: 'es',
     style: 'css',
+  }),
+  addWebpackModuleRule({
+    test: /\.(styl|stylus)$/,
+    exclude: /(node_modules)/,
+    loaders: [
+      'style-loader',
+      {
+        loader: 'css-loader',
+        options: { url: false },
+      },
+      {
+        loader: 'stylus-loader',
+        options: {
+          stylusOptions: {
+            import: [path.resolve(__dirname, './src/assets/stylus/lib/mixin.styl')],
+          },
+        },
+      },
+    ],
+  }),
+  addWebpackModuleRule({
+    test: /\.svg$/,
+    include: [path.resolve(__dirname, './src/assets/icons')],
+    use: [
+      { loader: 'svg-sprite-loader', options: {} },
+      {
+        loader: 'svgo-loader',
+        options: {
+          plugins: [
+            {
+              name: 'removeAttrs',
+              params: { attrs: 'fill' },
+            },
+          ],
+        },
+      },
+    ],
   })
 );
