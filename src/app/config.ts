@@ -178,3 +178,11 @@ export const supportedChainIds = (() => {
 
   return arr;
 })();
+
+export function getFortmaticKeyByNetwork(network: string): string {
+  if (network === NETWORK.mainnet.chainKey) {
+    return process.env.REACT_APP_FORTMATIC_KEY_MAINNET || '';
+  } else {
+    return process.env.REACT_APP_FORTMATIC_KEY_TESTNET || '';
+  }
+}

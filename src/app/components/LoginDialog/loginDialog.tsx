@@ -7,7 +7,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'rea
 import { useDispatch } from 'react-redux';
 import { ethers } from 'ethers';
 
-import { NETWORK, SupportedNetworks } from '../../config';
+import { NETWORK, SupportedNetworks, getFortmaticKeyByNetwork } from '../../config';
 import { useThemeContext } from '../../theme';
 
 import { getWeb3Connector } from '../../connector';
@@ -117,10 +117,10 @@ export default forwardRef((props, ref) => {
       title: 'Fortmatic',
       providerName: 'fortmatic',
       icon: icons.formaticIcon,
-      // notSupported:
-      //   !getFortmaticKeyByNetwork(preferredNetwork) ||
-      //   preferredNetwork === Network.polygon ||
-      //   preferredNetwork === Network.avalanche,
+      notSupported:
+        !getFortmaticKeyByNetwork(preferredNetwork) ||
+        preferredNetwork === NETWORK.polygon.chainKey ||
+        preferredNetwork === NETWORK.avalanche.chainKey,
     },
     {
       title: 'imToken',

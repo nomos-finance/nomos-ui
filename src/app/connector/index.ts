@@ -12,7 +12,7 @@ import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react';
 import { MewConnectConnector } from '@myetherwallet/mewconnect-connector';
 import { PortisConnector } from '../../web3-data-provider/web3-providers/connectors/portis-connector';
 
-import { supportedChainIds, SupportedNetworks, NETWORK } from '../config';
+import { supportedChainIds, SupportedNetworks, NETWORK, getFortmaticKeyByNetwork } from '../config';
 
 export enum LedgerDerivationPath {
   'Legacy' = "44'/60'/0'/x",
@@ -72,7 +72,7 @@ export function getWeb3Connector(
     case 'fortmatic':
       return new FortmaticConnector({
         chainId: networkId,
-        apiKey: '',
+        apiKey: getFortmaticKeyByNetwork(currentNetwork),
       });
     case 'mew-wallet':
       return new MewConnectConnector({
