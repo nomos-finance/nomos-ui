@@ -1,18 +1,11 @@
 import './index.stylus';
-import './market.scss';
 import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { Progress } from 'antd';
 
+import Icon from '../../../assets/icons';
 import Layout from '../../components/Layout';
-import {
-  Borrow,
-  Deposit,
-  Swap,
-  IBorrowDialog,
-  IDepositDialog,
-  ISwapDialog,
-} from '../../components/ChangeDialog/';
+import { Swap, ISwapDialog } from '../../components/ChangeDialog/';
 import useProtocolDataWithRpc from '../../hooks/usePoolData';
 import useNetworkInfo from '../../hooks/useNetworkInfo';
 import useWalletBalance from '../../hooks/useWalletBalance';
@@ -23,8 +16,6 @@ import MySavingLoad from './mySavingLoad';
 export default function Markets() {
   const { account } = useWeb3React();
   const [totalLiquidity, setTotalLiquidity] = useState('');
-  const BorrowDialogRef = useRef<IBorrowDialog>();
-  const DepositDialogRef = useRef<IDepositDialog>();
   const SwapDialogRef = useRef<ISwapDialog>();
   const [networkInfo] = useNetworkInfo();
 
@@ -37,16 +28,14 @@ export default function Markets() {
     networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
   );
 
-  console.log(data);
-
   return (
     <Layout className="page-market">
       <div className="totalBlock">
         <div className="block">
           <div className="text">
             <span>
-              {/* <Icon name="allLiquidity" />
-                            <Icon name="question" className="question" /> */}
+              <Icon name="allLiquidity" />
+              <Icon name="question" className="question" />
               总流动性
             </span>
           </div>
@@ -55,7 +44,7 @@ export default function Markets() {
         <div className="block">
           <div className="text">
             <span>
-              {/* <Icon name="allDeposit" /> */}
+              <Icon name="allDeposit" />
               总存款
             </span>
           </div>
@@ -64,7 +53,7 @@ export default function Markets() {
         <div className="block">
           <div className="text">
             <span>
-              {/* <Icon name="allLoan" /> */}
+              <Icon name="allLoan" />
               总贷款
             </span>
           </div>
@@ -77,22 +66,22 @@ export default function Markets() {
           <div className="block">
             <div className="main">
               <div className="item">
-                {/* <Icon name="deposit" /> */}
+                <Icon name="deposit" />
                 <div className="text">我的存款</div>
                 <div className="number">${data?.user?.totalLiquidityUSD}</div>
               </div>
               <div className="item">
-                {/* <Icon name="loan" /> */}
+                <Icon name="loan" />
                 <div className="text">我的贷款</div>
                 <div className="number">${data?.user?.totalBorrowsUSD}</div>
               </div>
               <div className="item">
-                {/* <Icon name="rate" /> */}
+                <Icon name="rate" />
                 <div className="text">总收益年利率</div>
                 <div className="number"></div>
               </div>
               <div className="item">
-                {/* <Icon name="reward" /> */}
+                <Icon name="reward" />
                 <div className="text">可领取奖励NOMO</div>
                 <div className="number">${data?.user?.totalRewardsUSD}</div>
               </div>
@@ -135,8 +124,6 @@ export default function Markets() {
           user={data?.user}
         />
       )}
-      <Borrow ref={BorrowDialogRef} />
-      <Deposit ref={DepositDialogRef} />
       <Swap ref={SwapDialogRef} />
     </Layout>
   );

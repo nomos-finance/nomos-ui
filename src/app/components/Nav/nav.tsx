@@ -1,4 +1,4 @@
-import './nav.scss';
+import './nav.styl';
 /*eslint-disable import/no-anonymous-default-export */
 
 import classnames from 'classnames';
@@ -24,41 +24,55 @@ export default (): React.ReactElement => {
           <span>Market</span>
         </Link>
         <Link className={classnames('item', { cur: /dao/.test(pathname) })} to="/dao">
-          <i>{/* <Icon name="dao" /> */}</i>
+          <i>
+            <Icon name="dao" />
+          </i>
           <span>DAO</span>
         </Link>
         <Link className={classnames('item', { cur: /voting/.test(pathname) })} to="/voting">
-          <i>{/* <Icon name="voting" /> */}</i>
+          <i>
+            <Icon name="voting" />
+          </i>
           <span>Voting</span>
         </Link>
         <Link className={classnames('item', { cur: /invitation/.test(pathname) })} to="/invitation">
-          <i>{/* <Icon name="invitation" /> */}</i>
+          <i>
+            <Icon name="invitation" />
+          </i>
           <span>Invitation</span>
         </Link>
         <Link className={classnames('item', { cur: /staking/.test(pathname) })} to="/staking">
-          <i>{/* <Icon name="staking" /> */}</i>
+          <i>
+            <Icon name="staking" />
+          </i>
           <span>Staking</span>
         </Link>
         <Link className={classnames('item', { cur: /position/.test(pathname) })} to="/position">
-          <i>{/* <Icon name="position" /> */}</i>
+          <i>
+            <Icon name="position" />
+          </i>
           <span>Position</span>
         </Link>
       </div>
       <div className="doc">
         <div className="item">
-          <i>{/* <Icon name="announcement" /> */}</i>
+          <i>
+            <Icon name="announcement" />
+          </i>
           <span>Announcement</span>
         </div>
         <div className="item">
-          <i>{/* <Icon name="file" /> */}</i>
+          <i>
+            <Icon name="file" />
+          </i>
           <span>File</span>
         </div>
       </div>
       <div className="medium">
-        {/* <Icon name="twitter" />
+        <Icon name="twitter" />
         <Icon name="facebook" />
         <Icon name="weChat" />
-        <Icon name="in" /> */}
+        <Icon name="in" />
       </div>
     </nav>
   );

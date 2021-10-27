@@ -1,3 +1,172 @@
-body
-    background: red
-    size: 100%
+.page-market
+    .block
+        background: var(--var-block-bg)
+        box-shadow: 0 0 5px var(--var-block-shadow)
+        border-radius: 15px
+
+    table
+        width: 100%
+
+        th
+            background: #f7f7f7
+            text-align: center
+            font-size: 18px
+            padding: 10px 0
+
+            &:first-child
+                border-top-left-radius: 15px
+                border-bottom-left-radius: 15px
+
+            &:last-child
+                border-top-right-radius: 15px
+                border-bottom-right-radius: 15px
+
+        td
+            font-size: 18px
+            padding: 10px
+
+    .totalBlock
+        display: flex
+        margin: 0 0 40px
+
+        .block
+            flex: 1
+            padding: 20px
+
+            &:nth-child(2)
+                margin: 0 50px
+
+            .text
+                font-size: 18px
+
+                span
+                    position: relative
+                    padding: 0 25px
+
+                    .icon
+                        position: absolute
+                        top: 50%
+                        transform: translateY(-50%)
+                        left: 0
+
+                        &.question
+                            left: auto
+                            right: 0
+
+            .number
+                font-size: 40px
+
+    .userBlock
+        margin: 0 0 40px
+
+        &>.title
+            font-size: 20px
+            margin: 0 0 20px
+
+        .userBlockMain
+            display: flex
+
+            .block
+                padding: 30px
+
+                &:first-child
+                    flex: 1
+                    margin: 0 50px 0 0
+
+                    .main
+                        display: flex
+
+                        .item
+                            flex: 1
+                            text-align: center
+
+                            .icon
+                                size(70px)
+
+                            .text
+                                font-size: 18px
+                                margin: 25px 0 10px
+                                color: #666
+
+                            .number
+                                font-size: 30px
+
+                    .btn
+                        width: 150px
+                        height: 50px
+                        line-height: @height
+                        color: #000
+                        background: #f9bd00
+                        text-align: center
+                        border-radius: 15px
+                        margin: 30px auto 0
+                        font-size: 18px
+
+    .voteBlock
+        justifyContentSpaceBetween()
+        padding: 20px
+        margin: 0 0 40px
+
+        .text
+            height: 50px
+            line-height: @height
+            font-size: 20px
+
+        .btn
+            width: 150px
+            height: 50px
+            line-height: @height
+            color: #000
+            background: #f9bd00
+            text-align: center
+            border-radius: 15px
+            font-size: 18px
+
+    .assetBlock
+        margin: 0 0 40px
+
+        .header
+            justifyContentSpaceBetween()
+            margin: 0 0 20px
+
+            .tab
+                display: flex
+                font-size: 18px
+                border-bottom: 1px solid #dddddd
+
+                .tabItem
+                    width: 120px
+                    text-align: center
+                    cursor: pointer
+
+                    &.cur
+                        position: relative
+
+                        &:after
+                            display: block
+                            content: ' '
+                            position: absolute
+                            bottom: -1px
+                            height: 2px
+                            background: #f9bd00
+                            width: 100%
+
+        .block
+            padding: 20px
+
+    .marketBlock
+        display: flex
+        margin: 0 0 40px
+
+        .main
+            flex: 1
+
+            &:first-child
+                margin: 0 50px 0 0
+
+            .title
+                font-size: 20px
+                margin: 0 0 20px
+
+            .block
+                padding: 20px

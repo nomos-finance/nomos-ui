@@ -1,4 +1,4 @@
-import './assets/index.scss';
+import './assets/stylus/index.styl';
 import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
 import { Web3ReactProvider } from '@web3-react/core';

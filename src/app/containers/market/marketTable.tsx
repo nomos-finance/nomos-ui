@@ -78,6 +78,7 @@ export default function MarketTable(props: IProps) {
         sIncentivesAPY: reserve.sIncentivesAPY,
       };
     });
+
   return (
     <div className="marketBlock">
       <div className="main">
