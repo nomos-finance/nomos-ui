@@ -1,3 +1,4 @@
+import './logoutDialog.styl';
 import { useWeb3React } from '@web3-react/core';
 import { Modal } from 'antd';
 import React, { forwardRef, useImperativeHandle, useState } from 'react';

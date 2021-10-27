@@ -1,4 +1,4 @@
-import './loginDialog.scss';
+import './loginDialog.styl';
 
 import { useWeb3React } from '@web3-react/core';
 import { Dropdown, Menu, Modal } from 'antd';
