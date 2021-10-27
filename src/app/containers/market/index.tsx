@@ -114,7 +114,12 @@ export default function Markets() {
         <div className="btn">投票</div>
       </div>
       {data?.user && balance && (
-        <MySavingLoad balance={balance} reserves={data.reserves} user={data.user} />
+        <MySavingLoad
+          balance={balance}
+          reserves={data.reserves}
+          user={data.user}
+          usdPriceEth={data.usdPriceEth}
+        />
       )}
       {data && balance && (
         <MarketTable

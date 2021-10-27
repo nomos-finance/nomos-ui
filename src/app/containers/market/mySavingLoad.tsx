@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import classnames from 'classnames';
-import { ComputedReserveData, UserSummaryData } from '@aave/protocol-js';
+import { ComputedReserveData, UserSummaryData, normalize } from '@aave/protocol-js';
 
 import {
   Borrow,
@@ -15,6 +15,7 @@ interface IProps {
   reserves: ComputedReserveData[];
   user: UserSummaryData;
   balance: IBalance;
+  usdPriceEth: string;
 }
 
 interface IBalance {
@@ -32,6 +33,8 @@ export default function MySavingLoad(props: IProps) {
     const poolReserve = props.reserves.find((res) => res.symbol === userReserve.reserve.symbol);
     obj[userReserve.reserve.symbol] = poolReserve;
   });
+
+  const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
 
   return (
     <div className="assetBlock">
@@ -75,6 +78,7 @@ export default function MySavingLoad(props: IProps) {
                         DepositDialogRef.current?.show({
                           type: 'Deposit',
                           data: obj[item.reserve.symbol],
+                          marketRefPriceInUsd,
                         })
                       }
                     >

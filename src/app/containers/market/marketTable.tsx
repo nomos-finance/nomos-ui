@@ -101,6 +101,7 @@ export default function MarketTable(props: IProps) {
                       type: 'Withdraw',
                       data: item.reserve,
                       balance: props.balance[item.underlyingAsset],
+                      marketRefPriceInUsd,
                     })
                   }
                 >
