@@ -2,11 +2,16 @@ import './borrow.styl';
 /*eslint-disable import/no-anonymous-default-export */
 
 import classnames from 'classnames';
-import React, { forwardRef, useState, useImperativeHandle } from 'react';
+import React, { forwardRef, useState, useImperativeHandle, useEffect } from 'react';
 import { Modal, Input, Button } from 'antd';
 import { useThemeContext } from '../../../theme';
 
-import { ComputedReserveData } from '@aave/protocol-js';
+import {
+  ComputedReserveData,
+  valueToBigNumber,
+  BigNumber,
+  UserSummaryData,
+} from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { handleSend } from '../helper/txHelper';
 import { useWeb3React } from '@web3-react/core';
@@ -16,6 +21,7 @@ import storage from '../../../utils/storage';
 interface IProps {
   type: 'Borrow' | 'Repay';
   data?: ComputedReserveData;
+  user?: UserSummaryData;
 }
 
 export interface IDialog {
@@ -55,6 +61,49 @@ export default forwardRef((props, ref) => {
     },
     hide,
   }));
+
+  useEffect(() => {
+    if (!params || !params.data || !params.user || !account) return;
+    const maxUserAmountToBorrow = valueToBigNumber(params.user?.availableBorrowsETH || 0).div(
+      params.data.price.priceInEth
+    );
+    let maxAmountToBorrow = BigNumber.max(
+      BigNumber.min(params.data.availableLiquidity, maxUserAmountToBorrow),
+      0
+    );
+    if (
+      maxAmountToBorrow.gt(0) &&
+      params.user?.totalBorrowsETH !== '0' &&
+      maxUserAmountToBorrow.lt(
+        valueToBigNumber(params.data.availableLiquidity).multipliedBy('1.01')
+      )
+    ) {
+      maxAmountToBorrow = maxAmountToBorrow.multipliedBy('0.99');
+    }
+    const formattedMaxAmountToBorrow = maxAmountToBorrow;
+
+    console.log(
+      +formattedMaxAmountToBorrow,
+      +maxUserAmountToBorrow,
+      params.user,
+      params.user?.availableBorrowsETH,
+      params.data.price.priceInEth,
+      params.data.availableLiquidity
+    );
+
+    // const totalBorrows = valueToBigNumber(params.user?.totalBorrows || '0').toNumber();
+    // const underlyingBalance = valueToBigNumber(userReserve?.underlyingBalance || '0').toNumber();
+
+    // const availableBorrowsETH = valueToBigNumber(user?.availableBorrowsETH || 0);
+    // const availableBorrows = availableBorrowsETH.gt(0)
+    //   ? BigNumber.min(
+    //       availableBorrowsETH
+    //         .div(poolReserve.price.priceInEth)
+    //         .multipliedBy(user && user.totalBorrowsETH !== '0' ? '0.99' : '1'),
+    //       poolReserve.availableLiquidity
+    //     ).toNumber()
+    //   : 0;
+  }, [params, account]);
 
   const handleBorrowAmountChange = (amount: string): void => {
     const val = filterInput(amount);

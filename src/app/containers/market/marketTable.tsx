@@ -141,7 +141,11 @@ export default function MarketTable(props: IProps) {
                 <tr
                   key={item.id}
                   onClick={() =>
-                    BorrowDialogRef.current?.show({ type: 'Borrow', data: item.reserve })
+                    BorrowDialogRef.current?.show({
+                      type: 'Borrow',
+                      data: item.reserve,
+                      user: props.user,
+                    })
                   }
                 >
                   <td>{item.currencySymbol}</td>
