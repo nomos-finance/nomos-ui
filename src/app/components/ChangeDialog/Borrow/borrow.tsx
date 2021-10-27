@@ -1,4 +1,4 @@
-import './borrow.scss';
+import './borrow.styl';
 /*eslint-disable import/no-anonymous-default-export */
 
 import classnames from 'classnames';

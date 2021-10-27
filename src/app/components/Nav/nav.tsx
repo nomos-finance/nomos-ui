@@ -13,7 +13,7 @@ export default (): React.ReactElement => {
   return (
     <nav className={classnames('lt-nav')}>
       <Link className="logo" to="/" />
-      <div className="nav">
+      <div className="menu">
         <Link
           className={classnames('item', { cur: pathname === '/' || /market/.test(pathname) })}
           to="/"

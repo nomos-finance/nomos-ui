@@ -13,10 +13,7 @@ module.exports = override(
     exclude: /(node_modules)/,
     loaders: [
       'style-loader',
-      {
-        loader: 'css-loader',
-        options: { url: false },
-      },
+      'css-loader',
       {
         loader: 'stylus-loader',
         options: {

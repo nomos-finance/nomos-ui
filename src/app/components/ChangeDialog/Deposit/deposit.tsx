@@ -1,6 +1,6 @@
 /*eslint-disable import/no-anonymous-default-export */
 
-import './deposit.scss';
+import './deposit.styl';
 import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle } from 'react';
 import { Modal, Input } from 'antd';

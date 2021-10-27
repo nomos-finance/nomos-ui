@@ -1,5 +1,5 @@
 /*eslint-disable import/no-anonymous-default-export */
-import './header.scss';
+import './header.styl';
 
 import classnames from 'classnames';
 import React, { useRef, useEffect, useState } from 'react';

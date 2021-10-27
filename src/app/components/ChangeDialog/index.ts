@@ -1,4 +1,4 @@
-import './changeDialog.scss';
+import './changeDialog.styl';
 
 export { default as Borrow } from './Borrow';
 export { default as Deposit } from './Deposit';

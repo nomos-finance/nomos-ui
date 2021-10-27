@@ -1,4 +1,4 @@
-import './deposit.scss';
+import './swap.styl';
 /*eslint-disable import/no-anonymous-default-export */
 
 import classnames from 'classnames';
