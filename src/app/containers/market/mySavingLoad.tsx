@@ -37,7 +37,7 @@ export default function MySavingLoad(props: IProps) {
   const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
 
   return (
-    <div className="assetBlock">
+    <div className="block assetBlock">
       <div className="header">
         <div className="tab">
           <div
@@ -54,86 +54,82 @@ export default function MySavingLoad(props: IProps) {
           </div>
         </div>
         <div className="text" onClick={() => SwapDialogRef.current?.show()}>
-          想把抵押资产换成其他资产，不用赎回，一键可完成
+          想把抵押资产换成其他资产，不用赎回，一键可完成 &gt;
         </div>
       </div>
       {tab === 'deposit' ? (
-        <div className="block">
-          <table>
-            <thead>
-              <tr>
-                <th>资产</th>
-                <th>抵押品</th>
-                <th>年收益率</th>
-                <th>存款余额</th>
-              </tr>
-            </thead>
-            <tbody>
-              {props.user.reservesData.map((item) => {
-                if (Number(item?.underlyingBalance)) {
-                  return (
-                    <tr
-                      key={item.reserve.id}
-                      onClick={() =>
-                        DepositDialogRef.current?.show({
-                          type: 'Deposit',
-                          data: obj[item.reserve.symbol],
-                          marketRefPriceInUsd,
-                        })
-                      }
-                    >
-                      <td>{item.reserve.symbol}</td>
-                      <td>{item.usageAsCollateralEnabledOnUser ? 'true' : 'false'}</td>
-                      <td>{item.reserve.liquidityRate}</td>
-                      <td>
-                        {item.underlyingBalance} u:{item.underlyingBalanceUSD}
-                      </td>
-                    </tr>
-                  );
-                }
-              })}
-            </tbody>
-          </table>
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>资产</th>
+              <th>抵押品</th>
+              <th>年收益率</th>
+              <th>存款余额</th>
+            </tr>
+          </thead>
+          <tbody>
+            {props.user.reservesData.map((item) => {
+              if (Number(item?.underlyingBalance)) {
+                return (
+                  <tr
+                    key={item.reserve.id}
+                    onClick={() =>
+                      DepositDialogRef.current?.show({
+                        type: 'Deposit',
+                        data: obj[item.reserve.symbol],
+                        marketRefPriceInUsd,
+                      })
+                    }
+                  >
+                    <td>{item.reserve.symbol}</td>
+                    <td>{item.usageAsCollateralEnabledOnUser ? 'true' : 'false'}</td>
+                    <td>{item.reserve.liquidityRate}</td>
+                    <td>
+                      {item.underlyingBalance} u:{item.underlyingBalanceUSD}
+                    </td>
+                  </tr>
+                );
+              }
+            })}
+          </tbody>
+        </table>
       ) : (
-        <div className="block">
-          <table>
-            <thead>
-              <tr>
-                <th>资产</th>
-                <th>利率</th>
-                <th>已借</th>
-              </tr>
-            </thead>
-            <tbody>
-              {props.user.reservesData.map((item) => {
-                if (Number(item?.scaledVariableDebt)) {
-                  return (
-                    <tr
-                      key={item.reserve.id}
-                      onClick={() =>
-                        BorrowDialogRef.current?.show({
-                          type: 'Repay',
-                          data: obj[item.reserve.symbol],
-                        })
-                      }
-                    >
-                      <td>{item.reserve.symbol}</td>
-                      <td>
-                        stable: {item.stableBorrowRate} variable:
-                        {obj[item.reserve.symbol].variableBorrowRate}
-                      </td>
-                      <td>
-                        stable: {item.stableBorrows} {item.stableBorrowsUSD} variable:{' '}
-                        {item.variableBorrows} {item.variableBorrowsUSD}
-                      </td>
-                    </tr>
-                  );
-                }
-              })}
-            </tbody>
-          </table>
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>资产</th>
+              <th>利率</th>
+              <th>已借</th>
+            </tr>
+          </thead>
+          <tbody>
+            {props.user.reservesData.map((item) => {
+              if (Number(item?.scaledVariableDebt)) {
+                return (
+                  <tr
+                    key={item.reserve.id}
+                    onClick={() =>
+                      BorrowDialogRef.current?.show({
+                        type: 'Repay',
+                        data: obj[item.reserve.symbol],
+                      })
+                    }
+                  >
+                    <td>{item.reserve.symbol}</td>
+                    <td>
+                      stable: {item.stableBorrowRate} variable:
+                      {obj[item.reserve.symbol].variableBorrowRate}
+                    </td>
+                    <td>
+                      stable: {item.stableBorrows} {item.stableBorrowsUSD} variable:{' '}
+                      {item.variableBorrows} {item.variableBorrowsUSD}
+                    </td>
+                  </tr>
+                );
+              }
+            })}
+          </tbody>
+        </table>
       )}
       <Borrow ref={BorrowDialogRef} />
       <Deposit ref={DepositDialogRef} />

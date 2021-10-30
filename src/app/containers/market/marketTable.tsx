@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   valueToBigNumber,
   normalize,
   ComputedReserveData,
   UserSummaryData,
 } from '@aave/protocol-js';
+import { Input } from 'antd';
 import {
   Borrow,
   Deposit,
@@ -14,6 +15,8 @@ import {
   ISwapDialog,
 } from '../../components/ChangeDialog/';
 import { formatMoney, pow10 } from '../../utils/tool';
+import Icon from '../../../assets/icons';
+import classNames from 'classnames';
 
 interface IProps {
   reserves: ComputedReserveData[];
@@ -31,6 +34,7 @@ export default function MarketTable(props: IProps) {
   const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
   const BorrowDialogRef = useRef<IBorrowDialog>();
   const DepositDialogRef = useRef<IDepositDialog>();
+  const [borrowType, setBorrowType] = useState('usd');
 
   let sortedData = props.reserves
     .filter((res) => res.isActive)
@@ -81,81 +85,108 @@ export default function MarketTable(props: IProps) {
 
   return (
     <div className="marketBlock">
-      <div className="main">
+      <div className="block">
         <div className="title">存款市场</div>
-        <div className="block">
-          <table>
-            <thead>
-              <tr>
-                <th>资产</th>
-                <th>存款APY</th>
-                <th>钱包余额</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedData.map((item) => (
-                <tr
-                  key={item.id}
-                  onClick={() =>
-                    DepositDialogRef.current?.show({
-                      type: 'Withdraw',
-                      data: item.reserve,
-                      balance: props.balance[item.underlyingAsset],
-                      marketRefPriceInUsd,
-                    })
-                  }
-                >
-                  {/* const availableBorrows = availableBorrowsETH.gt(0)
-          ? BigNumber.min(
-              // one percent margin to don't fail tx
-              availableBorrowsETH
-                .div(reserve.price.priceInEth)
-                .multipliedBy(user && user.totalBorrowsETH !== '0' ? '0.99' : '1'),
-              reserve.availableLiquidity
-            ).toNumber()
-          : 0; */}
-                  <td>{item.currencySymbol}</td>
-                  <td>{item.depositAPY}</td>
-                  <td>
-                    {formatMoney(pow10(props.balance[item.underlyingAsset], item.reserve.decimals))}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="search">
+          <em>
+            <Icon name="search" />
+          </em>
+          <Input bordered={false} placeholder="搜寻存款资产" />
+          <span>
+            所有资产
+            <i>
+              <Icon name="down" />
+            </i>
+          </span>
         </div>
+        <table>
+          <thead>
+            <tr>
+              <th>资产</th>
+              <th>存款APY</th>
+              <th>钱包余额</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedData.map((item) => (
+              <tr
+                key={item.id}
+                onClick={() =>
+                  DepositDialogRef.current?.show({
+                    type: 'Withdraw',
+                    data: item.reserve,
+                    balance: props.balance[item.underlyingAsset],
+                    marketRefPriceInUsd,
+                  })
+                }
+              >
+                <td>{item.currencySymbol}</td>
+                <td>{item.depositAPY}</td>
+                <td>
+                  {formatMoney(pow10(props.balance[item.underlyingAsset], item.reserve.decimals))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <div className="main">
-        <div className="title">贷款市场</div>
-        <div className="block">
-          <table>
-            <thead>
-              <tr>
-                <th>资产</th>
-                <th>stable 贷款APY</th>
-                <th>variable 贷款APY</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedData.map((item) => (
-                <tr
-                  key={item.id}
-                  onClick={() =>
-                    BorrowDialogRef.current?.show({
-                      type: 'Borrow',
-                      data: item.reserve,
-                      user: props.user,
-                    })
-                  }
-                >
-                  <td>{item.currencySymbol}</td>
-                  <td>{item.stableBorrowRate}</td>
-                  <td>{item.variableBorrowRate}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="block">
+        <div className="title">
+          <span>贷款市场</span>
+          <div className="tab">
+            <div
+              className={classNames('item', { cur: borrowType === 'USD' })}
+              onClick={() => setBorrowType('USD')}
+            >
+              USD
+            </div>
+            <div
+              className={classNames('item', { cur: borrowType === 'Amount' })}
+              onClick={() => setBorrowType('Amount')}
+            >
+              Amount
+            </div>
+          </div>
         </div>
+        <div className="search">
+          <em>
+            <Icon name="search" />
+          </em>
+          <Input bordered={false} placeholder="搜寻贷款资产" />
+          <span>
+            所有资产
+            <i>
+              <Icon name="down" />
+            </i>
+          </span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>资产</th>
+              <th>stable 贷款APY</th>
+              <th>variable 贷款APY</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedData.map((item) => (
+              <tr
+                key={item.id}
+                onClick={() =>
+                  BorrowDialogRef.current?.show({
+                    type: 'Borrow',
+                    data: item.reserve,
+                    user: props.user,
+                  })
+                }
+              >
+                <td>{item.currencySymbol}</td>
+                <td>{item.stableBorrowRate}</td>
+                <td>{item.variableBorrowRate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <Borrow ref={BorrowDialogRef} />
       <Deposit ref={DepositDialogRef} />

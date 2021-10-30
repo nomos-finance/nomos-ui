@@ -158,3 +158,16 @@ border-right(offset-x, args...)
     @media screen and (-webkit-min-device-pixel-ratio: 3)
       $w = (offset-x / 2)
       border-right: $w args
+
+placeholder($size = 18px)
+  ::-webkit-input-placeholder /* WebKit browsers */
+      color: var(--var-placeholder)
+      font-size: $size
+
+  ::-moz-placeholder /* Mozilla Firefox 19+ */
+      color: var(--var-placeholder)
+      font-size: $size
+
+  :-ms-input-placeholder /* Internet Explorer 10+ */
+      color: var(--var-placeholder)
+      font-size: $size

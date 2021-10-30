@@ -1,12 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#d3d3d3;}
-	.st1{fill:#ffffff;}
-</style>
-<circle class="st0" cx="100.2" cy="100.6" r="98"/>
-<path class="st1" d="M131.7,40.8v19.3h-11.4c-9,0-10.6,4.3-10.6,10.5v13.8H131l-2.8,21.6h-18.5v55.3H87.3V106H68.7V84.4h18.6V68.5
-	C87.3,50,98.6,40,115.1,40C123,40,129.8,40.5,131.7,40.8L131.7,40.8z"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="20px" viewBox="0 0 10 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>路径</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" >
+        <g id="NOMOS——昼日备份-6" transform="translate(-87.000000, -1741.000000)">
+            <g id="编组-4" transform="translate(0.000000, -0.052559)">
+                <g id="编组-19" transform="translate(24.000000, 1635.052559)">
+                    <g id="编组-23" transform="translate(0.000000, 96.947441)">
+                        <g id="编组-5备份" transform="translate(48.000000, 0.000000)">
+                            <path d="M24.9971655,13.1526796 L23.185941,13.1526796 C21.765873,13.1526796 21.4909297,13.8184629 21.4909297,14.7975559 L21.4909297,16.9543581 L24.8809524,16.9543581 L24.4387755,20.3308304 L21.4909297,20.3308304 L21.4909297,29 L17.9563492,29 L17.9563492,20.3336278 L15,20.3336278 L15,16.9543581 L17.9563492,16.9543581 L17.9563492,14.4646643 C17.9563492,11.5749411 19.744898,10 22.3582766,10 C23.6111111,10 24.6853741,10.0923145 25,10.1342756 L25,13.1526796 L24.9971655,13.1526796 Z" id="路径"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
 </svg>

@@ -1,29 +1,31 @@
 .page-market
     .block
         background: var(--var-block-bg)
-        box-shadow: 0 0 5px var(--var-block-shadow)
-        border-radius: 15px
+        border-radius: 24px
+        border: 1px solid var(--var-block-border)
 
     table
         width: 100%
 
         th
-            background: #f7f7f7
+            background: var(--var-table-thead)
             text-align: center
-            font-size: 18px
-            padding: 10px 0
+            font-size: 16px
+            padding: 13px 0
+            color: var(--var-text-color)
 
             &:first-child
-                border-top-left-radius: 15px
-                border-bottom-left-radius: 15px
+                border-top-left-radius: 8px
+                border-bottom-left-radius: 8px
 
             &:last-child
-                border-top-right-radius: 15px
-                border-bottom-right-radius: 15px
+                border-top-right-radius: 8px
+                border-bottom-right-radius: 8px
 
         td
-            font-size: 18px
-            padding: 10px
+            font-size: 16px
+            padding: 16px 10px
+            color: var(--var-text-color)
 
     .totalBlock
         display: flex
@@ -31,142 +33,280 @@
 
         .block
             flex: 1
-            padding: 20px
+            padding: 20px 30px
+            box-shadow: var(--var-block-shadow)
 
-            &:nth-child(2)
-                margin: 0 50px
+            .inner
+                background-repeat: no-repeat
+                background-position: right top
+
+            &.totalLiquidity
+                .default
+                    background-image: url('./img/totalLiquidity-default.png')
+
+                .dark
+                    background-image: url('./img/totalLiquidity-dark.png')
+
+            &.totalDeposit
+                margin: 0 30px
+
+                .default
+                    background-image: url('./img/totalDeposit-default.png')
+
+                .dark
+                    background-image: url('./img/totalDeposit-dark.png')
+
+            &.totalBorrow
+                .default
+                    background-image: url('./img/totalBorrow-default.png')
+
+                .dark
+                    background-image: url('./img/totalBorrow-dark.png')
 
             .text
-                font-size: 18px
+                font-size: 16px
+                color: var(--var-nav-text)
 
                 span
                     position: relative
-                    padding: 0 25px
+                    padding: 0 25px 0 0
 
                     .icon
                         position: absolute
                         top: 50%
                         transform: translateY(-50%)
                         left: 0
+                        size: 18px
 
                         &.question
                             left: auto
                             right: 0
 
             .number
-                font-size: 40px
+                font-size: 56px
+
+                i
+                    font-size: 48px
 
     .userBlock
         margin: 0 0 40px
+        display: flex
 
-        &>.title
-            font-size: 20px
-            margin: 0 0 20px
+        .block
+            padding: 30px
 
-        .userBlockMain
-            display: flex
+            .title
+                justifyContentSpaceBetween()
 
-            .block
-                padding: 30px
+                span
+                    font-size: 20px
+                    font-weight: bold
+                    display: inline-block
+                    height: 40px
+                    line-height: @height
 
-                &:first-child
-                    flex: 1
-                    margin: 0 50px 0 0
+                .btn
+                    width: 112px
+                    height: 40px
+                    line-height: @height
+                    background: #FFD84E
+                    border-radius: 20px
+                    font-size: 16px
+                    font-family: PingFangSC-Regular, PingFang SC
+                    font-weight: 400
+                    text-align: center
+                    color: #0C0E11
+                    box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
 
-                    .main
-                        display: flex
+            &.userInfo
+                flex: 1
+                margin: 0 50px 0 0
 
-                        .item
-                            flex: 1
-                            text-align: center
+                .title
+                    margin: 0 0 40px
 
-                            .icon
-                                size(70px)
+                .main
+                    display: flex
 
-                            .text
-                                font-size: 18px
-                                margin: 25px 0 10px
-                                color: #666
+                    .item
+                        flex: 1
+                        border-left: 1px solid var(--var-border)
+                        padding: 0 0 0 32px
 
-                            .number
-                                font-size: 30px
+                        .icon
+                            size(35px)
+                            color: var(--var-block-icon-color)
+                            margin: 6px 0 40px
 
-                    .btn
-                        width: 150px
-                        height: 50px
-                        line-height: @height
-                        color: #000
-                        background: #f9bd00
-                        text-align: center
-                        border-radius: 15px
-                        margin: 30px auto 0
-                        font-size: 18px
+                        .text
+                            font-size: 16px
+                            margin: 0 0 6px
+                            color: var(--var-nav-text)
+
+                        .number
+                            font-size: 24px
+                            color: var(--var-nav-cur-text)
+
+                        &:first-child
+                            padding: 0
+                            border: 0 none
+
+            &.charts
+                padding-bottom: 0
+                .title
+                    margin: 0 0 20px
+                .main
+                    position relative
+                    width: 280px
+                    height: 180px
+                    overflow: hidden
+                    
+                    .Chart
+                        abCenter()
+
 
     .voteBlock
-        justifyContentSpaceBetween()
-        padding: 20px
+        padding: 32px
         margin: 0 0 40px
 
-        .text
-            height: 50px
-            line-height: @height
-            font-size: 20px
+        .title
+            justifyContentSpaceBetween()
+            margin: 0 0 20px
 
-        .btn
-            width: 150px
-            height: 50px
-            line-height: @height
-            color: #000
-            background: #f9bd00
-            text-align: center
-            border-radius: 15px
-            font-size: 18px
+            span
+                font-size: 20px
+                font-weight: bold
+                display: inline-block
+                height: 40px
+                line-height: @height
+
+            .icon
+                color: var(--var-nav-text)
+                margin: 10px 0
+
+        .main
+            justifyContentSpaceBetween()
+            background: var(--var-block-voteBlock)
+            padding: 15px 24px
+            border-radius: 8px
+
+            .item
+                height: 40px
+                line-height: @height
+                font-size: 20px
+
+                .btn
+                    width: 112px
+                    height: 40px
+                    line-height: @height
+                    background: #FFD84E
+                    border-radius: 20px
+                    font-size: 16px
+                    font-family: PingFangSC-Regular, PingFang SC
+                    font-weight: 400
+                    text-align: center
+                    color: #0C0E11
+                    box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
 
     .assetBlock
         margin: 0 0 40px
+        padding: 32px
 
         .header
             justifyContentSpaceBetween()
             margin: 0 0 20px
+            height: 28px
+            line-height: @height
 
             .tab
                 display: flex
-                font-size: 18px
-                border-bottom: 1px solid #dddddd
+                font-size: 20px
 
                 .tabItem
-                    width: 120px
                     text-align: center
                     cursor: pointer
+                    color: var(--var-nav-text)
+                    margin: 0 40px 0 0
 
                     &.cur
                         position: relative
+                        color: var(--var-nav-cur-text)
 
-                        &:after
-                            display: block
-                            content: ' '
-                            position: absolute
-                            bottom: -1px
-                            height: 2px
-                            background: #f9bd00
-                            width: 100%
-
-        .block
-            padding: 20px
+            .text
+                color: var(--var-nav-cur-text)
+                font-size: 16px
 
     .marketBlock
         display: flex
         margin: 0 0 40px
 
-        .main
+        .block
             flex: 1
+            padding: 32px
 
             &:first-child
                 margin: 0 50px 0 0
 
             .title
                 font-size: 20px
-                margin: 0 0 20px
+                margin: 0 0 18px
+                height: 40px
+                line-height: @height
+                justifyContentSpaceBetween()
+
+                .tab
+                    display: flex
+                    width: 180px
+                    border-radius: 20px
+                    overflow: hidden
+                    font-size: 16px
+
+                    .item
+                        background: var(--var-tab-button-bg)
+                        flex: 1
+                        height: 40px
+                        line-height: @height
+                        text-align: center
+                        color: var(--var-tab-button-color)
+                        cursor: pointer
+
+                        &.cur
+                            background: #FFD84E
+                            color: #333
+
+            .search
+                border: 1px solid var(--var-border)
+                height: 40px
+                line-height: @height
+                border-radius: 24px
+                display: flex
+                placeholder()
+                padding: 0 10px 0 20px
+                margin: 0 0 15px
+
+                .ant-input
+                    flex: 1
+
+                em
+                    display: block
+                    width: 16px
+                    position: relative
+
+                    .icon
+                        abCenter()
+                        size: 16px
+
+                span
+                    display: block
+                    color: var(--var-placeholder)
+                    font-size: 16px
+
+                    i
+                        display: inline-block
+                        padding: 0 20px 0 5px
+
+                        .icon
+                            size: 10px
 
             .block
                 padding: 20px

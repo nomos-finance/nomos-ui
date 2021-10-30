@@ -1,7 +1,7 @@
 import './logoutDialog.styl';
 import { useWeb3React } from '@web3-react/core';
 import { Modal } from 'antd';
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 
 import storage from '../../utils/storage';
 import { getShortenAddress } from '../../utils/tool';
@@ -18,6 +18,8 @@ const LongDialog = forwardRef((props, ref) => {
   const { currentThemeName } = useThemeContext();
   const [LogoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const { account, deactivate, chainId } = useWeb3React();
+  const storedAccount = storage.get('account');
+  const [currentAccount, setCurrentAccount] = useState<string>();
 
   useImperativeHandle(ref, () => ({
     show: () => {
@@ -28,45 +30,56 @@ const LongDialog = forwardRef((props, ref) => {
     },
   }));
 
-  return account ? (
-    <>
-      <Modal
-        visible={LogoutDialogOpen}
-        onCancel={() => setLogoutDialogOpen(false)}
-        footer={null}
-        wrapClassName={classNames('customDialog', 'logoutDialog', currentThemeName)}
-        centered
-        destroyOnClose={true}
-        closable={false}
-      >
-        <div className="modalTitle">
-          <div className="title">Account</div>
-          <em onClick={() => setLogoutDialogOpen(false)}>x</em>
-        </div>
-        <div className="modalMain">
-          <div className="content">
-            <div className="account">
-              <div className="address">{getShortenAddress(account)}</div>
+  useEffect(() => {
+    if (account) {
+      setCurrentAccount(account);
+    } else if (storedAccount) {
+      setCurrentAccount(storedAccount);
+    }
+    return () => {
+      setCurrentAccount(undefined);
+    };
+  }, [account]);
+
+  return (
+    <Modal
+      visible={LogoutDialogOpen}
+      onCancel={() => setLogoutDialogOpen(false)}
+      footer={null}
+      wrapClassName={classNames('customDialog', 'logoutDialog', currentThemeName)}
+      centered
+      destroyOnClose={true}
+      closable={false}
+    >
+      <div className="modalTitle">
+        <div className="title">Account</div>
+        <em onClick={() => setLogoutDialogOpen(false)}>x</em>
+      </div>
+      <div className="modalMain">
+        <div className="content">
+          <div className="account">
+            <div className="address">
+              {currentAccount ? getShortenAddress(currentAccount) : null}
             </div>
           </div>
         </div>
-        <div className="ModalBtn">
-          <div
-            className="btn"
-            onClick={() => {
-              deactivate();
-              disconnectWeb3Connector();
-              storage.set('isLogout', true);
-              storage.set('account', '');
-              setLogoutDialogOpen(false);
-            }}
-          >
-            Disconnect
-          </div>
+      </div>
+      <div className="ModalBtn">
+        <div
+          className="btn"
+          onClick={() => {
+            deactivate();
+            disconnectWeb3Connector();
+            storage.set('isLogout', true);
+            storage.set('account', '');
+            setLogoutDialogOpen(false);
+          }}
+        >
+          Disconnect
         </div>
-      </Modal>
-    </>
-  ) : null;
+      </div>
+    </Modal>
+  );
 });
 
 export default LongDialog;

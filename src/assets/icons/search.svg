@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FF8C04;}
-</style>
-<path class="st0" d="M162.2,155.5l-30.8-30.8c8.8-10.3,14.1-23.7,14.1-38.3c0-32.6-26.5-59.1-59.1-59.1S27.3,53.8,27.3,86.4
-	s26.5,59.1,59.1,59.1c14.6,0,28-5.3,38.3-14.1l30.8,30.8c1.9,1.9,4.9,1.9,6.7,0C164.1,160.4,164.1,157.3,162.2,155.5z M86.4,136.4
-	c-27.6,0-50-22.4-50-50c0-27.6,22.4-50,50-50c27.6,0,50,22.4,50,50C136.4,114,114,136.4,86.4,136.4z"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="18px" viewBox="0 0 17 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>形状结合</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="NOMOS——昼日备份-6" transform="translate(-325.000000, -1451.000000)" fill="#666666" fill-rule="nonzero">
+            <g id="编组-22备份" transform="translate(280.000000, 1348.000000)">
+                <g id="编组-25" transform="translate(32.000000, 92.000000)">
+                    <path d="M21.3683604,25.9151854 C17.7631595,25.3695729 15,22.2574717 15,18.5 C15,14.3578644 18.3578644,11 22.5,11 C26.6421356,11 30,14.3578644 30,18.5 C30,22.3482353 27.1017372,25.5195451 23.3689364,25.9502044 L23.3688755,29.9172872 C23.3688755,30.469572 22.9211602,30.9172872 22.3688755,30.9172872 C21.8165907,30.9172872 21.3688755,30.469572 21.3688755,29.9172872 Z M22.5,13 C19.4624339,13 17,15.4624339 17,18.5 C17,21.5375661 19.4624339,24 22.5,24 C25.5375661,24 28,21.5375661 28,18.5 C28,15.4624339 25.5375661,13 22.5,13 Z" id="形状结合" transform="translate(22.500000, 20.958644) rotate(-45.000000) translate(-22.500000, -20.958644) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
 </svg>

@@ -15,20 +15,42 @@
 
 
 :root
-    --var-bg: #f7f7f7
-    --var-text-color: #222
-    --var-main-color: #ffd94d
+    --var-bg: #fff
+    --var-text-color: #333
+    --var-nav-bg: #F1F2F3
+    --var-nav-cur-text: #0C0E11
+    --var-nav-text: rgba(#333, .65)
+    --var-border: rgba(#333, .1)
+    --var-header-notice-icon-color: #FC6965
+    --var-block-border: #EAEAEA
     --var-block-bg: #fff
-    --var-block-shadow: #d3cbb2
+    --var-block-icon-color: #FF8600
+    --var-block-voteBlock: #F7F7F7
+    --var-block-shadow: 0px 9px 35px 0px #F3F5F8
+    --var-table-thead: #F7F7F7
     --var-dialog-bg: #fff
+    --var-placeholder: #333333
+    --var-tab-button-bg: #F3F3F3
+    --var-tab-button-color: #999
 
     .dark
-        --var-bg: #1F2127
+        --var-bg: #0C0E11
         --var-text-color: #fff
-        --var-main-color: #ffd94d
-        --var-block-bg: rgba(#000, 0.1)
-        --var-block-shadow: #d3cbb2
+        --var-nav-bg: #171A1F
+        --var-nav-cur-text: #FCD536
+        --var-nav-text: rgba(#fff, .65)
+        --var-border: #2D3239
+        --var-header-notice-icon-color: #FFD84E
+        --var-block-border: #171A1F
+        --var-block-bg: #171A1F
+        --var-block-icon-color: #FFDC8C
+        --var-block-voteBlock: #1B1F25
+        --var-block-shadow: none
+        --var-table-thead: #1B1F25
         --var-dialog-bg: #42454D
+        --var-placeholder: rgba(#fff, 0.45)
+        --var-tab-button-bg: #2E3135
+        --var-tab-button-color: rgba(#fff, 0.3)
 
 
 html, body, #root
@@ -50,7 +72,7 @@ html, body, #root
     flex: 1
     display: flex
     color: var(--var-text-color)
-    padding: 0 60px
+    padding: 0 40px 0 0
 
     .lt-content
         flex: 1

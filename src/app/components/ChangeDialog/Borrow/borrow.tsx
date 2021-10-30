@@ -42,6 +42,7 @@ export default forwardRef((props, ref) => {
   const [repayAmount, setRepayAmount] = useState<string | number>('');
   const [loading, setLoading] = useState(false);
   const [interestRateMode, setInterestRateMode] = useState('Stable');
+  const [maxAmountToBorrow, setMaxAmountToBorrow] = useState<number>();
 
   const hide = () => {
     setType(params ? params.type : 'Borrow');
@@ -80,29 +81,7 @@ export default forwardRef((props, ref) => {
     ) {
       maxAmountToBorrow = maxAmountToBorrow.multipliedBy('0.99');
     }
-    const formattedMaxAmountToBorrow = maxAmountToBorrow;
-
-    console.log(
-      +formattedMaxAmountToBorrow,
-      +maxUserAmountToBorrow,
-      params.user,
-      params.user?.availableBorrowsETH,
-      params.data.price.priceInEth,
-      params.data.availableLiquidity
-    );
-
-    // const totalBorrows = valueToBigNumber(params.user?.totalBorrows || '0').toNumber();
-    // const underlyingBalance = valueToBigNumber(userReserve?.underlyingBalance || '0').toNumber();
-
-    // const availableBorrowsETH = valueToBigNumber(user?.availableBorrowsETH || 0);
-    // const availableBorrows = availableBorrowsETH.gt(0)
-    //   ? BigNumber.min(
-    //       availableBorrowsETH
-    //         .div(poolReserve.price.priceInEth)
-    //         .multipliedBy(user && user.totalBorrowsETH !== '0' ? '0.99' : '1'),
-    //       poolReserve.availableLiquidity
-    //     ).toNumber()
-    //   : 0;
+    setMaxAmountToBorrow(+maxAmountToBorrow);
   }, [params, account]);
 
   const handleBorrowAmountChange = (amount: string): void => {
@@ -212,6 +191,7 @@ export default forwardRef((props, ref) => {
             <div onClick={() => setInterestRateMode('Stable')}>稳定利率</div>
           </div>
           <div>可贷款数量</div>
+          <div>{maxAmountToBorrow}</div>
           <div>
             <Input
               // bordered={false}
