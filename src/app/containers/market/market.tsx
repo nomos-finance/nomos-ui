@@ -1,7 +1,7 @@
 import './index.stylus';
 import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import { normalize, BigNumber } from '@aave/protocol-js';
+import { valueToBigNumber, normalize, BigNumber } from '@aave/protocol-js';
 import { useThemeContext } from '../../theme';
 
 import Icon from '../../../assets/icons';
@@ -14,10 +14,13 @@ import { useWeb3React } from '@web3-react/core';
 import MarketTable from './marketTable';
 import MySavingLoad from './mySavingLoad';
 import Chart from '../../components/Chart';
+import { CompactNumber } from '../../components/CompactNumber';
 
 export default function Markets() {
   const { account } = useWeb3React();
   const [totalLiquidity, setTotalLiquidity] = useState('');
+  const [totalDeposit, setTotalDeposit] = useState('');
+  const [totalBorrow, setTotalBorrow] = useState('');
   const SwapDialogRef = useRef<ISwapDialog>();
   const [networkInfo] = useNetworkInfo();
   const { currentThemeName } = useThemeContext();
@@ -30,7 +33,33 @@ export default function Markets() {
     networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
   );
 
-  console.log(data?.user);
+  useEffect(() => {
+    if (!data) return;
+    const marketRefPriceInUsd = normalize(data.usdPriceEth, 18);
+    let liquidity = new BigNumber(0);
+    let totalLiquidityInUSD = new BigNumber(0);
+    let totalBorrowsInUSD = new BigNumber(0);
+
+    data.reserves.forEach((item) => {
+      liquidity = liquidity.plus(item.availableLiquidity);
+      totalLiquidityInUSD = totalLiquidityInUSD.plus(
+        valueToBigNumber(item.totalLiquidity)
+          .multipliedBy(item.price.priceInEth)
+          .dividedBy(marketRefPriceInUsd)
+      );
+      totalBorrowsInUSD = totalBorrowsInUSD.plus(
+        valueToBigNumber(item.totalDebt)
+          .multipliedBy(item.price.priceInEth)
+          .dividedBy(marketRefPriceInUsd)
+          .toNumber()
+      );
+    });
+    setTotalLiquidity(liquidity.toString());
+    setTotalDeposit(totalLiquidityInUSD.toString());
+    setTotalBorrow(totalBorrowsInUSD.toString());
+  }, [data]);
+
+  console.log(data?.reserves);
 
   return (
     <Layout className="page-market">
@@ -45,7 +74,7 @@ export default function Markets() {
             </div>
             <div className="number">
               <i>$</i>
-              {totalLiquidity}
+              <CompactNumber value={totalLiquidity} />
             </div>
           </div>
         </div>
@@ -58,7 +87,8 @@ export default function Markets() {
               </span>
             </div>
             <div className="number">
-              <i>$</i>50,000.00
+              <i>$</i>
+              <CompactNumber value={totalDeposit} />
             </div>
           </div>
         </div>
@@ -71,7 +101,8 @@ export default function Markets() {
               </span>
             </div>
             <div className="number">
-              <i>$</i>50,000.00
+              <i>$</i>
+              <CompactNumber value={totalBorrow} />
             </div>
           </div>
         </div>
@@ -109,7 +140,7 @@ export default function Markets() {
           <div className="title">
             <span>健康因子</span>
           </div>
-          {/* <div>
+          <div>
             贷款上限 $
             {data && data.user
               ? new BigNumber(data.user.availableBorrowsETH)
@@ -117,7 +148,6 @@ export default function Markets() {
                   .toString()
               : 0}
           </div>
-          {data?.usdPriceEth} */}
           <div className="main">
             <Chart percentage={60} />
           </div>
