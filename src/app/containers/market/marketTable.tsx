@@ -34,7 +34,7 @@ export default function MarketTable(props: IProps) {
   const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
   const BorrowDialogRef = useRef<IBorrowDialog>();
   const DepositDialogRef = useRef<IDepositDialog>();
-  const [borrowType, setBorrowType] = useState('usd');
+  const [borrowType, setBorrowType] = useState('USD');
 
   let sortedData = props.reserves
     .filter((res) => res.isActive)

@@ -10,14 +10,15 @@ import { Swap, ISwapDialog } from '../../components/ChangeDialog/';
 import useProtocolDataWithRpc from '../../hooks/usePoolData';
 import useNetworkInfo from '../../hooks/useNetworkInfo';
 import useWalletBalance from '../../hooks/useWalletBalance';
-import { useWeb3React } from '@web3-react/core';
 import MarketTable from './marketTable';
 import MySavingLoad from './mySavingLoad';
 import Chart from '../../components/Chart';
 import { CompactNumber } from '../../components/CompactNumber';
 
+import { useSelector } from 'react-redux';
+import { IRootState } from '../../reducers/RootState';
+
 export default function Markets() {
-  const { account } = useWeb3React();
   const [totalLiquidity, setTotalLiquidity] = useState('');
   const [totalDeposit, setTotalDeposit] = useState('');
   const [totalBorrow, setTotalBorrow] = useState('');
@@ -25,6 +26,7 @@ export default function Markets() {
   const [networkInfo] = useNetworkInfo();
   const { currentThemeName } = useThemeContext();
   const { data, refresh } = useProtocolDataWithRpc();
+  const { account } = useSelector((store: IRootState) => store.base);
 
   const [balance] = useWalletBalance(
     networkInfo?.walletBalanceProvider,
@@ -107,52 +109,56 @@ export default function Markets() {
           </div>
         </div>
       </div>
-      <div className="userBlock">
-        <div className="block userInfo">
-          <div className="title">
-            <span>我的账户</span>
-            <span className="btn">领取奖励</span>
+
+      {account && (data?.user?.totalLiquidityUSD || data?.user?.totalBorrowsUSD) ? (
+        <div className="userBlock">
+          <div className="block userInfo">
+            <div className="title">
+              <span>我的账户</span>
+              <span className="btn">领取奖励</span>
+            </div>
+            <div className="main">
+              <div className="item">
+                <Icon name="deposit" />
+                <div className="text">我的存款</div>
+                <div className="number">${data?.user?.totalLiquidityUSD}</div>
+              </div>
+              <div className="item">
+                <Icon name="loan" />
+                <div className="text">我的贷款</div>
+                <div className="number">${data?.user?.totalBorrowsUSD}</div>
+              </div>
+              <div className="item">
+                <Icon name="rate" />
+                <div className="text">总收益年利率</div>
+                <div className="number"></div>
+              </div>
+              <div className="item">
+                <Icon name="reward" />
+                <div className="text">可领取奖励NOMO</div>
+                <div className="number">${data?.user?.totalRewardsUSD}</div>
+              </div>
+            </div>
           </div>
-          <div className="main">
-            <div className="item">
-              <Icon name="deposit" />
-              <div className="text">我的存款</div>
-              <div className="number">${data?.user?.totalLiquidityUSD}</div>
+          <div className="block charts">
+            <div className="title">
+              <span>健康因子</span>
             </div>
-            <div className="item">
-              <Icon name="loan" />
-              <div className="text">我的贷款</div>
-              <div className="number">${data?.user?.totalBorrowsUSD}</div>
+            <div>
+              贷款上限 $
+              {data && data.user
+                ? new BigNumber(data.user.availableBorrowsETH)
+                    .multipliedBy(data.usdPriceEth)
+                    .toString()
+                : 0}
             </div>
-            <div className="item">
-              <Icon name="rate" />
-              <div className="text">总收益年利率</div>
-              <div className="number"></div>
-            </div>
-            <div className="item">
-              <Icon name="reward" />
-              <div className="text">可领取奖励NOMO</div>
-              <div className="number">${data?.user?.totalRewardsUSD}</div>
+            <div className="main">
+              <Chart percentage={60} />
             </div>
           </div>
         </div>
-        <div className="block charts">
-          <div className="title">
-            <span>健康因子</span>
-          </div>
-          <div>
-            贷款上限 $
-            {data && data.user
-              ? new BigNumber(data.user.availableBorrowsETH)
-                  .multipliedBy(data.usdPriceEth)
-                  .toString()
-              : 0}
-          </div>
-          <div className="main">
-            <Chart percentage={60} />
-          </div>
-        </div>
-      </div>
+      ) : null}
+
       <div className="block voteBlock">
         <div className="title">
           <span>QBT Locker</span>
@@ -175,14 +181,17 @@ export default function Markets() {
           </div>
         </div>
       </div>
-      {data?.user && balance && (
+      {data?.user &&
+      balance &&
+      account &&
+      (data?.user?.totalLiquidityUSD || data?.user?.totalBorrowsUSD) ? (
         <MySavingLoad
           balance={balance}
           reserves={data.reserves}
           user={data.user}
           usdPriceEth={data.usdPriceEth}
         />
-      )}
+      ) : null}
       {data && balance && (
         <MarketTable
           balance={balance}
