@@ -2,12 +2,15 @@ import './logoutDialog.styl';
 import { useWeb3React } from '@web3-react/core';
 import { Modal } from 'antd';
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import storage from '../../utils/storage';
 import { getShortenAddress } from '../../utils/tool';
 import { useThemeContext } from '../../theme';
 import classNames from 'classnames';
 import { disconnectWeb3Connector } from '../../connector';
+import { IRootState } from '../../reducers/RootState';
+import { setAccount } from '../../actions/baseAction';
 
 export interface IDialog {
   show(): void;
@@ -17,9 +20,9 @@ export interface IDialog {
 const LongDialog = forwardRef((props, ref) => {
   const { currentThemeName } = useThemeContext();
   const [LogoutDialogOpen, setLogoutDialogOpen] = useState(false);
-  const { account, deactivate, chainId } = useWeb3React();
-  const storedAccount = storage.get('account');
-  const [currentAccount, setCurrentAccount] = useState<string>();
+  const { deactivate } = useWeb3React();
+  const { account } = useSelector((store: IRootState) => store.base);
+  const dispatch = useDispatch();
 
   useImperativeHandle(ref, () => ({
     show: () => {
@@ -29,17 +32,6 @@ const LongDialog = forwardRef((props, ref) => {
       setLogoutDialogOpen(false);
     },
   }));
-
-  useEffect(() => {
-    if (account) {
-      setCurrentAccount(account);
-    } else if (storedAccount) {
-      setCurrentAccount(storedAccount);
-    }
-    return () => {
-      setCurrentAccount(undefined);
-    };
-  }, [account]);
 
   return (
     <Modal
@@ -58,9 +50,7 @@ const LongDialog = forwardRef((props, ref) => {
       <div className="modalMain">
         <div className="content">
           <div className="account">
-            <div className="address">
-              {currentAccount ? getShortenAddress(currentAccount) : null}
-            </div>
+            <div className="address">{account ? getShortenAddress(account) : null}</div>
           </div>
         </div>
       </div>
@@ -72,6 +62,7 @@ const LongDialog = forwardRef((props, ref) => {
             disconnectWeb3Connector();
             storage.set('isLogout', true);
             storage.set('account', '');
+            dispatch(setAccount(''));
             setLogoutDialogOpen(false);
           }}
         >

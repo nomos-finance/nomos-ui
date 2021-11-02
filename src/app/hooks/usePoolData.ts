@@ -14,6 +14,8 @@ import {
 } from '@aave/protocol-js';
 import { assetsList, Asset, assetsOrder, STABLE_ASSETS } from '@aave/aave-ui-kit';
 import { useWeb3React } from '@web3-react/core';
+import { useSelector } from 'react-redux';
+import { IRootState } from '../reducers/RootState';
 
 import IUiPoolDataProviderFactory from '../contracts/IPoolDataProviderContract';
 import useNetworkInfo from '../hooks/useNetworkInfo';
@@ -152,15 +154,11 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
   const [loading, setLoading] = useState(true);
   const [poolData, setPoolData] = useState<DynamicPoolDataContextData | undefined>(undefined);
   const [networkInfo] = useNetworkInfo();
-  const { account } = useWeb3React();
+  const { account } = useSelector((store: IRootState) => store.base);
 
-  const fetchData = async (
-    poolAddress: string,
-    userAddress: string,
-    network: string,
-    poolDataProvider: string
-  ) => {
+  const fetchData = async (poolAddress: string, network: string, poolDataProvider: string) => {
     if (!networkInfo) return;
+    const userAddress = account || ethers.constants.AddressZero;
 
     try {
       setLoading(true);
@@ -244,7 +242,6 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
 
     fetchData(
       networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-      account || ethers.constants.AddressZero,
       networkInfo.chainKey,
       networkInfo.uiPoolDataProvider
     );
@@ -252,7 +249,6 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
       () =>
         fetchData(
           networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-          account || ethers.constants.AddressZero,
           networkInfo.chainKey,
           networkInfo.uiPoolDataProvider
         ),
@@ -268,7 +264,6 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
       if (!networkInfo) return;
       fetchData(
         networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-        account || ethers.constants.AddressZero,
         networkInfo.chainKey,
         networkInfo.uiPoolDataProvider
       );

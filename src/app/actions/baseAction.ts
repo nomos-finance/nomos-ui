@@ -8,3 +8,5 @@ export const setNetwork = (data: string): Action<string> =>
   createAction(BASE.SET_NETWORK, () => data)();
 export const setProviderName = (data: string): Action<string> =>
   createAction(BASE.SET_PROVIDER_NAME, () => data)();
+export const setAccount = (data: string): Action<string> =>
+  createAction(BASE.SET_ACCOUNT, () => data)();

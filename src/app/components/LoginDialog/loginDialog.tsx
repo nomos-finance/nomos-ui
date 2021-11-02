@@ -15,7 +15,7 @@ import * as icons from './img';
 import storage from '../../utils/storage';
 import useInactiveListener from './hooks/useInactiveListener';
 
-import { setNetwork, setProviderName } from '../../actions/baseAction';
+import { setNetwork, setProviderName, setAccount } from '../../actions/baseAction';
 export interface IDialog {
   show(): void;
   hide(): void;
@@ -59,6 +59,7 @@ export default forwardRef((props, ref) => {
   const [preferredNetwork, setPreferredNetwork] = useState<string>(SupportedNetworks[0].chainKey);
   const providerName = storage.get('providerName');
   const network = storage.get('network');
+  const storedAccount = storage.get('account');
   const isImToken = !!window.imToken;
   const browserWalletProvider = getWeb3ProviderFromBrowser();
 
@@ -179,7 +180,15 @@ export default forwardRef((props, ref) => {
   useEffect(() => {
     if (account) {
       storage.set('account', account);
+      dispatch(setAccount(account));
+    } else if (storedAccount) {
+      storage.set('account', account);
+      dispatch(setAccount(storedAccount));
     }
+    return () => {
+      storage.set('account', '');
+      dispatch(setAccount(''));
+    };
   }, [account]);
 
   useEffect(() => {

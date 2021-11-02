@@ -5,13 +5,13 @@ import classnames from 'classnames';
 import React, { useRef, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { IRootState } from '../../reducers/RootState';
 
-// import AddressInfo from './addressInfo';
 import LoginDialog, { IDialog as ILoginDialog } from '../LoginDialog';
 import LogoutDialog, { IDialog as ILogoutDialog } from '../LogoutDialog';
 import { useThemeContext } from '../../theme';
 import { getShortenAddress } from '../../utils/tool';
-import storage from '../../utils/storage';
 import Icon from '../../../assets/icons';
 import Dark from './img/dark.svg';
 import Default from './img/default.svg';
@@ -20,21 +20,8 @@ export default (): React.ReactElement => {
   const history = useHistory();
   const LoginDialogRef = useRef<ILoginDialog>();
   const LogoutDialogRef = useRef<ILogoutDialog>();
-  const { active, account, chainId } = useWeb3React();
-  const storedAccount = storage.get('account');
-  const [currentAccount, setCurrentAccount] = useState<string>();
   const { changeTheme, currentThemeName } = useThemeContext();
-
-  useEffect(() => {
-    if (account) {
-      setCurrentAccount(account);
-    } else if (storedAccount) {
-      setCurrentAccount(storedAccount);
-    }
-    return () => {
-      setCurrentAccount(undefined);
-    };
-  }, [account]);
+  const { account } = useSelector((store: IRootState) => store.base);
 
   return (
     <header className="lt-header">
@@ -54,13 +41,10 @@ export default (): React.ReactElement => {
         <div
           className="connect unLogin"
           onClick={() => {
-            LogoutDialogRef.current?.show();
-            return currentAccount
-              ? LogoutDialogRef.current?.show()
-              : LoginDialogRef.current?.show();
+            return account ? LogoutDialogRef.current?.show() : LoginDialogRef.current?.show();
           }}
         >
-          <span>{currentAccount ? getShortenAddress(currentAccount) : 'Connect wallet'}</span>
+          <span>{account ? getShortenAddress(account) : 'Connect wallet'}</span>
         </div>
       </div>
       <LoginDialog ref={LoginDialogRef} />

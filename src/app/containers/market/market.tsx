@@ -59,7 +59,7 @@ export default function Markets() {
     setTotalBorrow(totalBorrowsInUSD.toString());
   }, [data]);
 
-  console.log(data?.reserves);
+  console.log(data?.user);
 
   return (
     <Layout className="page-market">
