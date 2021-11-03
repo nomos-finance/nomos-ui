@@ -190,7 +190,9 @@ export default forwardRef((props, ref) => {
       destroyOnClose={true}
       closable={false}
     >
-      <div>{params?.data?.symbol}</div>
+      <div className="symbol">
+        <span>{params?.data?.symbol}</span>
+      </div>
       <div className="tab">
         <div
           className={classnames('tabItem', { cur: type === 'Deposit' })}

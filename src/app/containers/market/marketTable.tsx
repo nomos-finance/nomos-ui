@@ -17,6 +17,7 @@ import {
 import { formatMoney, pow10 } from '../../utils/tool';
 import Icon from '../../../assets/icons';
 import classNames from 'classnames';
+import { assetsList, getAssetInfoFactory } from '@aave/aave-ui-kit';
 
 interface IProps {
   reserves: ComputedReserveData[];
@@ -83,6 +84,8 @@ export default function MarketTable(props: IProps) {
       };
     });
 
+  const getAssetInfo = getAssetInfoFactory(assetsList);
+
   return (
     <div className="marketBlock">
       <div className="block">
@@ -121,7 +124,10 @@ export default function MarketTable(props: IProps) {
                   })
                 }
               >
-                <td>{item.currencySymbol}</td>
+                <td>
+                  <img src={getAssetInfo(item.currencySymbol).icon} alt="" />
+                  {item.currencySymbol}
+                </td>
                 <td>{item.depositAPY}</td>
                 <td>
                   {formatMoney(pow10(props.balance[item.underlyingAsset], item.reserve.decimals))}
@@ -181,7 +187,10 @@ export default function MarketTable(props: IProps) {
                   })
                 }
               >
-                <td>{item.currencySymbol}</td>
+                <td>
+                  <img src={getAssetInfo(item.currencySymbol).icon} alt="" />
+                  {item.currencySymbol}
+                </td>
                 <td>{item.stableBorrowRate}</td>
                 <td>{item.variableBorrowRate}</td>
               </tr>

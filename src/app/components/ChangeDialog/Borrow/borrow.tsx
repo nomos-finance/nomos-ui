@@ -249,7 +249,7 @@ export default forwardRef((props, ref) => {
           </div>
           <div>健康因子</div>
           <div>存款收益</div>
-          <div>抵押品参数1111</div>
+          <div>抵押品参数</div>
           <Button loading={loading} className="submit" onClick={() => handleRepaySubmit()}>
             提交
           </Button>
