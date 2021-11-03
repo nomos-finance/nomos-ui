@@ -28,7 +28,7 @@ export default function Markets() {
   const { data, refresh } = useProtocolDataWithRpc();
   const { account } = useSelector((store: IRootState) => store.base);
 
-  const [balance] = useWalletBalance(
+  const [balance, fetchBalance] = useWalletBalance(
     networkInfo?.walletBalanceProvider,
     account,
     networkInfo?.chainKey,
@@ -59,9 +59,10 @@ export default function Markets() {
     setTotalLiquidity(liquidity.toString());
     setTotalDeposit(totalLiquidityInUSD.toString());
     setTotalBorrow(totalBorrowsInUSD.toString());
+    fetchBalance();
   }, [data]);
 
-  console.log(data?.user);
+  // console.log(data);
 
   return (
     <Layout className="page-market">
@@ -104,7 +105,7 @@ export default function Markets() {
             </div>
             <div className="number">
               <i>$</i>
-              <CompactNumber value={totalBorrow} />
+              {/* <CompactNumber value={totalBorrow} /> */}
             </div>
           </div>
         </div>
@@ -160,25 +161,23 @@ export default function Markets() {
       ) : null}
 
       <div className="block voteBlock">
-        <div className="title">
-          <span>QBT Locker</span>
-          <Icon name="note" />
+        <div className="header">
+          <div className="text">
+            <span>锁仓NOMO</span>
+            <i>可在所有市场获得加成奖励</i>
+          </div>
+          <div className="more">了解更多 &gt;</div>
         </div>
         <div className="main">
           <div className="item">
-            <span>Locked</span>
+            <span>已锁仓NOMO</span>
             <i>10,000.00</i>
           </div>
           <div className="item">
-            <span>Locked Period</span>
-          </div>
-          <div className="item">
-            <span>qScore</span>
+            <span>收益加成</span>
             <i>10,000.00</i>
           </div>
-          <div className="item">
-            <div className="btn">投票</div>
-          </div>
+          <div className="btn">去DAO&Safety锁仓NOMO</div>
         </div>
       </div>
       {data?.user &&

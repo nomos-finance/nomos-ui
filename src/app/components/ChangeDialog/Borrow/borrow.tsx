@@ -11,6 +11,7 @@ import {
   valueToBigNumber,
   BigNumber,
   UserSummaryData,
+  ComputedUserReserve,
 } from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { handleSend } from '../helper/txHelper';
@@ -43,6 +44,8 @@ export default forwardRef((props, ref) => {
   const [loading, setLoading] = useState(false);
   const [interestRateMode, setInterestRateMode] = useState('Stable');
   const [maxAmountToBorrow, setMaxAmountToBorrow] = useState<number>();
+  const [userAssetInfo, setUserAssetInfo] = useState<ComputedUserReserve>();
+  const [isMax, setMax] = useState(false);
 
   const hide = () => {
     setType(params ? params.type : 'Borrow');
@@ -82,6 +85,12 @@ export default forwardRef((props, ref) => {
       maxAmountToBorrow = maxAmountToBorrow.multipliedBy('0.99');
     }
     setMaxAmountToBorrow(+maxAmountToBorrow);
+    if (params?.user?.reservesData && params?.data?.underlyingAsset) {
+      const asset = params.user.reservesData.filter(
+        (item) => item.reserve.underlyingAsset === params.data?.underlyingAsset
+      );
+      setUserAssetInfo(asset[0]);
+    }
   }, [params, account]);
 
   const handleBorrowAmountChange = (amount: string): void => {
@@ -216,6 +225,20 @@ export default forwardRef((props, ref) => {
           </div>
           <div>已贷款数量</div>
           <div>
+            <div
+              onClick={() => {
+                if (userAssetInfo) {
+                  setMax(true);
+                  if (interestRateMode === 'Variable') {
+                    setRepayAmount(userAssetInfo.variableBorrows);
+                  } else {
+                    setRepayAmount(userAssetInfo.stableBorrows);
+                  }
+                }
+              }}
+            >
+              MAX
+            </div>
             <Input
               // bordered={false}
               value={repayAmount}

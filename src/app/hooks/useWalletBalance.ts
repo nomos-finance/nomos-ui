@@ -16,7 +16,7 @@ const useWalletBalance = (
   account?: string | null | undefined,
   network?: string,
   providerAddress?: string
-): [IBalance] => {
+): [IBalance, () => void] => {
   const [balance, setBalance] = useState<IBalance>({});
 
   const fetchData = async () => {
@@ -38,20 +38,7 @@ const useWalletBalance = (
     }
   };
 
-  useEffect(() => {
-    if (!account) return;
-    setBalance({});
-    fetchData();
-    const interval = setInterval(async () => {
-      fetchData();
-    }, 30000);
-    return () => {
-      clearInterval(interval);
-      setBalance({});
-    };
-  }, [account]);
-
-  return [balance];
+  return [balance, fetchData];
 };
 
 export default useWalletBalance;

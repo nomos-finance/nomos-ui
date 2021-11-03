@@ -169,20 +169,28 @@
         padding: 32px
         margin: 0 0 40px
 
-        .title
+        .header
             justifyContentSpaceBetween()
             margin: 0 0 20px
+            height: 28px
+            line-height: @height
 
-            span
-                font-size: 20px
-                font-weight: bold
+            .text
                 display: inline-block
-                height: 40px
-                line-height: @height
 
-            .icon
-                color: var(--var-nav-text)
-                margin: 10px 0
+                span
+                    font-size: 20px
+                    font-weight: bold
+
+                i
+                    font-size: 14px;
+                    color: var(--var-nav-text)
+                    margin: 0 0 0 10px
+
+
+            .more
+                color: var(--var-nav-cur-text)
+                font-size: 16px
 
         .main
             justifyContentSpaceBetween()
@@ -195,18 +203,18 @@
                 line-height: @height
                 font-size: 20px
 
-                .btn
-                    width: 112px
-                    height: 40px
-                    line-height: @height
-                    background: #FFD84E
-                    border-radius: 20px
-                    font-size: 16px
-                    font-family: PingFangSC-Regular, PingFang SC
-                    font-weight: 400
-                    text-align: center
-                    color: #0C0E11
-                    box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+            .btn
+                height: 40px
+                line-height: @height
+                background: #FFD84E
+                border-radius: 20px
+                font-size: 16px
+                font-family: PingFangSC-Regular, PingFang SC
+                font-weight: 400
+                text-align: center
+                color: #0C0E11
+                box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+                padding: 0 20px
 
     .assetBlock
         margin: 0 0 40px
@@ -232,7 +240,7 @@
                         position: relative
                         color: var(--var-nav-cur-text)
 
-            .text
+            .more
                 color: var(--var-nav-cur-text)
                 font-size: 16px
 

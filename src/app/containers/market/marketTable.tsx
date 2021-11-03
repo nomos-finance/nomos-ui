@@ -117,6 +117,7 @@ export default function MarketTable(props: IProps) {
                     data: item.reserve,
                     balance: props.balance[item.underlyingAsset],
                     marketRefPriceInUsd,
+                    user: props.user,
                   })
                 }
               >

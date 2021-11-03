@@ -53,7 +53,7 @@ export default function MySavingLoad(props: IProps) {
             我的贷款
           </div>
         </div>
-        <div className="text" onClick={() => SwapDialogRef.current?.show()}>
+        <div className="more" onClick={() => SwapDialogRef.current?.show()}>
           想把抵押资产换成其他资产，不用赎回，一键可完成 &gt;
         </div>
       </div>
@@ -78,6 +78,7 @@ export default function MySavingLoad(props: IProps) {
                         type: 'Deposit',
                         data: obj[item.reserve.symbol],
                         marketRefPriceInUsd,
+                        user: props.user,
                       })
                     }
                   >
@@ -112,6 +113,7 @@ export default function MySavingLoad(props: IProps) {
                       BorrowDialogRef.current?.show({
                         type: 'Repay',
                         data: obj[item.reserve.symbol],
+                        user: props.user,
                       })
                     }
                   >

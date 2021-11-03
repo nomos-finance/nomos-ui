@@ -5,7 +5,12 @@ import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle, useEffect } from 'react';
 import { Modal, Input } from 'antd';
 import { useThemeContext } from '../../../theme';
-import { ComputedReserveData, valueToBigNumber } from '@aave/protocol-js';
+import {
+  ComputedReserveData,
+  valueToBigNumber,
+  UserSummaryData,
+  ComputedUserReserve,
+} from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { useWeb3React } from '@web3-react/core';
 import { pow10, formatMoney, filterInput } from '../../../utils/tool';
@@ -15,6 +20,7 @@ import { handleSend } from '../helper/txHelper';
 interface IProps {
   type: 'Deposit' | 'Withdraw';
   data?: ComputedReserveData;
+  user?: UserSummaryData;
   balance?: string;
   marketRefPriceInUsd: string;
 }
@@ -36,6 +42,8 @@ export default forwardRef((props, ref) => {
   const [depositAmount, setDepositAmount] = useState<string | number>('');
   const [withdrawAmount, setWithdrawAmount] = useState<string | number>('');
   const [loading, setLoading] = useState(false);
+  const [userAssetInfo, setUserAssetInfo] = useState<ComputedUserReserve>();
+  const [isMax, setMax] = useState(false);
 
   const hide = () => {
     setType(params ? params.type : 'Deposit');
@@ -107,7 +115,7 @@ export default forwardRef((props, ref) => {
       const txs = await lendingPool.withdraw({
         user: account,
         reserve: params.data.underlyingAsset,
-        amount: `${withdrawAmount}`, // TODO: Max
+        amount: `${isMax ? '-1' : withdrawAmount}`,
         aTokenAddress: params.data.aTokenAddress,
       });
       await handleSend(txs, library);
@@ -161,7 +169,14 @@ export default forwardRef((props, ref) => {
       stableBorrowRateEnabled: poolReserve.stableBorrowRateEnabled,
       borrowingEnabled: poolReserve.borrowingEnabled,
     };
-    console.log(reserveOverviewData);
+    // console.log(reserveOverviewData);
+    if (params?.user?.reservesData && params?.data?.underlyingAsset) {
+      const asset = params.user.reservesData.filter(
+        (item) => item.reserve.underlyingAsset === params.data?.underlyingAsset
+      );
+      setUserAssetInfo(asset[0]);
+    }
+
     return () => {};
   }, [params]);
 
@@ -232,7 +247,16 @@ export default forwardRef((props, ref) => {
       ) : (
         <div className="tabMain">
           <div>
-            <div onClick={() => setWithdrawAmount('-1')}>MAX</div>
+            <div
+              onClick={() => {
+                if (userAssetInfo) {
+                  setMax(true);
+                  setWithdrawAmount(userAssetInfo.underlyingBalance);
+                }
+              }}
+            >
+              MAX
+            </div>
             <Input
               // bordered={false}
               value={withdrawAmount}
