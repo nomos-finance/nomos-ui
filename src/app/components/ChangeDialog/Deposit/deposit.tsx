@@ -211,7 +211,7 @@ export default forwardRef((props, ref) => {
       </div>
       {type === 'Deposit' ? (
         <div className="tabMain">
-          <div className="wallet">
+          <div className="block">
             <div className="balance">
               <div>钱包余额</div>
               {formatMoney(pow10(params?.balance))}
@@ -243,8 +243,10 @@ export default forwardRef((props, ref) => {
           <div>
             <div>抵押品参数</div>
           </div>
-          <div className="submit" onClick={() => handleDepositSubmit()}>
-            提交
+          <div className="dialogFooter">
+            <div className="submit" onClick={() => handleDepositSubmit()}>
+              提交
+            </div>
           </div>
         </div>
       ) : (
@@ -268,8 +270,10 @@ export default forwardRef((props, ref) => {
               }}
             />
           </div>
-          <div className="submit" onClick={() => handleWithdrawSubmit()}>
-            提交
+          <div className="dialogFooter">
+            <div className="submit" onClick={() => handleWithdrawSubmit()}>
+              提交
+            </div>
           </div>
         </div>
       )}

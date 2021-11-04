@@ -200,23 +200,27 @@ export default forwardRef((props, ref) => {
             <div onClick={() => setInterestRateMode('Variable')}>可变利率</div>
             <div onClick={() => setInterestRateMode('Stable')}>稳定利率</div>
           </div>
-          <div>可贷款数量</div>
-          <div>{maxAmountToBorrow}</div>
-          <div>
-            <Input
-              // bordered={false}
-              value={borrowAmount}
-              onChange={(event) => {
-                handleBorrowAmountChange(event.target.value);
-              }}
-            />
+          <div className="block">
+            <div>可贷款数量</div>
+            <div>{maxAmountToBorrow}</div>
+            <div>
+              <Input
+                // bordered={false}
+                value={borrowAmount}
+                onChange={(event) => {
+                  handleBorrowAmountChange(event.target.value);
+                }}
+              />
+            </div>
           </div>
           <div>健康因子</div>
           <div>存款收益</div>
           <div>抵押品参数</div>
-          <Button loading={loading} className="submit" onClick={() => handleBorrowSubmit()}>
-            提交
-          </Button>
+          <div className="dialogFooter">
+            <Button loading={loading} className="submit" onClick={() => handleBorrowSubmit()}>
+              提交
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="tabMain">
@@ -251,9 +255,11 @@ export default forwardRef((props, ref) => {
           <div>健康因子</div>
           <div>存款收益</div>
           <div>抵押品参数</div>
-          <Button loading={loading} className="submit" onClick={() => handleRepaySubmit()}>
-            提交
-          </Button>
+          <div className="dialogFooter">
+            <Button loading={loading} className="submit" onClick={() => handleRepaySubmit()}>
+              提交
+            </Button>
+          </div>
         </div>
       )}
     </Modal>

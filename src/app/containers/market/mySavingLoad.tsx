@@ -84,8 +84,10 @@ export default function MySavingLoad(props: IProps) {
                     }
                   >
                     <td>
-                      <SymbolIcon symbol={item.reserve.symbol} />
-                      {item.reserve.symbol}
+                      <div className="asset">
+                        <SymbolIcon symbol={item.reserve.symbol} />
+                        <span>{item.reserve.symbol}</span>
+                      </div>
                     </td>
                     <td>{item.usageAsCollateralEnabledOnUser ? 'true' : 'false'}</td>
                     <td>{item.reserve.liquidityRate}</td>
@@ -122,8 +124,10 @@ export default function MySavingLoad(props: IProps) {
                     }
                   >
                     <td>
-                      <SymbolIcon symbol={item.reserve.symbol} />
-                      {item.reserve.symbol}
+                      <div className="asset">
+                        <SymbolIcon symbol={item.reserve.symbol} />
+                        <span>{item.reserve.symbol}</span>
+                      </div>
                     </td>
                     <td>
                       stable: {item.stableBorrowRate} variable:

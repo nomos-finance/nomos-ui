@@ -18,7 +18,7 @@ export default (props: IProps): React.ReactElement | null => {
       <img
         src={getAssetInfo(props.symbol).icon}
         alt=""
-        style={{ width: '100%', display: 'inline-block' }}
+        style={{ width: '100%', height: '100%', display: 'inline-block' }}
       />
     </div>
   ) : null;

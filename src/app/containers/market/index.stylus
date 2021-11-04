@@ -27,6 +27,18 @@
             padding: 16px 10px
             color: var(--var-text-color)
 
+            .asset
+                height: 32px
+                line-height: 32px
+                text-align: left
+                display: flex
+
+                .symbolIcon
+                    margin: 0 10px 0 0  
+
+            .money
+                text-align: right 
+
     .totalBlock
         display: flex
         margin: 0 0 40px

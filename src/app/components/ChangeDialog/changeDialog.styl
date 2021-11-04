@@ -35,31 +35,54 @@
 
         .tab
             display: flex
-            padding: 20px 32px 0
+            font-size: 18px
 
             .tabItem
                 flex: 1
                 text-align: center
+                position: relative
+                padding: 24px 0 11px
+                cursor: pointer
+                color: var(--var-nav-text)
 
                 &.cur
-                    color: yellow
+                    color: var(--var-nav-cur-text)
+
+                    &:after
+                        content: ' '
+                        width: 60px;
+                        height: 2px;
+                        background: #FFD84E;
+                        display: block
+                        position: absolute
+                        bottom: 0
+                        left: 50%
+                        transform: translate(-50%, 0)
 
         .tabMain
             background: var(--var-dialog-main-bg)
-            padding: 10px
+            padding: 16px 32px
             border-bottom-left-radius: 15px
             border-bottom-right-radius: 15px
 
-        .submit
-            display: inline-block
-            height: 40px
-            line-height: @height
-            background: #FFD84E
-            border-radius: 20px
-            font-size: 16px
-            font-family: PingFangSC-Regular, PingFang SC
-            font-weight: 400
+            .block
+                background: var(--var-dialog-block-bg)
+                padding: 25px 40px
+
+
+        .dialogFooter
             text-align: center
-            color: #0C0E11
-            box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
-            padding: 0 20px
+
+            .submit
+                display: inline-block
+                height: 40px
+                line-height: @height
+                background: #FFD84E
+                border-radius: 20px
+                font-size: 16px
+                font-family: PingFangSC-Regular, PingFang SC
+                font-weight: 400
+                text-align: center
+                color: #0C0E11
+                box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+                padding: 0 40px

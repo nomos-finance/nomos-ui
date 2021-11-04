@@ -14,7 +14,7 @@ import {
   IDepositDialog,
   ISwapDialog,
 } from '../../components/ChangeDialog/';
-import { formatMoney, pow10 } from '../../utils/tool';
+import { formatDecimal, formatMoney, pow10 } from '../../utils/tool';
 import Icon from '../../../assets/icons';
 import classNames from 'classnames';
 import SymbolIcon from '../../components/SymbolIcon';
@@ -84,6 +84,8 @@ export default function MarketTable(props: IProps) {
       };
     });
 
+  console.log(sortedData);
+
   return (
     <div className="marketBlock">
       <div className="block">
@@ -123,12 +125,16 @@ export default function MarketTable(props: IProps) {
                 }
               >
                 <td>
-                  <SymbolIcon symbol={item.currencySymbol} />
-                  {item.currencySymbol}
+                  <div className="asset">
+                    <SymbolIcon symbol={item.currencySymbol} />
+                    <span>{item.currencySymbol}</span>
+                  </div>
                 </td>
-                <td>{item.depositAPY}</td>
+                <td>{formatDecimal(item.depositAPY * 100)}%</td>
                 <td>
-                  {formatMoney(pow10(props.balance[item.underlyingAsset], item.reserve.decimals))}
+                  <div className="money">
+                    {formatMoney(pow10(props.balance[item.underlyingAsset], item.reserve.decimals))}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -186,11 +192,16 @@ export default function MarketTable(props: IProps) {
                 }
               >
                 <td>
-                  <SymbolIcon symbol={item.currencySymbol} />
-                  {item.currencySymbol}
+                  <div className="asset">
+                    <SymbolIcon symbol={item.currencySymbol} />
+                    <span>{item.currencySymbol}</span>
+                  </div>
                 </td>
-                <td>{item.stableBorrowRate}</td>
-                <td>{item.variableBorrowRate}</td>
+                <td>
+                  {formatDecimal(item.stableBorrowRate * 100 < 0 ? 0 : item.stableBorrowRate * 100)}
+                  %
+                </td>
+                <td>{formatDecimal(item.variableBorrowRate * 100)}%</td>
               </tr>
             ))}
           </tbody>

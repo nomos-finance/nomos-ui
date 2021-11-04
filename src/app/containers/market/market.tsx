@@ -17,6 +17,7 @@ import { CompactNumber } from '../../components/CompactNumber';
 
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../reducers/RootState';
+import { formatMoney } from 'app/utils/tool';
 
 export default function Markets() {
   const [totalLiquidity, setTotalLiquidity] = useState('');
@@ -122,12 +123,12 @@ export default function Markets() {
               <div className="item">
                 <Icon name="deposit" />
                 <div className="text">我的存款</div>
-                <div className="number">${data?.user?.totalLiquidityUSD}</div>
+                <div className="number">${formatMoney(data?.user?.totalLiquidityUSD)}</div>
               </div>
               <div className="item">
                 <Icon name="loan" />
                 <div className="text">我的贷款</div>
-                <div className="number">${data?.user?.totalBorrowsUSD}</div>
+                <div className="number">${formatMoney(data?.user?.totalBorrowsUSD)}</div>
               </div>
               <div className="item">
                 <Icon name="rate" />
@@ -137,7 +138,7 @@ export default function Markets() {
               <div className="item">
                 <Icon name="reward" />
                 <div className="text">可领取奖励NOMO</div>
-                <div className="number">${data?.user?.totalRewardsUSD}</div>
+                <div className="number">${formatMoney(data?.user?.totalRewardsUSD)}</div>
               </div>
             </div>
           </div>
