@@ -5,7 +5,7 @@ import {
   ComputedReserveData,
   UserSummaryData,
 } from '@aave/protocol-js';
-import { Input } from 'antd';
+import { Input, Table } from 'antd';
 import {
   Borrow,
   Deposit,
@@ -17,7 +17,7 @@ import {
 import { formatMoney, pow10 } from '../../utils/tool';
 import Icon from '../../../assets/icons';
 import classNames from 'classnames';
-import { assetsList, getAssetInfoFactory } from '@aave/aave-ui-kit';
+import SymbolIcon from '../../components/SymbolIcon';
 
 interface IProps {
   reserves: ComputedReserveData[];
@@ -84,8 +84,6 @@ export default function MarketTable(props: IProps) {
       };
     });
 
-  const getAssetInfo = getAssetInfoFactory(assetsList);
-
   return (
     <div className="marketBlock">
       <div className="block">
@@ -125,7 +123,7 @@ export default function MarketTable(props: IProps) {
                 }
               >
                 <td>
-                  <img src={getAssetInfo(item.currencySymbol).icon} alt="" />
+                  <SymbolIcon symbol={item.currencySymbol} />
                   {item.currencySymbol}
                 </td>
                 <td>{item.depositAPY}</td>
@@ -188,7 +186,7 @@ export default function MarketTable(props: IProps) {
                 }
               >
                 <td>
-                  <img src={getAssetInfo(item.currencySymbol).icon} alt="" />
+                  <SymbolIcon symbol={item.currencySymbol} />
                   {item.currencySymbol}
                 </td>
                 <td>{item.stableBorrowRate}</td>
