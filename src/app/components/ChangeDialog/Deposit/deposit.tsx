@@ -16,6 +16,7 @@ import { useWeb3React } from '@web3-react/core';
 import { pow10, formatMoney, filterInput } from '../../../utils/tool';
 import storage from '../../../utils/storage';
 import { handleSend } from '../helper/txHelper';
+import SymbolIcon from '../../SymbolIcon';
 
 interface IProps {
   type: 'Deposit' | 'Withdraw';
@@ -191,7 +192,8 @@ export default forwardRef((props, ref) => {
       closable={false}
     >
       <div className="symbol">
-        <span>{params?.data?.symbol}</span>
+        <SymbolIcon symbol={params?.data?.symbol} size={96} />
+        <div className="text">{params?.data?.symbol}</div>
       </div>
       <div className="tab">
         <div
@@ -209,8 +211,8 @@ export default forwardRef((props, ref) => {
       </div>
       {type === 'Deposit' ? (
         <div className="tabMain">
-          <div className="balance">
-            <div>
+          <div className="wallet">
+            <div className="balance">
               <div>钱包余额</div>
               {formatMoney(pow10(params?.balance))}
               {params?.data?.symbol}
@@ -224,7 +226,6 @@ export default forwardRef((props, ref) => {
                   handleDepositAmountChange(event.target.value);
                 }}
               />
-              {depositAmount}
             </div>
           </div>
           <div>

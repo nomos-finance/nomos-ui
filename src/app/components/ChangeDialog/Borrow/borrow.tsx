@@ -18,6 +18,7 @@ import { handleSend } from '../helper/txHelper';
 import { useWeb3React } from '@web3-react/core';
 import { pow10, formatMoney, filterInput } from '../../../utils/tool';
 import storage from '../../../utils/storage';
+import SymbolIcon from '../../SymbolIcon';
 
 interface IProps {
   type: 'Borrow' | 'Repay';

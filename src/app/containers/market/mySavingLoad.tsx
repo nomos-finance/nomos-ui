@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
 import classnames from 'classnames';
 import { ComputedReserveData, UserSummaryData, normalize } from '@aave/protocol-js';
-import { assetsList, getAssetInfoFactory } from '@aave/aave-ui-kit';
-
+import SymbolIcon from '../../components/SymbolIcon';
 import {
   Borrow,
   Deposit,
@@ -36,8 +35,6 @@ export default function MySavingLoad(props: IProps) {
   });
 
   const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
-
-  const getAssetInfo = getAssetInfoFactory(assetsList);
 
   return (
     <div className="block assetBlock">
@@ -82,11 +79,12 @@ export default function MySavingLoad(props: IProps) {
                         data: obj[item.reserve.symbol],
                         marketRefPriceInUsd,
                         user: props.user,
+                        balance: props.balance[item.reserve.underlyingAsset],
                       })
                     }
                   >
                     <td>
-                      <img src={getAssetInfo(item.reserve.symbol).icon} alt="" />
+                      <SymbolIcon symbol={item.reserve.symbol} />
                       {item.reserve.symbol}
                     </td>
                     <td>{item.usageAsCollateralEnabledOnUser ? 'true' : 'false'}</td>
@@ -124,7 +122,7 @@ export default function MySavingLoad(props: IProps) {
                     }
                   >
                     <td>
-                      <img src={getAssetInfo(item.reserve.symbol).icon} alt="" />
+                      <SymbolIcon symbol={item.reserve.symbol} />
                       {item.reserve.symbol}
                     </td>
                     <td>
