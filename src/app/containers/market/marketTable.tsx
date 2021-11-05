@@ -84,8 +84,6 @@ export default function MarketTable(props: IProps) {
       };
     });
 
-  console.log(sortedData);
-
   return (
     <div className="marketBlock">
       <div className="block">

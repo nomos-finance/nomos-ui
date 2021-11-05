@@ -10,7 +10,8 @@ export function original(num: number | string | undefined, decimals = 18): strin
   return new BigNumber(num).multipliedBy(new BigNumber(10).pow(decimals)).toFixed();
 }
 
-export const formatDecimal = (number: number, decimal: number = 2): string => {
+export const formatDecimal = (number: number | string | undefined, decimal: number = 2): string => {
+  if (number === undefined) return '';
   let num = number.toString();
   const index = num.indexOf('.');
   if (index !== -1) {

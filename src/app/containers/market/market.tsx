@@ -63,7 +63,7 @@ export default function Markets() {
     fetchBalance();
   }, [data]);
 
-  // console.log(data);
+  // console.log(data?.user, data?.reserves);
 
   return (
     <Layout className="page-market">

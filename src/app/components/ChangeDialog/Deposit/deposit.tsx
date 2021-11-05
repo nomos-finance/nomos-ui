@@ -13,7 +13,7 @@ import {
 } from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { useWeb3React } from '@web3-react/core';
-import { pow10, formatMoney, filterInput } from '../../../utils/tool';
+import { pow10, formatMoney, filterInput, formatDecimal } from '../../../utils/tool';
 import storage from '../../../utils/storage';
 import { handleSend } from '../helper/txHelper';
 import SymbolIcon from '../../SymbolIcon';
@@ -213,9 +213,11 @@ export default forwardRef((props, ref) => {
         <div className="tabMain">
           <div className="block">
             <div className="balance">
-              <div>钱包余额</div>
-              {formatMoney(pow10(params?.balance))}
-              {params?.data?.symbol}
+              <span>钱包余额</span>
+              <i>
+                {formatMoney(pow10(params?.balance))}
+                <em>{params?.data?.symbol}</em>
+              </i>
             </div>
             <div className={classnames('input', { error: !!depositValidationMessage })}>
               <div onClick={() => setDepositAmount(Number(pow10(params?.balance)))}>MAX</div>
@@ -228,20 +230,24 @@ export default forwardRef((props, ref) => {
               />
             </div>
           </div>
-          <div>
-            <div>健康因子</div>
-          </div>
-          <div>
-            <div>存款收益</div>
-            <div>
-              <div>存款年利率</div>
-              <div>
-                {params?.data?.borrowingEnabled ? Number(params?.data?.liquidityRate) : -1}%
+          <div className="info">
+            <div className="item">
+              <div className="key">健康因子</div>
+              <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
+            </div>
+            <div className="item">
+              <div className="key">存款收益</div>
+              <div className="subItem">
+                <div className="key">存款年利率</div>
+                <div className="value">
+                  {params?.data?.borrowingEnabled ? Number(params?.data?.liquidityRate) : -1}%
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <div>抵押品参数</div>
+            <div className="item">
+              <div className="key">抵押品参数</div>
+              <div className="key">xxxx</div>
+            </div>
           </div>
           <div className="dialogFooter">
             <div className="submit" onClick={() => handleDepositSubmit()}>

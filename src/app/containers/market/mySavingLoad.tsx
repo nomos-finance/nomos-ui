@@ -10,6 +10,7 @@ import {
   IDepositDialog,
   ISwapDialog,
 } from '../../components/ChangeDialog/';
+import { formatDecimal, formatMoney } from 'app/utils/tool';
 
 interface IProps {
   reserves: ComputedReserveData[];
@@ -90,9 +91,10 @@ export default function MySavingLoad(props: IProps) {
                       </div>
                     </td>
                     <td>{item.usageAsCollateralEnabledOnUser ? 'true' : 'false'}</td>
-                    <td>{item.reserve.liquidityRate}</td>
+                    <td>{formatDecimal(Number(item.reserve.liquidityRate) * 100)}%</td>
                     <td>
-                      {item.underlyingBalance} u:{item.underlyingBalanceUSD}
+                      <div>{Number(item.underlyingBalance).toFixed(2)}</div>
+                      <div>${formatMoney(item.underlyingBalanceUSD)}</div>
                     </td>
                   </tr>
                 );
@@ -130,12 +132,21 @@ export default function MySavingLoad(props: IProps) {
                       </div>
                     </td>
                     <td>
-                      stable: {item.stableBorrowRate} variable:
-                      {obj[item.reserve.symbol].variableBorrowRate}
+                      <div>stable: {formatDecimal(Number(item.stableBorrowRate) * 100)}% </div>
+                      <div>
+                        variable:
+                        {formatDecimal(Number(obj[item.reserve.symbol].variableBorrowRate) * 100)}%
+                      </div>
                     </td>
                     <td>
-                      stable: {item.stableBorrows} {item.stableBorrowsUSD} variable:{' '}
-                      {item.variableBorrows} {item.variableBorrowsUSD}
+                      <div>
+                        <span>stable: {Number(item.stableBorrows).toFixed(2)}</span>
+                        <span>${formatMoney(item.stableBorrowsUSD)}</span>
+                      </div>
+                      <div>
+                        <span>variable: {Number(item.variableBorrows).toFixed(2)}</span>
+                        <span>${formatMoney(item.variableBorrowsUSD)}</span>
+                      </div>
                     </td>
                   </tr>
                 );
