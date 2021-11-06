@@ -76,7 +76,7 @@ export default function MySavingLoad(props: IProps) {
                     key={item.reserve.id}
                     onClick={() =>
                       DepositDialogRef.current?.show({
-                        type: 'Deposit',
+                        type: 'Withdraw',
                         data: obj[item.reserve.symbol],
                         marketRefPriceInUsd,
                         user: props.user,

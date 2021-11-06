@@ -220,9 +220,12 @@ export default forwardRef((props, ref) => {
               </i>
             </div>
             <div className={classnames('input', { error: !!depositValidationMessage })}>
-              <div onClick={() => setDepositAmount(Number(pow10(params?.balance)))}>MAX</div>
+              <div className="max" onClick={() => setDepositAmount(Number(pow10(params?.balance)))}>
+                MAX
+              </div>
               <Input
-                // bordered={false}
+                bordered={false}
+                placeholder="请输入金额"
                 value={depositAmount}
                 onChange={(event) => {
                   handleDepositAmountChange(event.target.value);
@@ -240,13 +243,27 @@ export default forwardRef((props, ref) => {
               <div className="subItem">
                 <div className="key">存款年利率</div>
                 <div className="value">
-                  {params?.data?.borrowingEnabled ? Number(params?.data?.liquidityRate) : -1}%
+                  {params?.data?.borrowingEnabled
+                    ? formatDecimal(Number(params?.data?.liquidityRate) * 100)
+                    : -1}
+                  %
                 </div>
               </div>
             </div>
             <div className="item">
               <div className="key">抵押品参数</div>
-              <div className="key">xxxx</div>
+              <div className="subItem">
+                <div className="key">抵押率</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">可贷款价值</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">已贷款价值</div>
+                <div className="value">xxx</div>
+              </div>
             </div>
           </div>
           <div className="dialogFooter">
@@ -257,24 +274,69 @@ export default forwardRef((props, ref) => {
         </div>
       ) : (
         <div className="tabMain">
-          <div>
-            <div
-              onClick={() => {
-                if (userAssetInfo) {
-                  setMax(true);
-                  setWithdrawAmount(userAssetInfo.underlyingBalance);
-                }
-              }}
-            >
-              MAX
+          <div className="block">
+            <div className="balance">
+              <span>钱包余额</span>
+              <i>
+                {formatMoney(pow10(params?.balance))}
+                <em>{params?.data?.symbol}</em>
+              </i>
             </div>
-            <Input
-              // bordered={false}
-              value={withdrawAmount}
-              onChange={(event) => {
-                handleWithdrawAmountChange(event.target.value);
-              }}
-            />
+            <div className="input">
+              <div
+                onClick={() => {
+                  if (userAssetInfo) {
+                    setMax(true);
+                    setWithdrawAmount(userAssetInfo.underlyingBalance);
+                  }
+                }}
+                className="max"
+              >
+                MAX
+              </div>
+              <Input
+                bordered={false}
+                placeholder="请输入金额"
+                value={withdrawAmount}
+                onChange={(event) => {
+                  handleWithdrawAmountChange(event.target.value);
+                }}
+              />
+            </div>
+          </div>
+          <div className="info">
+            <div className="item">
+              <div className="key">健康因子</div>
+              <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
+            </div>
+            <div className="item">
+              <div className="key">存款收益</div>
+              <div className="subItem">
+                <div className="key">存款年利率</div>
+                <div className="value">
+                  {params?.data?.borrowingEnabled ? Number(params?.data?.liquidityRate) : -1}%
+                </div>
+              </div>
+              <div className="subItem">
+                <div className="key">奖励年利率</div>
+                <div className="value">xxx</div>
+              </div>
+            </div>
+            <div className="item">
+              <div className="key">抵押品参数</div>
+              <div className="subItem">
+                <div className="key">抵押率</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">可贷款价值</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">已贷款价值</div>
+                <div className="value">xxx</div>
+              </div>
+            </div>
           </div>
           <div className="dialogFooter">
             <div className="submit" onClick={() => handleWithdrawSubmit()}>

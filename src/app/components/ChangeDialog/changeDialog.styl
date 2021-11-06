@@ -65,11 +65,62 @@
             border-bottom-left-radius: 15px
             border-bottom-right-radius: 15px
 
+            .typeTab
+                display: flex
+                border-radius: 20px
+                overflow: hidden
+                font-size: 16px
+                text-align: center
+                margin: 0 80px 16px
+
+                .typeTabItem
+                    background: var(--var-dialog-bg)
+                    flex: 1
+                    height: 40px
+                    line-height: @height
+                    text-align: center
+                    color: var(--var-tab-button-color)
+                    cursor: pointer
+
+                    &.cur
+                        background: #FFD84E
+                        color: #333
+
             .block
                 background: var(--var-dialog-block-bg)
                 padding: 25px 40px
                 border-radius: 8px
                 border: 1px solid var(--var-border)
+                justifyContentSpaceBetween()
+
+                .balance
+                    width: 150px
+                    padding: 0 10px 0 0
+
+                    span
+                        display: block
+                        font-size: 16px
+                        margin: 28px 0 3px
+                        color: var(--var-placeholder)
+
+                    i
+                        font-size: 20px
+
+                .input
+                    text-align: right
+
+                    .max
+                        font-size: 24px
+                        margin: 0 0 3px
+                        color: var(--var-dialog-max-color)
+
+                    input
+                        text-align: right
+                        padding: 0
+                        font-size: 32px
+                        color: var( --var-text-color)
+
+                    placeholder(32px)
 
             .info
                 .item

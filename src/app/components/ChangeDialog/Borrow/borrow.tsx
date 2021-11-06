@@ -16,7 +16,7 @@ import {
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { handleSend } from '../helper/txHelper';
 import { useWeb3React } from '@web3-react/core';
-import { pow10, formatMoney, filterInput } from '../../../utils/tool';
+import { formatDecimal, pow10, formatMoney, filterInput } from '../../../utils/tool';
 import storage from '../../../utils/storage';
 import SymbolIcon from '../../SymbolIcon';
 
@@ -180,6 +180,10 @@ export default forwardRef((props, ref) => {
       destroyOnClose={true}
       closable={false}
     >
+      <div className="symbol">
+        <SymbolIcon symbol={params?.data?.symbol} size={96} />
+        <div className="text">{params?.data?.symbol}</div>
+      </div>
       <div className="tab">
         <div
           className={classnames('tabItem', { cur: type === 'Borrow' })}
@@ -196,16 +200,30 @@ export default forwardRef((props, ref) => {
       </div>
       {type === 'Borrow' ? (
         <div className="tabMain">
-          <div>
-            <div onClick={() => setInterestRateMode('Variable')}>可变利率</div>
-            <div onClick={() => setInterestRateMode('Stable')}>稳定利率</div>
+          <div className="typeTab">
+            <div
+              className={classnames('typeTabItem', { cur: interestRateMode === 'Variable' })}
+              onClick={() => setInterestRateMode('Variable')}
+            >
+              可变利率
+            </div>
+            <div
+              className={classnames('typeTabItem', { cur: interestRateMode === 'Stable' })}
+              onClick={() => setInterestRateMode('Stable')}
+            >
+              稳定利率
+            </div>
           </div>
           <div className="block">
-            <div>可贷款数量</div>
-            <div>{maxAmountToBorrow}</div>
-            <div>
+            <div className="balance">
+              <span>可贷款数量</span>
+              <i>{maxAmountToBorrow}</i>
+            </div>
+            <div className="input">
+              <div className="max">Max</div>
               <Input
-                // bordered={false}
+                bordered={false}
+                placeholder="请输入金额"
                 value={borrowAmount}
                 onChange={(event) => {
                   handleBorrowAmountChange(event.target.value);
@@ -213,9 +231,39 @@ export default forwardRef((props, ref) => {
               />
             </div>
           </div>
-          <div>健康因子</div>
-          <div>存款收益</div>
-          <div>抵押品参数</div>
+          <div className="info">
+            <div className="item">
+              <div className="key">健康因子</div>
+              <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
+            </div>
+            <div className="item">
+              <div className="key">存款收益</div>
+              <div className="subItem">
+                <div className="key">存款年利率</div>
+                <div className="value">
+                  {params?.data?.borrowingEnabled
+                    ? formatDecimal(Number(params?.data?.liquidityRate) * 100)
+                    : -1}
+                  %
+                </div>
+              </div>
+            </div>
+            <div className="item">
+              <div className="key">抵押品参数</div>
+              <div className="subItem">
+                <div className="key">抵押率</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">可贷款价值</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">已贷款价值</div>
+                <div className="value">xxx</div>
+              </div>
+            </div>
+          </div>
           <div className="dialogFooter">
             <Button loading={loading} className="submit" onClick={() => handleBorrowSubmit()}>
               提交
@@ -224,12 +272,25 @@ export default forwardRef((props, ref) => {
         </div>
       ) : (
         <div className="tabMain">
-          <div>
-            <div onClick={() => setInterestRateMode('Variable')}>可变利率</div>
-            <div onClick={() => setInterestRateMode('Stable')}>稳定利率</div>
+          <div className="typeTab">
+            <div
+              className={classnames('typeTabItem', { cur: interestRateMode === 'Variable' })}
+              onClick={() => setInterestRateMode('Variable')}
+            >
+              可变利率
+            </div>
+            <div
+              className={classnames('typeTabItem', { cur: interestRateMode === 'Stable' })}
+              onClick={() => setInterestRateMode('Stable')}
+            >
+              稳定利率
+            </div>
           </div>
-          <div>已贷款数量</div>
-          <div>
+          <div className="balance">
+            <span>已贷款数量</span>
+            <i>xxx</i>
+          </div>
+          <div className="input">
             <div
               onClick={() => {
                 if (userAssetInfo) {
@@ -245,16 +306,47 @@ export default forwardRef((props, ref) => {
               MAX
             </div>
             <Input
-              // bordered={false}
+              bordered={false}
+              placeholder="请输入金额"
               value={repayAmount}
               onChange={(event) => {
                 handleRepayAmountChange(event.target.value);
               }}
             />
           </div>
-          <div>健康因子</div>
-          <div>存款收益</div>
-          <div>抵押品参数</div>
+          <div className="info">
+            <div className="item">
+              <div className="key">健康因子</div>
+              <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
+            </div>
+            <div className="item">
+              <div className="key">存款收益</div>
+              <div className="subItem">
+                <div className="key">存款年利率</div>
+                <div className="value">
+                  {params?.data?.borrowingEnabled
+                    ? formatDecimal(Number(params?.data?.liquidityRate) * 100)
+                    : -1}
+                  %
+                </div>
+              </div>
+            </div>
+            <div className="item">
+              <div className="key">抵押品参数</div>
+              <div className="subItem">
+                <div className="key">抵押率</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">可贷款价值</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">已贷款价值</div>
+                <div className="value">xxx</div>
+              </div>
+            </div>
+          </div>
           <div className="dialogFooter">
             <Button loading={loading} className="submit" onClick={() => handleRepaySubmit()}>
               提交

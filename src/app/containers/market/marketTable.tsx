@@ -114,7 +114,7 @@ export default function MarketTable(props: IProps) {
                 key={item.id}
                 onClick={() =>
                   DepositDialogRef.current?.show({
-                    type: 'Withdraw',
+                    type: 'Deposit',
                     data: item.reserve,
                     balance: props.balance[item.underlyingAsset],
                     marketRefPriceInUsd,
