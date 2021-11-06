@@ -44,7 +44,7 @@ export default forwardRef((props, ref) => {
   const [repayAmount, setRepayAmount] = useState<string | number>('');
   const [loading, setLoading] = useState(false);
   const [interestRateMode, setInterestRateMode] = useState('Stable');
-  const [maxAmountToBorrow, setMaxAmountToBorrow] = useState<number>();
+  const [maxAmountToBorrow, setMaxAmountToBorrow] = useState<number>(0);
   const [userAssetInfo, setUserAssetInfo] = useState<ComputedUserReserve>();
   const [isMax, setMax] = useState(false);
 
@@ -57,6 +57,7 @@ export default forwardRef((props, ref) => {
     setBorrowValidationMessage('');
     setRepayValidationMessage('');
     setLoading(false);
+    setMax(false);
   };
 
   useImperativeHandle(ref, () => ({
@@ -152,13 +153,7 @@ export default forwardRef((props, ref) => {
         interestRateMode: interestRateMode as any,
         user: account,
         reserve: params.data.underlyingAsset,
-        amount: `${repayAmount}`, // TODO: MAX
-      });
-      console.log({
-        interestRateMode: interestRateMode as any,
-        user: account,
-        reserve: params.data.underlyingAsset,
-        amount: `${repayAmount}`, // TODO: MAX
+        amount: `${isMax ? '-1' : repayAmount}`,
       });
       await handleSend(txs, library);
       setLoading(false);
@@ -217,10 +212,12 @@ export default forwardRef((props, ref) => {
           <div className="block">
             <div className="balance">
               <span>可贷款数量</span>
-              <i>{maxAmountToBorrow}</i>
+              <i>{formatMoney(`${maxAmountToBorrow}`)}</i>
             </div>
             <div className="input">
-              <div className="max">Max</div>
+              <div className="max" onClick={() => setBorrowAmount(maxAmountToBorrow)}>
+                Max
+              </div>
               <Input
                 bordered={false}
                 placeholder="请输入金额"
@@ -286,33 +283,44 @@ export default forwardRef((props, ref) => {
               稳定利率
             </div>
           </div>
-          <div className="balance">
-            <span>已贷款数量</span>
-            <i>xxx</i>
-          </div>
-          <div className="input">
-            <div
-              onClick={() => {
-                if (userAssetInfo) {
-                  setMax(true);
-                  if (interestRateMode === 'Variable') {
-                    setRepayAmount(userAssetInfo.variableBorrows);
-                  } else {
-                    setRepayAmount(userAssetInfo.stableBorrows);
-                  }
-                }
-              }}
-            >
-              MAX
+          <div className="block">
+            <div className="balance">
+              <span>已贷款数量</span>
+              <i>
+                {userAssetInfo
+                  ? formatMoney(
+                      interestRateMode === 'Variable'
+                        ? userAssetInfo.variableBorrows
+                        : userAssetInfo.stableBorrows
+                    )
+                  : 0}
+              </i>
             </div>
-            <Input
-              bordered={false}
-              placeholder="请输入金额"
-              value={repayAmount}
-              onChange={(event) => {
-                handleRepayAmountChange(event.target.value);
-              }}
-            />
+            <div className="input">
+              <div
+                onClick={() => {
+                  if (userAssetInfo) {
+                    setMax(true);
+                    if (interestRateMode === 'Variable') {
+                      setRepayAmount(userAssetInfo.variableBorrows);
+                    } else {
+                      setRepayAmount(userAssetInfo.stableBorrows);
+                    }
+                  }
+                }}
+                className="max"
+              >
+                MAX
+              </div>
+              <Input
+                bordered={false}
+                placeholder="请输入金额"
+                value={repayAmount}
+                onChange={(event) => {
+                  handleRepayAmountChange(event.target.value);
+                }}
+              />
+            </div>
           </div>
           <div className="info">
             <div className="item">

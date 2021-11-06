@@ -3,7 +3,7 @@
 import './deposit.styl';
 import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle, useEffect } from 'react';
-import { Modal, Input } from 'antd';
+import { Modal, Input, Button } from 'antd';
 import { useThemeContext } from '../../../theme';
 import {
   ComputedReserveData,
@@ -55,6 +55,7 @@ export default forwardRef((props, ref) => {
     setDepositValidationMessage('');
     setWithdrawValidationMessage('');
     setLoading(false);
+    setMax(false);
   };
 
   useImperativeHandle(ref, () => ({
@@ -267,9 +268,9 @@ export default forwardRef((props, ref) => {
             </div>
           </div>
           <div className="dialogFooter">
-            <div className="submit" onClick={() => handleDepositSubmit()}>
+            <Button loading={loading} className="submit" onClick={() => handleDepositSubmit()}>
               提交
-            </div>
+            </Button>
           </div>
         </div>
       ) : (
@@ -339,9 +340,9 @@ export default forwardRef((props, ref) => {
             </div>
           </div>
           <div className="dialogFooter">
-            <div className="submit" onClick={() => handleWithdrawSubmit()}>
+            <Button loading={loading} className="submit" onClick={() => handleWithdrawSubmit()}>
               提交
-            </div>
+            </Button>
           </div>
         </div>
       )}
