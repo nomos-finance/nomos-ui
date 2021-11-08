@@ -1,0 +1,97 @@
+.selectTokenList
+    .ant-popover-arrow
+        display: none
+
+    .ant-popover-inner
+        background: #2E3136
+        box-shadow: 0px 12px 21px 0px rgba(0, 0, 0, 0.15)
+        border-radius: 16px
+        border: 1px solid #43464A
+        width: 320px
+        overflow: hidden
+
+        .ant-popover-inner-content
+            padding: 0 0 16px
+
+        .header
+            padding: 32px 32px 16px
+
+        .input
+            placeholder(16px)
+            width: 256px
+            height: 40px
+            line-height: @height
+            background: #101112
+            border-radius: 24px
+            display: flex
+            color: #fff
+
+            em
+                padding: 10px 0 10px 10px
+
+            input
+                color: #fff
+
+        .list
+            .item
+                display: flex
+                height: 56px
+                padding: 0 32px
+
+                &:hover
+                    background: #383B40
+
+                .symbolIcon
+                    margin: 16px 8px 16px 0
+                    height: 24px !important
+                    width: 24px !important
+
+                .text
+                    flex: 1
+                    justifyContentSpaceBetween()
+                    color: var(--var-text-color)
+                    cursor: pointer
+
+                    .symbol
+                        height: 20px
+                        font-size: 14px
+                        font-weight: 600
+                        line-height: 20px
+                        margin: 8px 0 0
+
+                    .subSymbol
+                        font-size: 12px
+
+                    .number
+                        font-size: 16px
+                        line-height: 56px
+
+.selectToken
+    display: flex
+    background: #2E3136
+    border-radius: 20px
+    box-sizing: border-box
+    padding: 8px
+
+    .symbolIcon
+        height: 24px !important
+        width: 24px !important
+
+    .symbol
+        display: inline-block
+        height: 24px
+        line-height: @height
+        margin: 0 8px
+        display: flex
+
+        i
+            position relative
+            width: 30px
+
+            .icon
+                width: 10px
+                height: 6px
+                position: absolute
+                top: 50%
+                right: 0
+                transform: translateY(-50%)

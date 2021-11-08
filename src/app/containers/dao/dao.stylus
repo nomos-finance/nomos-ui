@@ -1,0 +1,29 @@
+.page-dao
+    .block
+        background: var(--var-block-bg)
+        border-radius: 24px
+        border: 1px solid var(--var-block-border)
+        margin: 0 0 30px
+        padding: 40px 32px 32px
+
+        .blockTitle
+            height: 28px
+            font-size: 20px
+            font-weight: 500
+            line-height: 28px
+
+            span
+                color: #FFD84E
+                font-size: 14px
+
+        table
+            color: var(--var-text-color)
+
+    .positionBlock
+        display: flex
+
+        .block
+            flex: 1
+
+        .voteBlock
+            margin-left: 30px

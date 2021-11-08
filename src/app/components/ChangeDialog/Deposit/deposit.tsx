@@ -214,8 +214,8 @@ export default forwardRef((props, ref) => {
         <div className="tabMain">
           <div className="block">
             <div className="balance">
-              <span>钱包余额</span>
-              <i>
+              <span className="balanceLabel">钱包余额</span>
+              <i className="balanceNumber">
                 {formatMoney(pow10(params?.balance))}
                 <em>{params?.data?.symbol}</em>
               </i>
@@ -277,8 +277,8 @@ export default forwardRef((props, ref) => {
         <div className="tabMain">
           <div className="block">
             <div className="balance">
-              <span>钱包余额</span>
-              <i>
+              <span className="balanceLabel">钱包余额</span>
+              <i className="balanceNumber">
                 {formatMoney(pow10(params?.balance))}
                 <em>{params?.data?.symbol}</em>
               </i>

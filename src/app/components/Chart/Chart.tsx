@@ -8,6 +8,7 @@ import { useThemeContext } from '../../theme';
 
 interface IChart {
   percentage: number | string;
+  text?: string;
 }
 export default (props: IChart): React.ReactElement => {
   const { currentThemeName } = useThemeContext();
@@ -30,7 +31,8 @@ export default (props: IChart): React.ReactElement => {
     tooltip: {
       backgroundColor: 'rgba(255, 255, 255, .9)',
       formatter: function (params: any) {
-        return '<div style="text-align: center">贷款上限<br />' + params.value + '%</div>';
+        return `<div>${props.text}</div>`;
+        // return '<div style="text-align: center">贷款上限<br />' + params.value + '%</div>';
       },
     },
     angleAxis: {

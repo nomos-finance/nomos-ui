@@ -211,8 +211,8 @@ export default forwardRef((props, ref) => {
           </div>
           <div className="block">
             <div className="balance">
-              <span>可贷款数量</span>
-              <i>{formatMoney(`${maxAmountToBorrow}`)}</i>
+              <span className="balanceLabel">可贷款数量</span>
+              <i className="balanceNumber">{formatMoney(`${maxAmountToBorrow}`)}</i>
             </div>
             <div className="input">
               <div className="max" onClick={() => setBorrowAmount(maxAmountToBorrow)}>
@@ -285,8 +285,8 @@ export default forwardRef((props, ref) => {
           </div>
           <div className="block">
             <div className="balance">
-              <span>已贷款数量</span>
-              <i>
+              <span className="balanceLabel">已贷款数量</span>
+              <i className="balanceNumber">
                 {userAssetInfo
                   ? formatMoney(
                       interestRateMode === 'Variable'

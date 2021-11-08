@@ -146,16 +146,19 @@ export default function Markets() {
             <div className="title">
               <span>健康因子</span>
             </div>
-            <div>
-              贷款上限 $
-              {data && data.user
-                ? new BigNumber(data.user.availableBorrowsETH)
-                    .multipliedBy(data.usdPriceEth)
-                    .toString()
-                : 0}
-            </div>
             <div className="main">
-              <Chart percentage={60} />
+              <Chart
+                percentage={60}
+                text={`贷款上限<br />$${
+                  data && data.user
+                    ? formatMoney(
+                        new BigNumber(data.user.availableBorrowsETH)
+                          .multipliedBy(data.usdPriceEth)
+                          .toString()
+                      )
+                    : 0
+                }`}
+              />
             </div>
           </div>
         </div>

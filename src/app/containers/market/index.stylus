@@ -34,10 +34,10 @@
                 display: flex
 
                 .symbolIcon
-                    margin: 0 10px 0 0  
+                    margin: 0 10px 0 0
 
             .money
-                text-align: right 
+                text-align: right
 
     .totalBlock
         display: flex
@@ -129,6 +129,7 @@
                     text-align: center
                     color: #0C0E11
                     box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+                    cursor: pointer
 
             &.userInfo
                 flex: 1
@@ -165,17 +166,18 @@
 
             &.charts
                 padding-bottom: 0
+
                 .title
                     margin: 0 0 20px
+
                 .main
-                    position relative
+                    position: relative
                     width: 280px
                     height: 180px
                     overflow: hidden
-                    
+
                     .Chart
                         abCenter()
-
 
     .voteBlock
         padding: 32px
@@ -195,14 +197,14 @@
                     font-weight: bold
 
                 i
-                    font-size: 14px;
+                    font-size: 14px
                     color: var(--var-nav-text)
                     margin: 0 0 0 10px
-
 
             .more
                 color: var(--var-nav-cur-text)
                 font-size: 16px
+                cursor: pointer
 
         .main
             justifyContentSpaceBetween()
@@ -227,6 +229,7 @@
                 color: #0C0E11
                 box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
                 padding: 0 20px
+                cursor: pointer
 
     .assetBlock
         margin: 0 0 40px
@@ -255,6 +258,7 @@
             .more
                 color: var(--var-nav-cur-text)
                 font-size: 16px
+                cursor: pointer
 
     .marketBlock
         display: flex

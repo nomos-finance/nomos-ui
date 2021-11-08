@@ -3,7 +3,7 @@ import './swap.styl';
 
 import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle } from 'react';
-import { Modal, Input, Button } from 'antd';
+import { Modal, Input, Button, Popover } from 'antd';
 import { useThemeContext } from '../../../theme';
 
 import { ComputedReserveData } from '@aave/protocol-js';
@@ -12,6 +12,8 @@ import { handleSend } from '../helper/txHelper';
 import { useWeb3React } from '@web3-react/core';
 import { pow10, formatMoney, filterInput } from '../../../utils/tool';
 import storage from '../../../utils/storage';
+import SelectToken from 'app/components/SelectToken/selectToken';
+import Icon from 'assets/icons';
 
 interface IProps {}
 
@@ -72,6 +74,18 @@ export default forwardRef((props, ref) => {
     //   }
   };
 
+  const content = (
+    <div>
+      <div>滑点</div>
+      <div>自动</div>
+      <Input />
+      <div>交易截止期限</div>
+      <Input />
+      分钟
+      <div>注：交易市场为Uniswap</div>
+    </div>
+  );
+
   return (
     <Modal
       visible={show}
@@ -82,12 +96,68 @@ export default forwardRef((props, ref) => {
       destroyOnClose={true}
       closable={false}
     >
-      <div>兑换</div>
-      <div>已抵押资产</div>
-      <div>BTC</div>
-      <div>目标抵押资产</div>
-      <div>ETH</div>
-      <div onClick={() => handleSubmit()}>提交</div>
+      <div className="swapHeader">
+        <div className="text">兑换</div>
+        <Popover
+          placement="bottomLeft"
+          content={content}
+          trigger="click"
+          overlayClassName={classnames('swapSetting', currentThemeName)}
+        >
+          <div className="setting">
+            <Icon name="setting" />
+          </div>
+        </Popover>
+      </div>
+      <div className="tabMain">
+        <div className="blockTitle">已抵押资产</div>
+        <div className="block">
+          <div className="balance">
+            <SelectToken />
+            <div className="swapNumber">
+              <div className="label">抵押量:</div>
+              <div className="value">55</div>
+            </div>
+          </div>
+          <div className="input">
+            <div onClick={() => {}} className="max">
+              MAX
+            </div>
+            <Input
+              bordered={false}
+              placeholder="请输入金额"
+              // value={withdrawAmount}
+              onChange={(event) => {}}
+            />
+            <div className="number">≈$1000.00</div>
+          </div>
+        </div>
+        <div className="blockTitle blockTitle2">目标抵押资产</div>
+        <div className="block">
+          <div className="balance">
+            <SelectToken />
+            <div className="swapNumber">
+              <div className="label">钱包余额:</div>
+              <div className="value">55</div>
+            </div>
+          </div>
+          <div className="input">
+            <Input
+              bordered={false}
+              placeholder="请输入金额"
+              // value={withdrawAmount}
+              onChange={(event) => {}}
+            />
+            <div className="number">≈$1000.00</div>
+          </div>
+        </div>
+        <div className="blockTip">1WETH=1000.00SENT</div>
+        <div className="dialogFooter">
+          <Button loading={loading} className="submit" onClick={() => handleSubmit()}>
+            提交
+          </Button>
+        </div>
+      </div>
     </Modal>
   );
 });
