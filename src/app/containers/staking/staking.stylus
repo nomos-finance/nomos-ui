@@ -16,50 +16,44 @@
                 color: #FFD84E
                 font-size: 14px
 
-        table
-            background: var(--var-bg)
-            width 100%
-            margin: 20px 0 0
-            border-radius: 5px
-            overflow hidden
-
-            td
-                border: 1px solid var(--var-block-border)
-                color: var(--var-text-color)
-                padding: 15px 20px
-                min-width 120px
-
-                &:first-child
-                    text-align: center
-
-                div
-                    padding: 6px 0
-
-    .descBlock
-        .main
-            table
-                border: 1px solid var(--var-border)
-
     .infoBlock
+        .header
+            justifyContentSpaceBetween()
+
+            .blockTitle
+                height: 40px
+                line-height: @height
+
+            .right
+                display: flex
+
+                .notice
+                    color: #DE3811
+                    height: 40px
+                    line-height: @height
+                    margin-right: 16px
+
+                .btn
+                    height: 40px
+                    line-height: @height
+                    background: #FFD84E
+                    border-radius: 20px
+                    font-size: 16px
+                    font-weight: 400
+                    text-align: center
+                    color: #0C0E11
+                    box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+                    padding: 0 40px
+                    cursor: pointer
+                    border: 0 none
+
         .main
             display: flex
             padding: 40px 0 0
 
-            .left
-                flex: 2.5
-                justifyContentSpaceBetween()
-                padding: 0 90px 0 0
-
-            .right
-                flex: 1.5
-                display: flex
-                padding: 0 0 0 90px
-                border-left: 1px solid var(--var-border)
-
-                .item
-                    flex: 1
-
             .item
+                flex: 1
+                border-left: 1px solid var(--var-border)
                 padding: 0 0 0 32px
 
                 .icon
@@ -80,11 +74,71 @@
                     padding: 0
                     border: 0 none
 
-    .positionBlock
+    .operation
         display: flex
 
         .block
             flex: 1
 
-        .voteBlock
-            margin-left: 30px
+            &:first-child
+                margin-right: 30px
+
+            .box
+                background: var(--var-dialog-block-bg)
+                padding: 25px 40px
+                border-radius: 8px
+                justifyContentSpaceBetween()
+                margin: 24px 0 0 
+
+                .balance
+                    width: 150px
+                    padding: 0 10px 0 0
+
+                    .balanceLabel
+                        display: block
+                        font-size: 16px
+                        margin: 28px 0 3px
+                        color: var(--var-placeholder)
+
+                    .balanceNumber
+                        font-size: 20px
+
+                .input
+                    text-align: right
+
+                    .max
+                        font-size: 24px
+                        margin: 0 0 3px
+                        color: var(--var-dialog-max-color)
+                        cursor: pointer
+
+                    input
+                        text-align: right
+                        padding: 0
+                        font-size: 32px
+                        color: var(--var-text-color)
+
+                    placeholder(32px)
+
+                    .number
+                        font-size: 16px
+                        text-align: right
+                        color: var(--var-placeholder)
+
+            .btnWrap
+                text-align: center
+                padding: 32px 0 0
+                .btn
+                    display: inline-block
+                    height: 40px
+                    line-height: @height
+                    background: #FFD84E
+                    border-radius: 20px
+                    font-size: 16px
+                    font-weight: 400
+                    text-align: center
+                    color: #0C0E11
+                    box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+                    padding: 0 40px
+                    cursor: pointer
+                    border: 0 none

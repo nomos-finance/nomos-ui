@@ -1,0 +1,103 @@
+.page-data
+    .block
+        background: var(--var-block-bg)
+        border-radius: 24px
+        border: 1px solid var(--var-block-border)
+        margin: 0 0 30px
+        padding: 40px 32px 32px
+
+        .blockTitle
+            height: 28px
+            font-size: 20px
+            font-weight: 500
+            line-height: 28px
+
+    .ranking
+        .proportion
+            display: flex
+
+            .proportionItem
+                flex: 1
+
+                &:last-child
+                    padding: 0 0 0 30px
+
+                .header
+                    .text
+                        height: 28px
+                        font-size: 20px
+                        font-family: PingFangSC-Semibold, PingFang SC
+                        font-weight: 600
+                        color: var(--var-nav-cur-text)
+                        line-height: 28px
+
+                    .number
+                        height: 59px
+                        font-size: 46px
+                        font-family: Helvetica
+                        color: var(--var-nav-cur-text)
+                        line-height: 55px
+                        margin: 22px 0 0
+
+                .main
+                    .title
+                        height: 22px
+                        font-size: 16px
+                        line-height: 22px
+                        margin: 40px 0 24px
+
+                    .item
+                        padding: 0 0 23px
+
+                        .progress
+                            .progressText
+                                justifyContentSpaceBetween()
+
+                            .progressBar
+                                height: 8px
+                                background: #2B3038
+                                border-radius: 4px
+                                margin: 8px 0 0
+
+                                div
+                                    height: 100%
+                                    background: #FCD536
+                                    border-radius: 4px
+
+        .totalBox
+            justifyContentSpaceBetween()
+            padding: 40px 0 0
+
+            .text
+                height: 28px
+                font-size: 20px
+                font-weight: 600
+                color: var(--var-text-color)
+                line-height: @height
+                margin: 0 0 30px
+
+            .number
+                height: 30px
+                font-size: 24px
+                font-family: Helvetica
+                line-height: @height
+                color: var(--var-nav-cur-text)
+
+    .marketBlock
+        .ant-table
+            background: none
+            margin: 24px 0 0
+
+            th
+                background: var(--var-table-thead)
+                color: var(--var-text-color)
+                border: 0 none
+                font-size: 16px
+
+            td
+                color: var(--var-text-color)
+                border: 0 none
+                font-size: 16px
+
+            tr.ant-table-row:hover > td
+                background: var(--var-table-td-hover)

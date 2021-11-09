@@ -34,6 +34,12 @@ export default (): React.ReactElement => {
           </i>
           <span>Market</span>
         </Link>
+        <Link className={classnames('item', { cur: /data/.test(pathname) })} to="/data">
+          <i>
+            <Icon name="data" />
+          </i>
+          <span>Data</span>
+        </Link>
         <Link className={classnames('item', { cur: /dao/.test(pathname) })} to="/dao">
           <i>
             <Icon name="dao" />
