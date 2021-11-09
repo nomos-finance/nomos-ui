@@ -25,7 +25,7 @@ export default function Markets() {
             你可以质押NOMO来保护协议的安全，同时获得NOMO奖励。<i>了解更多</i>
           </span>
         </div>
-        <div>
+        <div className="main">
           <table>
             <tr>
               <td>锁仓义务</td>
@@ -46,12 +46,36 @@ export default function Markets() {
       </div>
       <div className="block infoBlock">
         <div className="blockTitle">NOMO锁仓总量</div>
-        <div>
-          <div>NOMO锁仓总量</div>
-          <div>veNOMO总量</div>
-          <div>平均锁仓时间</div>
-          <div>每天奖励释放NOMO量</div>
-          <div>锁仓年收益</div>
+        <div className="main">
+          <div className="left">
+            <div className="item">
+              <Icon name="deposit" />
+              <div className="text">NOMO锁仓总量</div>
+              <div className="number">1212</div>
+            </div>
+            <div className="item">
+              <Icon name="loan" />
+              <div className="text">veNOMO总量</div>
+              <div className="number">1212</div>
+            </div>
+            <div className="item">
+              <Icon name="rate" />
+              <div className="text">平均锁仓时间</div>
+              <div className="number">1212</div>
+            </div>
+          </div>
+          <div className="right">
+            <div className="item">
+              <Icon name="reward" />
+              <div className="text">每天奖励释放NOMO量</div>
+              <div className="number">1212</div>
+            </div>
+            <div className="item">
+              <Icon name="reward" />
+              <div className="text">锁仓年收益</div>
+              <div className="number">121212</div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="positionBlock">

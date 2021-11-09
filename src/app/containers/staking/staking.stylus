@@ -1,4 +1,4 @@
-.page-dao
+.page-staking
     .block
         background: var(--var-block-bg)
         border-radius: 24px
