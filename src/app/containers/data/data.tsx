@@ -126,7 +126,7 @@ export default function Markets() {
           </div>
           <div className="item">
             <div className="text">Average Boost</div>
-            <div className="number">36,089,587.22</div>
+            <div className="number rockets">36,089,587.22</div>
           </div>
         </div>
       </div>

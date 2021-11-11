@@ -51,6 +51,16 @@
                         margin: 3px 0 0
                         color: var(--var-text-color)
 
+                .code
+                    display: flex
+                    .getCode
+                        height: 40px;
+                        background: var(--var-block-bg)
+                        border-radius: 8px;
+                        border: 1px solid #FFD84E;
+                        color: #FFD84E
+                        margin: 0 0 0 10px
+
                 .btn
                     margin: 0 0 0 100px
                     height: 40px

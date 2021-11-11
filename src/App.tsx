@@ -7,6 +7,7 @@ import Dao from './app/containers/dao';
 import Voting from './app/containers/voting';
 import Staking from './app/containers/staking';
 import Position from './app/containers/position';
+import Protocol from './app/containers/protocol';
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
       <Route path="/voting" component={Voting} />
       <Route path="/staking" component={Staking} />
       <Route path="/position" component={Position} />
+      <Route path="/protocol" component={Protocol} />
       <Route path="/" component={Market} />
     </Switch>
   );

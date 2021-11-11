@@ -71,8 +71,11 @@ export default function Markets() {
                 },
               ]}
             >
-              <div className="input">
-                <Input placeholder="请输入" bordered={false} />
+              <div className="code">
+                <div className="input">
+                  <Input placeholder="请输入" bordered={false} />
+                </div>
+                <Button className="getCode">获取验证码</Button>
               </div>
             </Form.Item>
             <Form.Item>

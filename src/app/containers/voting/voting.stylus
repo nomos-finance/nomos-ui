@@ -6,85 +6,272 @@
         margin: 0 0 30px
         padding: 40px 32px 32px
 
-        .blockTitle
-            height: 28px
-            font-size: 20px
-            font-weight: 500
-            line-height: 28px
+        .header
+            justifyContentSpaceBetween()
 
-            span
-                color: #FFD84E
-                font-size: 14px
-
-        table
-            background: var(--var-bg)
-            width 100%
-            margin: 20px 0 0
-            border-radius: 5px
-            overflow hidden
-
-            td
-                border: 1px solid var(--var-block-border)
-                color: var(--var-text-color)
-                padding: 15px 20px
-                min-width 120px
-
-                &:first-child
-                    text-align: center
-
-                div
-                    padding: 6px 0
-
-    .descBlock
-        .main
-            table
-                border: 1px solid var(--var-border)
-
-    .infoBlock
-        .main
-            display: flex
-            padding: 40px 0 0
-
-            .left
-                flex: 2.5
-                justifyContentSpaceBetween()
-                padding: 0 90px 0 0
-
-            .right
-                flex: 1.5
+            .tab
                 display: flex
-                padding: 0 0 0 90px
-                border-left: 1px solid var(--var-border)
 
                 .item
-                    flex: 1
-
-            .item
-                padding: 0 0 0 32px
-
-                .icon
-                    size(35px)
-                    color: var(--var-block-icon-color)
-                    margin: 6px 0 40px
-
-                .text
+                    height: 48px
+                    line-height: @height
+                    padding: 0 30px
                     font-size: 16px
-                    margin: 0 0 6px
-                    color: var(--var-nav-text)
+                    cursor: pointer
 
-                .number
-                    font-size: 24px
-                    color: var(--var-nav-cur-text)
+                    &.cur
+                        background: var(--var-dialog-main-bg)
+                        border-radius: 8px
 
-                &:first-child
-                    padding: 0
-                    border: 0 none
+            .link
+                color: var(--var-nav-cur-text)
+                font-size: 16px
+                height: 48px
+                line-height: @height
 
-    .positionBlock
-        display: flex
+        .tabMain
+            &.all
+                .item
+                    justifyContentSpaceBetween()
+                    background: var(--var-dialog-main-bg)
+                    padding: 30px
+                    margin: 24px 0 0
+                    border-radius: 8px
 
-        .block
-            flex: 1
+                    .left
+                        .title
+                            height: 28px
+                            font-size: 20px
+                            font-weight: 600
+                            line-height: 28px
+                            margin: 0 0 12px
+                            cursor: pointer
 
-        .voteBlock
-            margin-left: 30px
+                        .text
+                            display: flex
+                            font-size: 16px
+
+                            .status
+                                position: relative
+                                padding: 0 0 0 20px
+
+                                &:after
+                                    content: ' '
+                                    display: block
+                                    position: absolute
+                                    top: 50%
+                                    transform: translateY(-50%)
+                                    left: 0
+                                    border-radius: 8px
+                                    size: 8px
+
+                                &.status1
+                                    color: #FFAD4D
+
+                                    &:after
+                                        background: @color
+
+                                &.status2
+                                    color: #FA6400
+
+                                    &:after
+                                        background: @color
+
+                                &.status3
+                                    color: #79C982
+
+                                    &:after
+                                        background: @color
+
+                                &.status4
+                                    color: #DE5958
+
+                                    &:after
+                                        background: @color
+
+                                &.status5
+                                    color: #999
+
+                                    &:after
+                                        background: @color
+
+                            .time
+                                padding: 0 16px 0 21px
+
+                    .compare
+                        width: 400px
+
+                        .txt
+                            justifyContentSpaceBetween()
+                            height: 22px
+                            line-height: 22px
+                            font-size: 16px
+
+                        .bar
+                            height: 8px
+                            background: linear-gradient(270deg, #008EFF 0%, #0055FF 100%)
+                            border-radius: 6px
+                            clear: both
+                            margin: 12px 0 8px
+
+                            div
+                                float: right
+                                height: 8px
+                                background: linear-gradient(90deg, #FD9D00 0%, #FA6400 100%)
+                                border-radius: 0px 6px 6px 0px
+
+                        .num
+                            justifyContentSpaceBetween()
+                            height: 22px
+                            font-size: 16px
+                            font-weight: 600
+                            line-height: 22px
+
+                            div
+                                &:first-child
+                                    color: #008CFF
+
+                                &:last-child
+                                    color: #FA6400
+
+            &.rule
+                background: #000
+
+            &.create
+                .form
+                    background: var(--var-dialog-main-bg)
+                    border-radius: 16px
+                    padding: 72px 0
+
+                    .ant-form
+                        width: 400px
+                        margin: 0 auto
+
+                        .ant-form-item
+                            padding-bottom: 10px
+
+                        .ant-form-item-label
+                            width: 100px
+
+                            >label
+                                color: var(--var-text-color)
+                                font-size: 16px
+                                height: 40px
+                                line-height: @height
+
+                        .input
+                            border-radius: 8px
+                            background: var(--var-block-bg)
+                            border: 1px solid var(--var-block-border)
+                            height: 40px
+                            line-height: @height
+                            placeholder(16px)
+
+                            input
+                                font-size: 16px
+                                margin: 3px 0 0
+                                color: var(--var-text-color)
+
+                        .btn
+                            margin: 0 0 0 100px
+                            height: 40px
+                            line-height: @height
+                            background: #FFD84E
+                            border-radius: 20px
+                            font-size: 16px
+                            font-weight: 400
+                            text-align: center
+                            color: #0C0E11
+                            box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+                            padding: 0 40px
+                            cursor: pointer
+                            border: 0 none
+
+            &.my
+                .content
+                    background: var(--var-dialog-main-bg)
+                    border-radius: 16px
+                    padding: 20px
+                    margin: 24px 0 0
+
+                    .boxTitle
+                        height: 28px
+                        font-size: 20px
+                        font-weight: 500
+                        line-height: 28px
+                        margin: 0 0 16px
+
+                    .box
+                        background: var(--var-dialog-block-bg)
+                        padding: 25px 40px
+                        border-radius: 8px
+
+                        .wrap
+                            justifyContentSpaceBetween()
+
+                            .balance
+                                width: 150px
+                                padding: 0 10px 0 0
+
+                                .balanceLabel
+                                    display: block
+                                    font-size: 16px
+                                    margin: 28px 0 3px
+
+                                .balanceNumber
+                                    font-size: 20px
+
+                                .swapNumber
+                                    display: flex
+                                    margin: 17px 0 0
+                                    font-size: 16px
+
+                            .input
+                                text-align: right
+                                placeholder(32px)
+
+                                .max
+                                    font-size: 24px
+                                    margin: 0 0 3px
+                                    color: var(--var-dialog-max-color)
+                                    cursor: pointer
+
+                                input
+                                    text-align: right
+                                    padding: 0
+                                    font-size: 32px
+                                    color: var(--var-text-color)
+
+                                .number
+                                    font-size: 16px
+                                    text-align: right
+                                    color: var(--var-placeholder)
+
+                    .tableTab
+                        display: flex
+                        padding: 0 20px
+
+                        .item
+                            padding: 24px 20px 10px
+                            font-size: 16px
+                            cursor pointer
+
+                            &.cur,&:hover
+                                color: var(--var-dialog-max-color)
+
+                    .table
+                        background: var(--var-dialog-block-bg)
+                        border-radius: 16px
+
+                        table
+                            width: 100%
+                            color: var(--var-nav-text)
+                            font-size: 16px
+
+                            th
+                                background: var(--var-table-thead)
+                                color: var(--var-text-color)
+                                padding: 13px 16px
+
+                            td
+                                padding: 13px 16px
