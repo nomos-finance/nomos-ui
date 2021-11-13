@@ -8,18 +8,24 @@
 
         .blockTitle
             justifyContentSpaceBetween()
+            margin: 0 0 6px
 
             strong
                 height: 40px
+                line-height: @height
                 font-size: 20px
                 font-weight: 500
-                line-height: @height
+                
 
             em
+                height: 40px
+                line-height: @height
                 color: #DE3811
                 font-size: 14px
 
             i
+                height: 40px
+                line-height: @height
                 color: #FFD84E
                 font-size: 14px
 
@@ -40,7 +46,7 @@
     .infoBlock
         .main
             display: flex
-            padding: 40px 0 0
+            padding: 34px 0 0
 
             .left
                 flex: 2.5
@@ -86,10 +92,10 @@
                 flex: 2.5
 
     .voteBlock
-        margin-left: 30px
 
         .box
             background: var(--var-dialog-block-bg)
+            border: 1px solid var(--var-border)
             padding: 25px 40px
             border-radius: 8px
 

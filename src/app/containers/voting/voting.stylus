@@ -207,6 +207,8 @@
                         border-radius: 8px
 
                         .wrap
+                            width: 900px
+                            margin: 0 auto
                             justifyContentSpaceBetween()
 
                             .balance
@@ -246,6 +248,20 @@
                                     font-size: 16px
                                     text-align: right
                                     color: var(--var-placeholder)
+
+                            .entrust
+                                placeholder(24px)
+                                margin: 0 0 0 70px
+
+                                .entrustLabel
+                                    display: block
+                                    font-size: 16px
+                                    margin: 22px 0 3px
+
+                                input
+                                    padding: 0
+                                    font-size: 24px;
+                                    color: var(--var-text-color)
 
                     .tableTab
                         display: flex

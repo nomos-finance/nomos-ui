@@ -85,6 +85,7 @@
 
             .box
                 background: var(--var-dialog-block-bg)
+                border: 1px solid var(--var-border)
                 padding: 25px 40px
                 border-radius: 8px
                 justifyContentSpaceBetween()

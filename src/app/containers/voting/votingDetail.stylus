@@ -1,0 +1,107 @@
+.page-votingDetail
+    .block
+        background: var(--var-block-bg)
+        border-radius: 24px
+        border: 1px solid var(--var-block-border)
+        margin: 0 0 30px
+        padding: 36px 32px 32px
+
+        .blockTitle
+            height: 28px
+            font-size: 20px
+            font-weight: 500
+            line-height: 28px
+
+    .back
+        color: var(--var-nav-text)
+        display: flex
+        margin: 0 0 16px
+        cursor: pointer
+
+        span
+            font-size: 16px
+            display: inline-block
+            height: 20px
+            line-height: @height
+
+    .votingBlock
+        .baseInfo
+            display: flex
+
+            .left
+                flex: 1
+                padding: 12px 0 0
+
+                .status
+                    position: relative
+                    padding: 0 0 0 20px
+
+                    &:after
+                        content: ' '
+                        display: block
+                        position: absolute
+                        top: 50%
+                        transform: translateY(-50%)
+                        left: 0
+                        border-radius: 8px
+                        size: 8px
+
+                    &.status1
+                        color: #FFAD4D
+
+                        &:after
+                            background: @color
+
+                    &.status2
+                        color: #FA6400
+
+                        &:after
+                            background: @color
+
+                    &.status3
+                        color: #79C982
+
+                        &:after
+                            background: @color
+
+                    &.status4
+                        color: #DE5958
+
+                        &:after
+                            background: @color
+
+                    &.status5
+                        color: #999
+
+                        &:after
+                            background: @color
+
+                .time
+                    padding: 0 16px
+
+            .right
+                position: relative
+                margin: 4px 0 0
+
+                .response
+                    position: absolute
+                    top: -30px
+                    right: 0
+                    height: 28px
+                    font-size: 20px
+                    font-family: PingFangSC-Medium, PingFang SC
+                    font-weight: 500
+                    line-height: 28px
+                    width: 200px
+                    text-align: right
+
+                .number
+                    height: 22px
+                    font-size: 16px
+                    font-family: PingFangSC-Regular, PingFang SC
+                    font-weight: 400
+                    color: var(--var-nav-cur-text)
+                    line-height: 22px
+
+    .contentBlock
+        font-size: 16px

@@ -5,6 +5,7 @@ import Market from './app/containers/market';
 import Data from './app/containers/data';
 import Dao from './app/containers/dao';
 import Voting from './app/containers/voting';
+import votingDetail from './app/containers/voting/votingDetail';
 import Staking from './app/containers/staking';
 import Position from './app/containers/position';
 import Protocol from './app/containers/protocol';
@@ -14,6 +15,7 @@ const App: React.FC = () => {
     <Switch>
       <Route path="/data" component={Data} />
       <Route path="/dao" component={Dao} />
+      <Route path="/voting/detail/:id" component={votingDetail} exact />
       <Route path="/voting" component={Voting} />
       <Route path="/staking" component={Staking} />
       <Route path="/position" component={Position} />

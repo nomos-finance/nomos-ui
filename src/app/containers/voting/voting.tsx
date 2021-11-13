@@ -208,11 +208,9 @@ export default function Markets() {
                       }}
                     />
                   </div>
-                  <div className="balance input">
-                    <span className="balanceLabel">委托给地址</span>
-                    <i className="balanceNumber">
-                      <Input bordered={false} placeholder="Enter ETH address" />
-                    </i>
+                  <div className="entrust">
+                    <span className="entrustLabel">委托给地址</span>
+                    <Input bordered={false} placeholder="Enter ETH address" />
                   </div>
                 </div>
               </div>
