@@ -213,25 +213,30 @@ export default forwardRef((props, ref) => {
       {type === 'Deposit' ? (
         <div className="tabMain">
           <div className="block">
-            <div className="balance">
-              <span className="balanceLabel">钱包余额</span>
-              <i className="balanceNumber">
-                {formatMoney(pow10(params?.balance))}
-                <em>{params?.data?.symbol}</em>
-              </i>
-            </div>
-            <div className={classnames('input', { error: !!depositValidationMessage })}>
-              <div className="max" onClick={() => setDepositAmount(Number(pow10(params?.balance)))}>
-                MAX
+            <div className="box">
+              <div className="balance">
+                <span className="balanceLabel">钱包余额</span>
+                <i className="balanceNumber">
+                  {formatMoney(pow10(params?.balance))}
+                  <em>{params?.data?.symbol}</em>
+                </i>
               </div>
-              <Input
-                bordered={false}
-                placeholder="请输入金额"
-                value={depositAmount}
-                onChange={(event) => {
-                  handleDepositAmountChange(event.target.value);
-                }}
-              />
+              <div className={classnames('input', { error: !!depositValidationMessage })}>
+                <div
+                  className="max"
+                  onClick={() => setDepositAmount(Number(pow10(params?.balance)))}
+                >
+                  MAX
+                </div>
+                <Input
+                  bordered={false}
+                  placeholder="请输入金额"
+                  value={depositAmount}
+                  onChange={(event) => {
+                    handleDepositAmountChange(event.target.value);
+                  }}
+                />
+              </div>
             </div>
           </div>
           <div className="info">
@@ -276,33 +281,35 @@ export default forwardRef((props, ref) => {
       ) : (
         <div className="tabMain">
           <div className="block">
-            <div className="balance">
-              <span className="balanceLabel">钱包余额</span>
-              <i className="balanceNumber">
-                {formatMoney(pow10(params?.balance))}
-                <em>{params?.data?.symbol}</em>
-              </i>
-            </div>
-            <div className="input">
-              <div
-                onClick={() => {
-                  if (userAssetInfo) {
-                    setMax(true);
-                    setWithdrawAmount(userAssetInfo.underlyingBalance);
-                  }
-                }}
-                className="max"
-              >
-                MAX
+            <div className="box">
+              <div className="balance">
+                <span className="balanceLabel">钱包余额</span>
+                <i className="balanceNumber">
+                  {formatMoney(pow10(params?.balance))}
+                  <em>{params?.data?.symbol}</em>
+                </i>
               </div>
-              <Input
-                bordered={false}
-                placeholder="请输入金额"
-                value={withdrawAmount}
-                onChange={(event) => {
-                  handleWithdrawAmountChange(event.target.value);
-                }}
-              />
+              <div className="input">
+                <div
+                  onClick={() => {
+                    if (userAssetInfo) {
+                      setMax(true);
+                      setWithdrawAmount(userAssetInfo.underlyingBalance);
+                    }
+                  }}
+                  className="max"
+                >
+                  MAX
+                </div>
+                <Input
+                  bordered={false}
+                  placeholder="请输入金额"
+                  value={withdrawAmount}
+                  onChange={(event) => {
+                    handleWithdrawAmountChange(event.target.value);
+                  }}
+                />
+              </div>
             </div>
           </div>
           <div className="info">

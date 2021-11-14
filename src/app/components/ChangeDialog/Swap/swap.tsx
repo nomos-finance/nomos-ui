@@ -75,14 +75,22 @@ export default forwardRef((props, ref) => {
   };
 
   const content = (
-    <div>
-      <div>滑点</div>
-      <div>自动</div>
-      <Input />
-      <div>交易截止期限</div>
-      <Input />
-      分钟
-      <div>注：交易市场为Uniswap</div>
+    <div className="settingWrap">
+      <div className="settingTitle">滑点</div>
+      <div className="btnWrap">
+        <div className="btn">自动</div>
+        <div className="input">
+          <Input bordered={false} placeholder="请输入" />
+        </div>
+      </div>
+      <div className="settingTitle">交易截止期限</div>
+      <div className="time">
+        <div className="input">
+          <Input bordered={false} placeholder="请输入" />
+        </div>
+        <span>分钟</span>
+      </div>
+      <div className="notice">注：交易市场为Uniswap</div>
     </div>
   );
 
@@ -112,43 +120,47 @@ export default forwardRef((props, ref) => {
       <div className="tabMain">
         <div className="blockTitle">已抵押资产</div>
         <div className="block">
-          <div className="balance">
-            <SelectToken />
-            <div className="swapNumber">
-              <div className="label">抵押量:</div>
-              <div className="value">55</div>
+          <div className="box">
+            <div className="balance">
+              <SelectToken />
+              <div className="swapNumber">
+                <div className="label">抵押量:</div>
+                <div className="value">55</div>
+              </div>
             </div>
-          </div>
-          <div className="input">
-            <div onClick={() => {}} className="max">
-              MAX
+            <div className="input">
+              <div onClick={() => {}} className="max">
+                MAX
+              </div>
+              <Input
+                bordered={false}
+                placeholder="请输入金额"
+                // value={withdrawAmount}
+                onChange={(event) => {}}
+              />
+              <div className="number">≈$1000.00</div>
             </div>
-            <Input
-              bordered={false}
-              placeholder="请输入金额"
-              // value={withdrawAmount}
-              onChange={(event) => {}}
-            />
-            <div className="number">≈$1000.00</div>
           </div>
         </div>
         <div className="blockTitle blockTitle2">目标抵押资产</div>
         <div className="block">
-          <div className="balance">
-            <SelectToken />
-            <div className="swapNumber">
-              <div className="label">钱包余额:</div>
-              <div className="value">55</div>
+          <div className="box">
+            <div className="balance">
+              <SelectToken />
+              <div className="swapNumber">
+                <div className="label">钱包余额:</div>
+                <div className="value">55</div>
+              </div>
             </div>
-          </div>
-          <div className="input">
-            <Input
-              bordered={false}
-              placeholder="请输入金额"
-              // value={withdrawAmount}
-              onChange={(event) => {}}
-            />
-            <div className="number">≈$1000.00</div>
+            <div className="input">
+              <Input
+                bordered={false}
+                placeholder="请输入金额"
+                // value={withdrawAmount}
+                onChange={(event) => {}}
+              />
+              <div className="number">≈$1000.00</div>
+            </div>
           </div>
         </div>
         <div className="blockTip">1WETH=1000.00SENT</div>

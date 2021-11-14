@@ -14,15 +14,17 @@
 
     .back
         color: var(--var-nav-text)
-        display: flex
         margin: 0 0 16px
-        cursor: pointer
 
-        span
-            font-size: 16px
-            display: inline-block
-            height: 20px
-            line-height: @height
+        em
+            display: flex
+            cursor: pointer
+
+            span
+                font-size: 16px
+                display: inline-block
+                height: 20px
+                line-height: @height
 
     .votingBlock
         .baseInfo
@@ -81,11 +83,11 @@
 
             .right
                 position: relative
-                margin: 4px 0 0
+                margin: 10px 0 0
 
                 .response
                     position: absolute
-                    top: -30px
+                    top: -36px
                     right: 0
                     height: 28px
                     font-size: 20px
@@ -103,5 +105,294 @@
                     color: var(--var-nav-cur-text)
                     line-height: 22px
 
+        .main
+            display: flex
+            background: var(--var-dialog-main-bg)
+            border-radius: 16px
+            padding: 30px 24px
+            margin: 25px 0 0
+
+            .box
+                background: var(--var-dialog-block-bg)
+                padding: 25px 40px
+                border-radius: 8px
+
+                .wrap
+                    width: 800px
+                    margin: 0 auto
+                    justifyContentSpaceBetween()
+
+                    .balance
+                        width: 150px
+                        padding: 0 10px 0 0
+
+                        .balanceLabel
+                            display: block
+                            font-size: 16px
+                            margin: 28px 0 3px
+
+                        .balanceNumber
+                            font-size: 20px
+
+                        .swapNumber
+                            display: flex
+                            margin: 17px 0 0
+                            font-size: 16px
+
+                    .input
+                        text-align: right
+                        placeholder(32px)
+
+                        .max
+                            font-size: 24px
+                            margin: 0 0 3px
+                            color: var(--var-dialog-max-color)
+                            cursor: pointer
+
+                        input
+                            text-align: right
+                            padding: 0
+                            font-size: 32px
+                            color: var(--var-text-color)
+
+                        .number
+                            font-size: 16px
+                            text-align: right
+                            color: var(--var-placeholder)
+
+                    .voting
+                        .votingLabel
+                            height: 22px
+                            font-size: 16px
+                            font-weight: 500
+                            line-height: 22px
+
+                        .votingBtn
+                            display: flex
+                            margin: 8px 0 0
+
+                            div
+                                width: 96px
+                                height: 40px
+                                border-radius: 20px
+                                text-align: center
+                                line-height: @height
+                                font-size: 16px
+                                font-weight: 400
+                                cursor: pointer
+
+                                &:last-child
+                                    margin: 0 0 0 30px
+
+                                &.agree
+                                    border: 1px solid var(--var-placeholder)
+                                    color: var(--var-placeholder)
+
+                                &.oppose
+                                    border: 1px solid var(--var-dialog-max-color)
+                                    color: var(--var-dialog-max-color)
+
+            .btnWrap
+                text-align: center
+                flex: 1
+                padding: 45px 0 0
+
+                .btn
+                    display: inline-block
+                    height: 40px
+                    line-height: @height
+                    background: #FFD84E
+                    border-radius: 20px
+                    font-size: 16px
+                    font-weight: 400
+                    text-align: center
+                    color: #0C0E11
+                    box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+                    padding: 0 40px
+                    cursor: pointer
+                    border: 0 none
+
+    .proportionBlock
+        .header
+            display: flex
+
+            div
+                flex: 1
+                padding: 0 25px
+                height: 22px
+                font-size: 16px
+                font-family: PingFangSC-Regular, PingFang SC
+                font-weight: 400
+                color: #E96630
+                line-height: 22px
+
+                &:first-child
+                    text-align: right
+
+                span
+                    position: relative
+                    padding: 0 30px 0 0
+
+                    .icon
+                        position: absolute
+                        top: 0
+                        right: 0
+                        color: #fff
+
+        .main
+            display: flex
+            margin: 33px 0 0
+
+            &>div
+                padding: 0 44px
+                flex: 1
+
+            .left
+                .bar
+                    div
+                        background: linear-gradient(270deg, #008EFF 0%, #0055FF 100%)
+
+            .right
+                border-left: 1px solid var(--var-border)
+
+                .bar
+                    div
+                        background: linear-gradient(270deg, #FD9D00 0%, #FA6400 100%)
+
+            .process
+                .txt
+                    justifyContentSpaceBetween()
+                    height: 28px
+                    font-size: 20px
+                    font-family: PingFangSC-Semibold, PingFang SC
+                    font-weight: 600
+                    line-height: 28px
+
+                .bar
+                    height: 8px
+                    background: var(--var-dialog-main-bg)
+                    border-radius: 9px
+                    margin: 16px 0 0
+
+                    div
+                        height: 100%
+                        border-radius: 9px
+
+            .itemHeader
+                justifyContentSpaceBetween()
+                padding: 35px 0 0
+                font-size: 16px
+                font-weight: 600
+
+            .item
+                justifyContentSpaceBetween()
+                padding: 35px 0 0
+                font-size: 16px
+
+            .btnWrap
+                text-align: center
+                margin: 40px 0 0
+
+                .btn
+                    display: inline-block
+                    height: 40px
+                    line-height: @height
+                    background: #FFD84E
+                    border-radius: 20px
+                    font-size: 16px
+                    font-weight: 400
+                    text-align: center
+                    color: #0C0E11
+                    box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+                    padding: 0 40px
+                    cursor: pointer
+                    border: 0 none
+
     .contentBlock
         font-size: 16px
+
+        .main
+            font-size: 16px
+            font-family: PingFangSC-Semibold, PingFang SC
+            font-weight: 600
+            line-height: 22px
+            color: var(--var-nav-text)
+            margin: 24px 0 0
+
+    .commentBlock
+        .btn
+            display: inline-block
+            height: 40px
+            line-height: @height
+            background: #FFD84E
+            border-radius: 20px
+            font-size: 16px
+            font-weight: 400
+            text-align: center
+            color: #0C0E11
+            box-shadow: 0px 2px 5px 0px rgba(#FFD84E, 0.5)
+            padding: 0 40px
+            cursor: pointer
+            border: 0 none
+
+        .commentWrap
+            .form
+                display: flex
+                padding: 30px 0 24px
+
+                .avatar
+                    size: 48px
+                    background: #999
+                    border-radius: 48px
+                    margin: 0 24px 0 0
+
+                .ant-input
+                    flex: 1
+                    border: 1px solid var(--var-border)
+                    border-radius: 8px
+                    background: var(--var-dialog-block-bg)
+                    color: var(--var-text-color)
+                    font-size: 16px
+                    padding: 20px
+
+            .comment
+                text-align: right
+
+        .list
+            padding: 30px 0 0
+
+            .item
+                display: flex
+                padding: 0 0 60px
+
+                .avatar
+                    size: 48px
+                    background: #999
+                    border-radius: 48px
+                    margin: 0 24px 0 0
+
+                .content
+                    flex: 1
+
+                    .name
+                        padding: 0 0 8px
+                        font-size: 16px
+
+                    .text
+                        padding: 0 0 12px
+
+                    .foot
+                        justifyContentSpaceBetween()
+                        color: var(--var-nav-text)
+
+                        .support
+                            display: flex
+
+                        span
+                            height: 20px
+                            line-height: @height
+                            padding: 0 0 0 10px
+
+        .btnWrap
+            text-align: center
+            margin: 40px 0 0

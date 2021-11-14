@@ -138,13 +138,26 @@
                 background: #000
 
             &.create
+                margin: 24px 0 0
+
+                .formTitle
+                    height: 28px
+                    font-size: 20px
+                    font-family: PingFangSC-Medium, PingFang SC
+                    font-weight: 500
+                    line-height: 28px
+                    color: var(--var-text-color)
+                    margin: 0 0 38px
+                    width: 100px
+                    text-align: right
+
                 .form
                     background: var(--var-dialog-main-bg)
                     border-radius: 16px
                     padding: 72px 0
 
                     .ant-form
-                        width: 400px
+                        width: 580px
                         margin: 0 auto
 
                         .ant-form-item
@@ -163,13 +176,19 @@
                             border-radius: 8px
                             background: var(--var-block-bg)
                             border: 1px solid var(--var-block-border)
-                            height: 40px
-                            line-height: @height
+                            min-height: 40px
+                            line-height: @min-height
                             placeholder(16px)
 
-                            input
+                            input, textarea
                                 font-size: 16px
                                 margin: 3px 0 0
+                                color: var(--var-text-color)
+
+                            textarea
+                                min-height: 100px
+
+                            .ant-select-selection-item
                                 color: var(--var-text-color)
 
                         .btn
@@ -186,6 +205,55 @@
                             padding: 0 40px
                             cursor: pointer
                             border: 0 none
+
+                    .box
+                        background: var(--var-dialog-block-bg)
+                        border: 1px solid var(--var-border)
+                        padding: 25px 40px
+                        border-radius: 8px
+
+                        .wrap
+                            margin: 0 auto
+                            justifyContentSpaceBetween()
+
+                            .balance
+                                width: 150px
+                                padding: 0 10px 0 0
+                                color: var(--var-text-color)
+
+                                .balanceLabel
+                                    display: block
+                                    font-size: 16px
+                                    margin: 28px 0 3px
+
+                                .balanceNumber
+                                    font-size: 20px
+
+                                .swapNumber
+                                    display: flex
+                                    margin: 17px 0 0
+                                    font-size: 16px
+
+                            .input2
+                                text-align: right
+                                placeholder(32px)
+
+                                .max
+                                    font-size: 24px
+                                    margin: 0 0 3px
+                                    color: var(--var-dialog-max-color)
+                                    cursor: pointer
+
+                                input
+                                    text-align: right
+                                    padding: 0
+                                    font-size: 32px
+                                    color: var(--var-text-color)
+
+                                .number
+                                    font-size: 16px
+                                    text-align: right
+                                    color: var(--var-placeholder)
 
             &.my
                 .content
@@ -260,7 +328,7 @@
 
                                 input
                                     padding: 0
-                                    font-size: 24px;
+                                    font-size: 24px
                                     color: var(--var-text-color)
 
                     .tableTab
@@ -270,9 +338,9 @@
                         .item
                             padding: 24px 20px 10px
                             font-size: 16px
-                            cursor pointer
+                            cursor: pointer
 
-                            &.cur,&:hover
+                            &.cur, &:hover
                                 color: var(--var-dialog-max-color)
 
                     .table

@@ -89,56 +89,70 @@
             .blockTitle
                 margin: 0 0 8px
                 font-size: 16px
-                
+
                 &.blockTitle2
                     padding: 32px 0 0
 
             .block
                 background: var(--var-dialog-block-bg)
-                padding: 25px 40px
+                padding: 25px 0
                 border-radius: 8px
                 border: 1px solid var(--var-border)
-                justifyContentSpaceBetween()
 
-                .balance
-                    width: 150px
-                    padding: 0 10px 0 0
+                .box
+                    justifyContentSpaceBetween()
+                    padding: 0 40px
 
-                    .balanceLabel
-                        display: block
-                        font-size: 16px
-                        margin: 28px 0 3px
-                        color: var(--var-placeholder)
+                    .balance
+                        width: 150px
+                        padding: 0 10px 0 0
 
-                    .balanceNumber
+                        .balanceLabel
+                            display: block
+                            font-size: 16px
+                            margin: 28px 0 3px
+                            color: var(--var-placeholder)
+
+                        .balanceNumber
+                            font-size: 20px
+
+                        .swapNumber
+                            display: flex
+                            margin: 17px 0 0
+                            font-size: 16px
+
+                    .input
+                        text-align: right
+
+                        .max
+                            font-size: 24px
+                            margin: 0 0 3px
+                            color: var(--var-dialog-max-color)
+                            cursor: pointer
+
+                        input
+                            text-align: right
+                            padding: 0
+                            font-size: 32px
+                            color: var(--var-text-color)
+
+                        placeholder(32px)
+
+                        .number
+                            font-size: 16px
+                            text-align: right
+                            color: var(--var-placeholder)
+
+                .collateral
+                    justifyContentSpaceBetween()
+                    border-bottom: 1px solid var(--var-border)
+                    padding: 0 40px  17px
+                    margin: 0 0 6px
+
+                    .value
+                        height: 40px
+                        line-height: @height
                         font-size: 20px
-
-                    .swapNumber
-                        display: flex
-                        margin: 17px 0 0
-                        font-size: 16px
-
-                .input
-                    text-align: right
-
-                    .max
-                        font-size: 24px
-                        margin: 0 0 3px
-                        color: var(--var-dialog-max-color)
-                        cursor: pointer
-
-                    input
-                        text-align: right
-                        padding: 0
-                        font-size: 32px
-                        color: var(--var-text-color)
-
-                    placeholder(32px)
-
-                    .number
-                        font-size: 16px
-                        text-align: right
-                        color: var(--var-placeholder)
 
             .info
                 .item
@@ -174,7 +188,7 @@
 
         .dialogFooter
             text-align: center
-            padding: 30px 0 
+            padding: 30px 0
 
             .submit
                 display: inline-block
@@ -193,20 +207,20 @@
 
         .swapHeader
             text-align: center
-            position relative
+            position: relative
 
             .text
                 font-size: 24px
                 padding: 32px 0 56px
 
             .setting
-                position absolute
+                position: absolute
                 top: 34px
                 right: 34px
+                cursor: pointer
 
                 .icon
                     size: 28px
-
 
         .blockTip
             text-align: right

@@ -19,6 +19,7 @@ import { useWeb3React } from '@web3-react/core';
 import { formatDecimal, pow10, formatMoney, filterInput } from '../../../utils/tool';
 import storage from '../../../utils/storage';
 import SymbolIcon from '../../SymbolIcon';
+import SelectToken from 'app/components/SelectToken/selectToken';
 
 interface IProps {
   type: 'Borrow' | 'Repay';
@@ -47,6 +48,7 @@ export default forwardRef((props, ref) => {
   const [maxAmountToBorrow, setMaxAmountToBorrow] = useState<number>(0);
   const [userAssetInfo, setUserAssetInfo] = useState<ComputedUserReserve>();
   const [isMax, setMax] = useState(false);
+  const [collateralMode, setCollateralMode] = useState('Collateral');
 
   const hide = () => {
     setType(params ? params.type : 'Borrow');
@@ -210,22 +212,24 @@ export default forwardRef((props, ref) => {
             </div>
           </div>
           <div className="block">
-            <div className="balance">
-              <span className="balanceLabel">可贷款数量</span>
-              <i className="balanceNumber">{formatMoney(`${maxAmountToBorrow}`)}</i>
-            </div>
-            <div className="input">
-              <div className="max" onClick={() => setBorrowAmount(maxAmountToBorrow)}>
-                Max
+            <div className="box">
+              <div className="balance">
+                <span className="balanceLabel">可贷款数量</span>
+                <i className="balanceNumber">{formatMoney(`${maxAmountToBorrow}`)}</i>
               </div>
-              <Input
-                bordered={false}
-                placeholder="请输入金额"
-                value={borrowAmount}
-                onChange={(event) => {
-                  handleBorrowAmountChange(event.target.value);
-                }}
-              />
+              <div className="input">
+                <div className="max" onClick={() => setBorrowAmount(maxAmountToBorrow)}>
+                  Max
+                </div>
+                <Input
+                  bordered={false}
+                  placeholder="请输入金额"
+                  value={borrowAmount}
+                  onChange={(event) => {
+                    handleBorrowAmountChange(event.target.value);
+                  }}
+                />
+              </div>
             </div>
           </div>
           <div className="info">
@@ -271,55 +275,63 @@ export default forwardRef((props, ref) => {
         <div className="tabMain">
           <div className="typeTab">
             <div
-              className={classnames('typeTabItem', { cur: interestRateMode === 'Variable' })}
-              onClick={() => setInterestRateMode('Variable')}
+              className={classnames('typeTabItem', { cur: collateralMode === 'Ordinary' })}
+              onClick={() => setCollateralMode('Ordinary')}
             >
-              可变利率
+              普通还款
             </div>
             <div
-              className={classnames('typeTabItem', { cur: interestRateMode === 'Stable' })}
-              onClick={() => setInterestRateMode('Stable')}
+              className={classnames('typeTabItem', { cur: collateralMode === 'Collateral' })}
+              onClick={() => setCollateralMode('Collateral')}
             >
-              稳定利率
+              抵押品还款
             </div>
           </div>
           <div className="block">
-            <div className="balance">
-              <span className="balanceLabel">已贷款数量</span>
-              <i className="balanceNumber">
-                {userAssetInfo
-                  ? formatMoney(
-                      interestRateMode === 'Variable'
-                        ? userAssetInfo.variableBorrows
-                        : userAssetInfo.stableBorrows
-                    )
-                  : 0}
-              </i>
-            </div>
-            <div className="input">
-              <div
-                onClick={() => {
-                  if (userAssetInfo) {
-                    setMax(true);
-                    if (interestRateMode === 'Variable') {
-                      setRepayAmount(userAssetInfo.variableBorrows);
-                    } else {
-                      setRepayAmount(userAssetInfo.stableBorrows);
-                    }
-                  }
-                }}
-                className="max"
-              >
-                MAX
+            {collateralMode === 'Collateral' ? (
+              <div className="collateral">
+                <SelectToken />
+                <span className="value">1212ETH</span>
               </div>
-              <Input
-                bordered={false}
-                placeholder="请输入金额"
-                value={repayAmount}
-                onChange={(event) => {
-                  handleRepayAmountChange(event.target.value);
-                }}
-              />
+            ) : null}
+            <div className="box">
+              <div className="balance">
+                <span className="balanceLabel">已贷款数量</span>
+                <i className="balanceNumber">
+                  {userAssetInfo
+                    ? formatMoney(
+                        interestRateMode === 'Variable'
+                          ? userAssetInfo.variableBorrows
+                          : userAssetInfo.stableBorrows
+                      )
+                    : 0}
+                </i>
+              </div>
+              <div className="input">
+                <div
+                  onClick={() => {
+                    if (userAssetInfo) {
+                      setMax(true);
+                      if (interestRateMode === 'Variable') {
+                        setRepayAmount(userAssetInfo.variableBorrows);
+                      } else {
+                        setRepayAmount(userAssetInfo.stableBorrows);
+                      }
+                    }
+                  }}
+                  className="max"
+                >
+                  MAX
+                </div>
+                <Input
+                  bordered={false}
+                  placeholder="请输入金额"
+                  value={repayAmount}
+                  onChange={(event) => {
+                    handleRepayAmountChange(event.target.value);
+                  }}
+                />
+              </div>
             </div>
           </div>
           <div className="info">

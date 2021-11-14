@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { valueToBigNumber, normalize, BigNumber } from '@aave/protocol-js';
 import { useThemeContext } from '../../theme';
 import { Input, Button } from 'antd';
+import { Link, useHistory } from 'react-router-dom';
 
 import Icon from '../../../assets/icons';
 import Layout from '../../components/Layout';
@@ -16,12 +17,15 @@ export default function Markets() {
   const { currentThemeName } = useThemeContext();
   const { account } = useSelector((store: IRootState) => store.base);
   const [tab, setTab] = useState('all');
+  const history = useHistory();
 
   return (
     <Layout className="page-votingDetail">
       <div className="back">
-        <Icon name="back" />
-        <span>返回</span>
+        <em onClick={() => history.go(-1)}>
+          <Icon name="back" />
+          <span>返回</span>
+        </em>
       </div>
       <div className="block votingBlock">
         <div className="blockTitle">
@@ -61,18 +65,101 @@ export default function Markets() {
                   }}
                 />
               </div>
-              <div className="entrust">
-                <span className="entrustLabel">委托给地址</span>
-                <Input bordered={false} placeholder="Enter ETH address" />
+              <div className="voting">
+                <div className="votingLabel">选择</div>
+                <div className="votingBtn">
+                  <div className="agree">赞成</div>
+                  <div className="oppose">反对</div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="btn">提交</div>
+          <div className="btnWrap">
+            <div className="btn">提交</div>
+          </div>
         </div>
       </div>
-      <div className="block">
-        <div>* 法定票数100.00veNOMO</div>
-        <div>法定赞成票占比 75% </div>
+      <div className="block proportionBlock">
+        <div className="header">
+          <div>
+            <span>
+              * 法定票数100.00veNOMO
+              <Icon name="correct" />
+            </span>
+          </div>
+          <div>
+            <span>
+              法定赞成票占比 75%
+              <Icon name="correct" />
+            </span>
+          </div>
+        </div>
+        <div className="main">
+          <div className="left">
+            <div className="process">
+              <div className="txt">
+                <div>赞成</div>
+                <div>120120veNomo</div>
+              </div>
+              <div className="bar">
+                <div style={{ width: '20%' }}></div>
+              </div>
+            </div>
+            <div className="wrap">
+              <div className="itemHeader">
+                <div>地址</div>
+                <div>投票</div>
+              </div>
+              <div className="item">
+                <div>xxx</div>
+                <div>121212</div>
+              </div>
+              <div className="item">
+                <div>xxx</div>
+                <div>121212</div>
+              </div>
+              <div className="item">
+                <div>xxx</div>
+                <div>121212</div>
+              </div>
+            </div>
+            <div className="btnWrap">
+              <div className="btn">查看更多</div>
+            </div>
+          </div>
+          <div className="right">
+            <div className="process">
+              <div className="txt">
+                <div>赞成</div>
+                <div>120120veNomo</div>
+              </div>
+              <div className="bar">
+                <div style={{ width: '20%' }}></div>
+              </div>
+            </div>
+            <div className="wrap">
+              <div className="itemHeader">
+                <div>地址</div>
+                <div>投票</div>
+              </div>
+              <div className="item">
+                <div>xxx</div>
+                <div>121212</div>
+              </div>
+              <div className="item">
+                <div>xxx</div>
+                <div>121212</div>
+              </div>
+              <div className="item">
+                <div>xxx</div>
+                <div>121212</div>
+              </div>
+            </div>
+            <div className="btnWrap">
+              <div className="btn">查看更多</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="block contentBlock">
         <div className="blockTitle">提案内容</div>
@@ -89,6 +176,52 @@ export default function Markets() {
           rights waived via CC0. Special Thanks Mudit Gupta, flashfish, Nipun, Emilio, Lasse
           Herskind, Gasper, Ernesto, Andrey, 0xMaki, Zer0dot, Stani, Ernesto, and numerous others on
           the Gauntlet team for assistance and review of this proposal.
+        </div>
+      </div>
+      <div className="block commentBlock">
+        <div className="blockTitle">发表评论</div>
+        <div className="commentWrap">
+          <div className="form">
+            <div className="avatar"></div>
+            <Input.TextArea></Input.TextArea>
+          </div>
+          <div className="comment">
+            <div className="btn">评论</div>
+          </div>
+        </div>
+        <div className="blockTitle">评论列表（2342条）</div>
+        <div className="list">
+          <div className="item">
+            <div className="avatar"></div>
+            <div className="content">
+              <div className="name">xxxxx</div>
+              <div className="text">xxxxx</div>
+              <div className="foot">
+                <div className="time">1小时前</div>
+                <div className="support">
+                  <Icon name="support" />
+                  <span>点赞</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="item">
+            <div className="avatar"></div>
+            <div className="content">
+              <div className="name">xxxxx</div>
+              <div className="text">xxxxx</div>
+              <div className="foot">
+                <div className="time">1小时前</div>
+                <div className="support">
+                  <Icon name="support" />
+                  <span>点赞</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="btnWrap">
+          <div className="btn">查看更多</div>
         </div>
       </div>
     </Layout>

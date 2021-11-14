@@ -310,6 +310,7 @@
 
                 .ant-input
                     flex: 1
+                    color var(--var-text-color)
 
                 em
                     display: block

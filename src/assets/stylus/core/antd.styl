@@ -1,2 +1,89 @@
 .ant-btn, .ant-btn:active, .ant-btn:hover, .ant-btn:focus
     border: 0 none
+
+.ant-form-item-label
+    padding-right: 10px
+
+    > label::after
+        display: none
+
+.customSelect
+    background-color: var(--var-bg) !important
+
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled)
+        background-color: var(--var-block-bg)
+        color: var(--var-text-color)
+
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled)
+        background-color: var(--var-block-bg)
+        color: var(--var-text-color)
+
+    .ant-select-item
+        color: var(--var-text-color)
+
+.swapSetting
+    .ant-popover-arrow
+        display: none
+
+    .ant-popover-inner
+        background: var(--var-dialog-main-bg)
+        border-radius: 15px
+        color: var(--var-text-color)
+
+        .settingTitle
+            color: var(--var-text-color)
+            margin: 0 0 8px
+
+        .btnWrap
+            display: flex
+            margin: 0 0 24px
+
+            .btn
+                width: 96px
+                height: 40px
+                line-height: @height
+                background: #FFD84E
+                border-radius: 20px
+                color: #0C0E11
+                text-align: center
+
+            .input
+                placeholder(16px)
+                border-radius: 20px
+                border: 1px solid var(--var-border)
+                background: var(--var-dialog-block-bg)
+                width: 112px
+                margin: 0 0 0 16px
+
+                .ant-input
+                    height: 40px
+                    line-height: @height
+                    font-size: 16px
+                    text-align: right
+                    color: var(--var-text-color)
+        .time
+            display: flex
+            margin: 0 0 8px
+
+            .input
+                placeholder(16px)
+                border-radius: 20px
+                border: 1px solid var(--var-border)
+                background: var(--var-dialog-block-bg)
+                width: 96px
+
+                .ant-input
+                    height: 40px
+                    line-height: @height
+                    font-size: 16px
+                    text-align: center
+                    color: var(--var-text-color)
+
+            span
+                height: 40px
+                line-height: @height
+                margin: 0 0 0 8px
+                color: var(--var-nav-text)
+
+        .notice
+            color: var(--var-tab-button-color)

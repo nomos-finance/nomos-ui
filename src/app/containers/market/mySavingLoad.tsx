@@ -11,6 +11,7 @@ import {
   ISwapDialog,
 } from '../../components/ChangeDialog/';
 import { formatDecimal, formatMoney } from 'app/utils/tool';
+import { Switch } from 'antd';
 
 interface IProps {
   reserves: ComputedReserveData[];
@@ -63,9 +64,9 @@ export default function MySavingLoad(props: IProps) {
           <thead>
             <tr>
               <th>资产</th>
-              <th>抵押品</th>
               <th>年收益率</th>
               <th>存款余额</th>
+              <th>抵押品</th>
             </tr>
           </thead>
           <tbody>
@@ -90,11 +91,13 @@ export default function MySavingLoad(props: IProps) {
                         <span>{item.reserve.symbol}</span>
                       </div>
                     </td>
-                    <td>{item.usageAsCollateralEnabledOnUser ? 'true' : 'false'}</td>
                     <td>{formatDecimal(Number(item.reserve.liquidityRate) * 100)}%</td>
                     <td>
                       <div>{Number(item.underlyingBalance).toFixed(2)}</div>
                       <div>${formatMoney(item.underlyingBalanceUSD)}</div>
+                    </td>
+                    <td>
+                      <Switch checked={item.usageAsCollateralEnabledOnUser}></Switch>
                     </td>
                   </tr>
                 );

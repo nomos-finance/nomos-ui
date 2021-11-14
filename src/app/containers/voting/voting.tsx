@@ -3,7 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { valueToBigNumber, normalize, BigNumber } from '@aave/protocol-js';
 import { useThemeContext } from '../../theme';
-import { Input, Button, Form } from 'antd';
+import { Input, Button, Form, Select } from 'antd';
+import { Link, useHistory } from 'react-router-dom';
 
 import Icon from '../../../assets/icons';
 import Layout from '../../components/Layout';
@@ -11,6 +12,8 @@ import Layout from '../../components/Layout';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../reducers/RootState';
 import { formatMoney } from 'app/utils/tool';
+
+const { Option } = Select;
 
 const compare = (support: number, oppose: number) => {
   return (
@@ -34,9 +37,17 @@ const compare = (support: number, oppose: number) => {
 export default function Markets() {
   const { currentThemeName } = useThemeContext();
   const { account } = useSelector((store: IRootState) => store.base);
-  const [tab, setTab] = useState('my');
+  const [tab, setTab] = useState('create');
   const [form] = Form.useForm();
-  const submit = () => {};
+  const submit = async () => {
+    try {
+      const values = await form.validateFields();
+      console.log('Success:', values);
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  };
+  const history = useHistory();
 
   return (
     <Layout className="page-voting">
@@ -69,7 +80,7 @@ export default function Markets() {
         </div>
         {tab === 'all' ? (
           <div className="tabMain all">
-            <div className="item">
+            <div className="item" onClick={() => history.push(`voting/detail/1212`)}>
               <div className="left">
                 <div className="title">提案号：0001关于XXXX的提案</div>
                 <div className="text">
@@ -130,15 +141,23 @@ export default function Markets() {
         {tab === 'create' ? (
           <div className="tabMain create">
             <div className="form">
-              <div>创建提案</div>
               <Form form={form} scrollToFirstError>
+                <div className="formTitle">创建提案</div>
                 <Form.Item
                   label="提案类型"
                   name="address"
                   rules={[{ required: true, message: 'Please input your address!' }]}
                 >
                   <div className="input">
-                    <Input placeholder="请输入" bordered={false} />
+                    <Select
+                      defaultValue="lucy"
+                      bordered={false}
+                      dropdownClassName={classnames('customSelect', currentThemeName)}
+                    >
+                      <Option value="jack">Jack</Option>
+                      <Option value="lucy">Lucy</Option>
+                      <Option value="Yiminghe">yiminghe</Option>
+                    </Select>
                   </div>
                 </Form.Item>
                 <Form.Item
@@ -161,7 +180,7 @@ export default function Markets() {
                 </Form.Item>
                 <Form.Item
                   name="code"
-                  label="提案标题"
+                  label="提案内容"
                   rules={[
                     {
                       required: true,
@@ -170,7 +189,35 @@ export default function Markets() {
                   ]}
                 >
                   <div className="input">
-                    <Input placeholder="请输入" bordered={false} />
+                    <Input.TextArea placeholder="请输入" bordered={false} />
+                  </div>
+                </Form.Item>
+                <Form.Item label="&nbsp;&nbsp;">
+                  <div className="box">
+                    <div className="wrap">
+                      <div className="balance">
+                        <span className="balanceLabel">我的veNOMO</span>
+                        <i className="balanceNumber">xx</i>
+                      </div>
+                      <div
+                        className={classnames('input2', { error: !!`depositValidationMessage` })}
+                      >
+                        <div
+                          className="max"
+                          onClick={() => `setDepositAmount(Number(pow10(params?.balance)))`}
+                        >
+                          MAX
+                        </div>
+                        <Input
+                          bordered={false}
+                          placeholder="请输入金额"
+                          // value={depositAmount}
+                          onChange={(event) => {
+                            //   handleDepositAmountChange(event.target.value);
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </Form.Item>
                 <Form.Item>
