@@ -5,8 +5,9 @@ import classnames from 'classnames';
 import React, { useRef, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { IRootState } from '../../reducers/RootState';
+import { Popover } from 'antd';
 
 import LoginDialog, { IDialog as ILoginDialog } from '../LoginDialog';
 import LogoutDialog, { IDialog as ILogoutDialog } from '../LogoutDialog';
@@ -15,13 +16,38 @@ import { getShortenAddress } from '../../utils/tool';
 import Icon from '../../../assets/icons';
 import Dark from './img/dark.svg';
 import Default from './img/default.svg';
+import { disconnectWeb3Connector } from '../../connector';
+import storage from '../../utils/storage';
+import { setAccount } from '../../actions/baseAction';
 
 export default (): React.ReactElement => {
   const history = useHistory();
   const LoginDialogRef = useRef<ILoginDialog>();
   const LogoutDialogRef = useRef<ILogoutDialog>();
   const { changeTheme, currentThemeName } = useThemeContext();
-  const { account } = useSelector((store: IRootState) => store.base);
+  const { account, network } = useSelector((store: IRootState) => store.base);
+  const { deactivate } = useWeb3React();
+  const dispatch = useDispatch();
+
+  const content = (
+    <div>
+      <div className="network">{network}</div>
+      <div className="account">{account}</div>
+      <div className="protocol">子协议: 2121212</div>
+      <div
+        className="disconnect"
+        onClick={() => {
+          deactivate();
+          disconnectWeb3Connector();
+          storage.set('isLogout', true);
+          storage.set('account', '');
+          dispatch(setAccount(''));
+        }}
+      >
+        Disconnect
+      </div>
+    </div>
+  );
 
   return (
     <header className="lt-header">
@@ -38,14 +64,33 @@ export default (): React.ReactElement => {
         {currentThemeName === 'default' ? <img src={Default} alt="" /> : <img src={Dark} alt="" />}
       </div>
       <div className="account">
-        <div
-          className="connect unLogin"
-          onClick={() => {
-            return account ? LogoutDialogRef.current?.show() : LoginDialogRef.current?.show();
-          }}
-        >
-          <span>{account ? getShortenAddress(account) : 'Connect wallet'}</span>
-        </div>
+        {account ? (
+          <Popover
+            placement="bottomLeft"
+            content={content}
+            trigger="click"
+            overlayClassName={classnames('headerUserMenu', currentThemeName)}
+          >
+            <div
+              className="user"
+              // onClick={() => {
+              //   return LogoutDialogRef.current?.show();
+              // }}
+            >
+              <div>{network}</div>
+              <div>{getShortenAddress(account)}</div>
+            </div>
+          </Popover>
+        ) : (
+          <div
+            className="connect"
+            onClick={() => {
+              return LoginDialogRef.current?.show();
+            }}
+          >
+            <span>Connect wallet</span>
+          </div>
+        )}
       </div>
       <LoginDialog ref={LoginDialogRef} />
       <LogoutDialog ref={LogoutDialogRef} />

@@ -1,7 +1,7 @@
 import './loginDialog.styl';
 
 import { useWeb3React } from '@web3-react/core';
-import { Dropdown, Menu, Modal } from 'antd';
+import { Dropdown, Menu, Modal, Input } from 'antd';
 import classNames from 'classnames';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -207,13 +207,14 @@ export default forwardRef((props, ref) => {
       centered
       destroyOnClose={true}
       closable={false}
+      width={800}
     >
       <div className="modalTitle">
         <div className="title">Connect your wallet</div>
       </div>
       <div className="modalMain">
         <div className="walletHeader">
-          <div>Select preferred network</div>
+          <div className="title">Select preferred network</div>
           <Dropdown overlay={preferredMenu}>
             <div
               className="select"
@@ -232,10 +233,22 @@ export default forwardRef((props, ref) => {
                 key={index}
                 onClick={() => onLogin(item.providerName, preferredNetwork)}
               >
-                <img src={item.icon} alt="" />
-                {item.title}
+                <div>
+                  <img src={item.icon} alt="" />
+                  {item.title}
+                </div>
               </div>
             ))}
+        </div>
+        <div className="foot">
+          <div className="form">
+            <div className="label">子协议ID</div>
+            <div className="input">
+              <Input bordered={false} />
+              <div> *使用子协议可获得额外奖励</div>
+            </div>
+          </div>
+          <div className="btn">连接</div>
         </div>
       </div>
     </Modal>

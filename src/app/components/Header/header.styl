@@ -1,4 +1,40 @@
 
+.headerUserMenu
+    .ant-popover-arrow
+        display: none
+
+    .ant-popover-inner
+        background: var(--var-header-user-popover)
+        box-shadow: 0px 12px 21px 0px rgba(0, 0, 0, 0.15)
+        border-radius: 16px
+        width: 214px
+        overflow: hidden
+        word-break: break-all
+        word-wrap: break-word
+
+        .ant-popover-inner-content
+            padding: 0
+            text-align: center
+            color: var(--var-text-color)
+            font-size: 16px
+
+    .network
+        padding: 16px 0 0
+
+    .account
+        padding: 8px 10px 20px
+        color: var(--var-nav-text)
+
+    .protocol
+        background: var(--var-header-user-popover-cur)
+        height: 48px
+        line-height: @height
+
+    .disconnect
+        height: 48px
+        line-height: @height
+        cursor pointer
+
 .lt-header
     display: flex
     margin: 40px 0
@@ -6,12 +42,12 @@
 
     .notice
         flex: 1
-        
+
         span
             display: inline-block
             height: 40px
             line-height: @height
-            background: rgba(#FFD84E, .15)
+            background: rgba(#FFD84E, 0.15)
             border-radius: 20px
             position: relative
             padding: 0 20px 0 40px
@@ -30,12 +66,17 @@
         margin: 0 20px 0 0
         border-radius: 15px
         background: var(--var-nav-bg)
-        position relative
-        cursor pointer
-        
+        position: relative
+        cursor: pointer
+
         img
             abCenter()
 
-    .account
+    .connect
         height: 40px
         line-height: @height
+        cursor: pointer
+
+    .user
+        cursor: pointer
+        text-align: right
