@@ -32,13 +32,13 @@ export default (): React.ReactElement => {
           <i>
             <Icon name="market" />
           </i>
-          <span>Market</span>
+          <span>{t('Market')}</span>
         </Link>
         <Link className={classnames('item', { cur: /data/.test(pathname) })} to="/data">
           <i>
             <Icon name="data" />
           </i>
-          <span>Data</span>
+          <span>{t('Data')}</span>
         </Link>
         <Link className={classnames('item', { cur: /dao/.test(pathname) })} to="/dao">
           <i>
