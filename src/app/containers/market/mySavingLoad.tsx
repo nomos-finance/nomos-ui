@@ -96,8 +96,11 @@ export default function MySavingLoad(props: IProps) {
                       <div>{Number(item.underlyingBalance).toFixed(2)}</div>
                       <div>${formatMoney(item.underlyingBalanceUSD)}</div>
                     </td>
-                    <td>
-                      <Switch checked={item.usageAsCollateralEnabledOnUser}></Switch>
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <Switch
+                        checked={item.usageAsCollateralEnabledOnUser}
+                        onChange={() => alert('change')}
+                      ></Switch>
                     </td>
                   </tr>
                 );
