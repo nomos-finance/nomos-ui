@@ -28,6 +28,7 @@ export default (): React.ReactElement => {
   const { account, network } = useSelector((store: IRootState) => store.base);
   const { deactivate } = useWeb3React();
   const dispatch = useDispatch();
+  const [popoverVisible, setPopoverVisible] = useState(false);
 
   const content = (
     <div>
@@ -70,6 +71,7 @@ export default (): React.ReactElement => {
             content={content}
             trigger="click"
             overlayClassName={classnames('headerUserMenu', currentThemeName)}
+            onVisibleChange={(v) => setPopoverVisible(v)}
           >
             <div
               className="user"
@@ -79,6 +81,9 @@ export default (): React.ReactElement => {
             >
               <div>{network}</div>
               <div>{getShortenAddress(account)}</div>
+              <span className={classnames('arrow', { up: popoverVisible })}>
+                <Icon name="arrow" />
+              </span>
             </div>
           </Popover>
         ) : (

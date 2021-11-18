@@ -33,7 +33,7 @@
     .disconnect
         height: 48px
         line-height: @height
-        cursor pointer
+        cursor: pointer
 
 .lt-header
     display: flex
@@ -80,3 +80,17 @@
     .user
         cursor: pointer
         text-align: right
+        position: relative
+        padding: 0 20px 0 0
+
+        .arrow
+            position: absolute
+            top: 20px
+            right: 0
+            
+            &.up
+                .icon
+                    transform: rotate(180deg)
+
+            .icon
+                size: 8px

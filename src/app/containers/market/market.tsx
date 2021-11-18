@@ -133,7 +133,7 @@ export default function Markets() {
               <div className="item">
                 <Icon name="rate" />
                 <div className="text">总收益年利率</div>
-                <div className="number"></div>
+                <div className="number">--</div>
               </div>
               <div className="item">
                 <Icon name="reward" />

@@ -62,6 +62,7 @@ export default forwardRef((props, ref) => {
   const storedAccount = storage.get('account');
   const isImToken = !!window.imToken;
   const browserWalletProvider = getWeb3ProviderFromBrowser();
+  const [selectProviderName, setSelectProviderName] = useState<string>();
 
   const wallets: Wallet[] = [
     {
@@ -215,14 +216,14 @@ export default forwardRef((props, ref) => {
       <div className="modalMain">
         <div className="walletHeader">
           <div className="title">Select preferred network</div>
-          <Dropdown overlay={preferredMenu}>
-            <div
-              className="select"
-              onClick={() => onSelectSupperNetwork(NETWORK[preferredNetwork].chainName)}
-            >
-              {NETWORK[preferredNetwork].chainName}
-            </div>
-          </Dropdown>
+          {/* <Dropdown overlay={preferredMenu}> */} {/** TODO: tmp */}
+          <div
+            className="select"
+            onClick={() => onSelectSupperNetwork(NETWORK[preferredNetwork].chainName)}
+          >
+            {NETWORK[preferredNetwork].chainName}
+          </div>
+          {/* </Dropdown> */}
         </div>
         <div className="wallet">
           {wallets
@@ -231,7 +232,7 @@ export default forwardRef((props, ref) => {
               <div
                 className="item"
                 key={index}
-                onClick={() => onLogin(item.providerName, preferredNetwork)}
+                onClick={() => setSelectProviderName(item.providerName)}
               >
                 <div>
                   <img src={item.icon} alt="" />
@@ -248,7 +249,11 @@ export default forwardRef((props, ref) => {
               <div> *使用子协议可获得额外奖励</div>
             </div>
           </div>
-          <div className="btn">连接</div>
+          {selectProviderName && (
+            <div className="btn" onClick={() => onLogin(selectProviderName, preferredNetwork)}>
+              连接
+            </div>
+          )}
         </div>
       </div>
     </Modal>
