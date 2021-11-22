@@ -38,6 +38,17 @@ export default function MySavingLoad(props: IProps) {
 
   const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
 
+  const handleChange = async (status: boolean) => {
+    // await lendingPool.setUsageAsCollateral({
+    //   user: account,
+    //   reserve:
+    //     poolReserve.symbol === networkConfig.baseAsset
+    //       ? WrappedBaseNetworkAssetAddress
+    //       : poolReserve.underlyingAsset,
+    //   usageAsCollateral: status,
+    // });
+  };
+
   return (
     <div className="block assetBlock">
       <div className="header">
@@ -115,7 +126,7 @@ export default function MySavingLoad(props: IProps) {
                       <td onClick={(e) => e.stopPropagation()}>
                         <Switch
                           checked={item.usageAsCollateralEnabledOnUser}
-                          onChange={() => alert('change')}
+                          onChange={(status) => handleChange(status)}
                         ></Switch>
                       </td>
                     </tr>
@@ -138,8 +149,8 @@ export default function MySavingLoad(props: IProps) {
             <thead>
               <tr>
                 <th>资产</th>
-                <th>利率</th>
                 <th>已借</th>
+                <th>利率</th>
               </tr>
             </thead>
             <tbody>
@@ -163,21 +174,19 @@ export default function MySavingLoad(props: IProps) {
                         </div>
                       </td>
                       <td>
+                        <div>
+                          <span>stable: {Number(item.stableBorrows).toFixed(2)}</span>
+                        </div>
+                        <div>
+                          <span>variable: {Number(item.variableBorrows).toFixed(2)}</span>
+                        </div>
+                      </td>
+                      <td>
                         <div>stable: {formatDecimal(Number(item.stableBorrowRate) * 100)}% </div>
                         <div>
                           variable:
                           {formatDecimal(Number(obj[item.reserve.symbol].variableBorrowRate) * 100)}
                           %
-                        </div>
-                      </td>
-                      <td>
-                        <div>
-                          <span>stable: {Number(item.stableBorrows).toFixed(2)}</span>
-                          <span>${formatMoney(item.stableBorrowsUSD)}</span>
-                        </div>
-                        <div>
-                          <span>variable: {Number(item.variableBorrows).toFixed(2)}</span>
-                          <span>${formatMoney(item.variableBorrowsUSD)}</span>
                         </div>
                       </td>
                     </tr>
