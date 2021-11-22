@@ -168,8 +168,8 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
       const { 0: rawReservesData, 1: userReserves, 2: usdPriceEth, 3: rawRewardsData } = result;
 
       const rewardsData = {
-        userUnclaimedRewards: rawRewardsData.userUnclaimedRewards?.toString(),
-        emissionEndTimestamp: rawRewardsData.emissionEndTimestamp?.toNumber(),
+        userUnclaimedRewards: 0, //rawRewardsData.userUnclaimedRewards?.toString(),
+        emissionEndTimestamp: 0, // rawRewardsData.emissionEndTimestamp?.toNumber(),
       };
 
       const formatData = handleFormatData({

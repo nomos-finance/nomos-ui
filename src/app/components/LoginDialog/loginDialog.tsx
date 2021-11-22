@@ -216,14 +216,14 @@ export default forwardRef((props, ref) => {
       <div className="modalMain">
         <div className="walletHeader">
           <div className="title">Select preferred network</div>
-          {/* <Dropdown overlay={preferredMenu}> */} {/** TODO: tmp */}
-          <div
-            className="select"
-            onClick={() => onSelectSupperNetwork(NETWORK[preferredNetwork].chainName)}
-          >
-            {NETWORK[preferredNetwork].chainName}
-          </div>
-          {/* </Dropdown> */}
+          <Dropdown overlay={preferredMenu}>
+            <div
+              className="select"
+              onClick={() => onSelectSupperNetwork(NETWORK[preferredNetwork].chainName)}
+            >
+              {NETWORK[preferredNetwork].chainName}
+            </div>
+          </Dropdown>
         </div>
         <div className="wallet">
           {wallets
