@@ -36,6 +36,8 @@ export default function Markets() {
     networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
   );
 
+  console.log(balance);
+
   useEffect(() => {
     if (!data) return;
     const marketRefPriceInUsd = normalize(data.usdPriceEth, 18);

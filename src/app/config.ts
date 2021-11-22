@@ -144,7 +144,7 @@ export const NETWORK: INetwork = {
     publicJsonRPCUrl: 'https://rinkeby.arbitrum.io/rpc',
     chainKey: 'arbitrum_rinkeby',
     chainName: 'Arbitrum Rinkeby',
-    walletBalanceProvider: '',
+    walletBalanceProvider: '0x9014F60b6a8db67251db855A470F751F7bFa482A',
     uiPoolDataProvider: '0x92b46AE76ba40616a9eF8Cd4c77F20f5FDb2Ebdc',
     baseUniswapAdapter: '',
     rewardTokenSymbol: 'stkAAVE',

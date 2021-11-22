@@ -77,7 +77,7 @@ const handleFormatData = ({
     })
     .map((reserve: any) => ({
       ...reserve,
-      symbol: unPrefixSymbol(reserve.symbol, 'A'),
+      symbol: unPrefixSymbol(reserve.symbol, 'N'),
     }))
     .sort(
       ({ symbol: a }: any, { symbol: b }: any) =>
@@ -120,7 +120,7 @@ const handleFormatData = ({
   return {
     formattedUsdPriceEth,
     formattedReservesData: fr.map((reserve: any) => {
-      if (reserve.symbol.toUpperCase() === `AWETH`) {
+      if (reserve.symbol.toUpperCase() === `NWETH`) {
         // TODO
         return {
           ...reserve,
@@ -131,7 +131,7 @@ const handleFormatData = ({
       return reserve;
     }),
     formattedUserReserves: fur.map((userReserve: any) => {
-      if (userReserve.reserve.symbol.toUpperCase() === `AWETH`) {
+      if (userReserve.reserve.symbol.toUpperCase() === `NWETH`) {
         return {
           ...userReserve,
           reserve: {
