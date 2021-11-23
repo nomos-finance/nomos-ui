@@ -29,8 +29,7 @@ const useLendingPoolContract = (): [LendingPoolInterfaceV2 | undefined] => {
         }
       );
 
-      // const lendingPool = txBuilder.getLendingPool('proto_kovan');
-      const lendingPool = txBuilder.getLendingPool('proto_arbitrum_rinkeby');
+      const lendingPool = txBuilder.getLendingPool(`proto_${networkInfo.chainKey}`);
 
       setContract(lendingPool);
     }
