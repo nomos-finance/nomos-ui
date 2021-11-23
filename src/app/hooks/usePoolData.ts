@@ -120,7 +120,7 @@ const handleFormatData = ({
   return {
     formattedUsdPriceEth,
     formattedReservesData: fr.map((reserve: any) => {
-      if (reserve.symbol.toUpperCase() === `NWETH`) {
+      if (reserve.symbol.toUpperCase() === `WETH`) {
         // TODO
         return {
           ...reserve,
@@ -131,7 +131,7 @@ const handleFormatData = ({
       return reserve;
     }),
     formattedUserReserves: fur.map((userReserve: any) => {
-      if (userReserve.reserve.symbol.toUpperCase() === `NWETH`) {
+      if (userReserve.reserve.symbol.toUpperCase() === `WETH`) {
         return {
           ...userReserve,
           reserve: {

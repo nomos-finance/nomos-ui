@@ -82,6 +82,12 @@ export default forwardRef((props, ref) => {
     if (!lendingPool || !params?.data || !account || !depositAmount) return;
     try {
       setLoading(true);
+      console.log({
+        user: account,
+        reserve: params.data.underlyingAsset,
+        amount: `${depositAmount}`,
+        referralCode: storage.get('referralCode') || undefined,
+      });
       const txs = await lendingPool.deposit({
         user: account,
         reserve: params.data.underlyingAsset,
