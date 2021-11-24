@@ -55,7 +55,7 @@ export function filterInput(val: string): string {
     .replace('-', '')
     .replace(/^\.+|[^\d.]/g, '')
     .replace(/^0\d+\./g, '0.')
-    .replace(/\.{2,}/, '')
+    .replace(/\.{6,}/, '')
     .replace(/^0(\d)/, '$1')
-    .replace(/^(\-)*(\d+)\.(\d{0,2}).*$/, '$1$2.$3');
+    .replace(/^(\-)*(\d+)\.(\d{0,6}).*$/, '$1$2.$3');
 }
