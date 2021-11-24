@@ -1,4 +1,4 @@
-import { LendingPoolInterfaceV2, TxBuilderV2 } from '@aave/protocol-js';
+import { LendingPoolInterfaceV2, TxBuilderV2 } from '@nomosfinance/protocol';
 import { getProvider } from '../contracts/provider';
 
 import { useEffect, useState } from 'react';
