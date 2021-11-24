@@ -10,7 +10,7 @@ import {
   valueToBigNumber,
   UserSummaryData,
   ComputedUserReserve,
-} from '@aave/protocol-js';
+} from '@nomosfinance/protocol';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { useWeb3React } from '@web3-react/core';
 import { pow10, formatMoney, filterInput, formatDecimal } from '../../../utils/tool';

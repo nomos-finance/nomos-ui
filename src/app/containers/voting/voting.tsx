@@ -1,7 +1,7 @@
 import './voting.stylus';
 import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import { valueToBigNumber, normalize, BigNumber } from '@aave/protocol-js';
+import { valueToBigNumber, normalize, BigNumber } from '@nomosfinance/protocol';
 import { useThemeContext } from '../../theme';
 import { Input, Button, Form, Select } from 'antd';
 import { Link, useHistory } from 'react-router-dom';

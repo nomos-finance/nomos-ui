@@ -11,7 +11,7 @@ import {
   RewardsInformation,
   ComputedReserveData,
   UserSummaryData,
-} from '@aave/protocol-js';
+} from '@nomosfinance/protocol';
 import { assetsList, Asset, assetsOrder, STABLE_ASSETS } from '@aave/aave-ui-kit';
 import { useWeb3React } from '@web3-react/core';
 import { useSelector } from 'react-redux';

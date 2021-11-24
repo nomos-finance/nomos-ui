@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AnimationArrow, DropdownWrapper, useThemeContext } from '@aave/aave-ui-kit';
-import { Network } from '@aave/protocol-js';
+import { Network } from '@nomosfinance/protocol';
 
 interface SelectPreferredNetworkProps {
   preferredNetwork: Network;

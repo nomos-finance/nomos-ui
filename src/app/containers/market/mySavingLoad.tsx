@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import classnames from 'classnames';
-import { ComputedReserveData, UserSummaryData, normalize } from '@aave/protocol-js';
+import { ComputedReserveData, UserSummaryData, normalize } from '@nomosfinance/protocol';
 import SymbolIcon from '../../components/SymbolIcon';
 import {
   Borrow,
@@ -114,7 +114,7 @@ export default function MySavingLoad(props: IProps) {
                       <td>
                         <div>{Number(item.underlyingBalance).toFixed(2)}</div>
                       </td>
-                      <td>{formatDecimal(Number(item.reserve.liquidityRate) * 100)}%</td>
+                      <td>{/* {formatDecimal(Number(item.reserve.liquidityRate) * 100)} */}%</td>
                       <td>
                         <span>
                           --

@@ -1,4 +1,4 @@
-import { ChainId, Network } from '@aave/protocol-js';
+import { ChainId, Network } from '@nomosfinance/protocol';
 
 type ExtendedSupportedNetworks = Network | 'unsupported';
 
