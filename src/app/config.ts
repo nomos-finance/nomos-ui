@@ -144,20 +144,21 @@ export const NETWORK: INetwork = {
     publicJsonRPCUrl: 'https://rinkeby.arbitrum.io/rpc',
     chainKey: 'arbitrum_rinkeby',
     chainName: 'Arbitrum Rinkeby',
-    walletBalanceProvider: '0x9014F60b6a8db67251db855A470F751F7bFa482A',
-    uiPoolDataProvider: '0x92b46AE76ba40616a9eF8Cd4c77F20f5FDb2Ebdc',
+    walletBalanceProvider: '0x642038fA1B55EA72Fc57b5F6CA4df90c4Da65Ea2',
+    uiPoolDataProvider: '0x714d6FF01740e7e6a380693DE54e0f2546C44771',
     baseUniswapAdapter: '',
     rewardTokenSymbol: 'stkAAVE',
     rewardTokenAddress: '0xb597cd8d3217ea6477232f9217fa70837ff667af',
     rewardTokenDecimals: 18,
     incentivePrecision: 18,
     addresses: {
-      LENDING_POOL_ADDRESS_PROVIDER: '0x0FB148a06996D37279Cb526D63ef372eB8479cec',
-      LENDING_POOL: '0xD22A400557fd7816d817ba13F622aa6867F7681b',
-      WETH_GATEWAY: '0x838567648AAd90231F156B45D4dd8F9D9e95Ac81',
-      FAUCET: '0x600103d518cC5E8f3319D532eB4e5C268D32e604',
+      LENDING_POOL_ADDRESS_PROVIDER: '0x6C862e4eC71Bb46e42762236165B2484A29B56DF',
+      LENDING_POOL: '0x64c84Fa0413831190CB083f6948915be3443a7FA',
+      WETH_GATEWAY: '0x92D39dB316a05536F48ca9E11B3Cf46Ef53818F8',
+      FAUCET: '0x600103d518cC5E8f3319D532eB4e5C268D32e604', //
     },
     incentives: {
+      //
       INCENTIVES_CONTROLLER: '0x01d83fe6a10d2f2b7af17034343746188272cac9',
       INCENTIVES_CONTROLLER_REWARD_TOKEN: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
     },

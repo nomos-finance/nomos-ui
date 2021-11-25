@@ -15,3 +15,7 @@ export function notEmpty<TValue>(value: TValue | null | undefined): value is TVa
 export function toSmall(num: number | string, decimals = 18): string {
   return new BigNumber(num).dividedBy(new BigNumber(10).pow(decimals)).toFixed();
 }
+
+export const parseNumber = (value: string | number, decimals: number): BigNumber => {
+  return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
+};

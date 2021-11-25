@@ -1,6 +1,6 @@
 import { Contract } from 'ethers';
 
-import { abi } from '../abi/lendingpool/LendingPool.sol/LendingPool.json';
+import abi from 'abi/LendingPool.json';
 import { getProvider, getSigner } from './provider';
 
 const contract = (address: string, network: string, account?: string | null): Contract => {

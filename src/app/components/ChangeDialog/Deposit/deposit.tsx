@@ -17,6 +17,10 @@ import { pow10, formatMoney, filterInput, formatDecimal } from '../../../utils/t
 import storage from '../../../utils/storage';
 import { handleSend } from '../helper/txHelper';
 import SymbolIcon from '../../SymbolIcon';
+import BigNumber from 'bignumber.js';
+
+import useLendingPoolContract from 'app/hooks/useLendingPoolContract';
+import { parseNumber } from 'app/utils';
 
 interface IProps {
   type: 'Deposit' | 'Withdraw';
@@ -188,6 +192,54 @@ export default forwardRef((props, ref) => {
     return () => {};
   }, [params]);
 
+  const [lendingPool2] = useLendingPoolContract();
+
+  const handleDepositSubmit2 = async () => {
+    if (!lendingPool2 || !params?.data || !account || !depositAmount) return;
+    console.log(
+      lendingPool2,
+      params.data.underlyingAsset,
+      library?.utils?.toHex(parseNumber(depositAmount, 18)),
+      account,
+      storage.get('referralCode') || 0
+    );
+    try {
+      const a = await lendingPool2.estimateGas.deposit(
+        params.data.underlyingAsset,
+        library?.utils?.toHex(parseNumber(depositAmount, 18)),
+        account,
+        storage.get('referralCode') || 0
+      );
+      console.log(a);
+      // const txs = await lendingPool2.deposit(
+      //   params.data.underlyingAsset,
+      //   library?.utils?.toHex(parseNumber(depositAmount, 18)),
+      //   account,
+      //   storage.get('referralCode') || 0,
+      //   { gasLimit: 14400000 }
+      // );
+    } catch (error) {
+      console.log(error);
+    }
+
+    // try {
+    //   setLoading(true);
+    //   const txs = await lendingPool2.deposit(
+    //     params.data.underlyingAsset,
+    //     valueToBigNumber(depositAmount),
+    //     account,
+    //     storage.get('referralCode') || undefined
+    //   );
+    //   await handleSend(txs, library);
+    //   setLoading(false);
+    //   hide();
+    // } catch (error) {
+    //   console.log(error);
+    //   setLoading(false);
+    //   hide();
+    // }
+  };
+
   return (
     <Modal
       visible={show}
@@ -280,6 +332,9 @@ export default forwardRef((props, ref) => {
           </div>
           <div className="dialogFooter">
             <Button loading={loading} className="submit" onClick={() => handleDepositSubmit()}>
+              提交
+            </Button>
+            <Button loading={loading} className="submit" onClick={() => handleDepositSubmit2()}>
               提交
             </Button>
           </div>

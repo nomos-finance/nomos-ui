@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
 import { Web3ReactProvider } from '@web3-react/core';
 import { ethers } from 'ethers';
+import Web3 from 'web3';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 import { ThemeProvider } from './app/theme';
@@ -14,7 +15,8 @@ ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider>
       <HashRouter>
-        <Web3ReactProvider getLibrary={(provider) => new ethers.providers.Web3Provider(provider)}>
+        <Web3ReactProvider getLibrary={(provider) => new Web3(provider)}>
+          {/* <Web3ReactProvider getLibrary={(provider) => new ethers.providers.Web3Provider(provider)}> */}
           <App />
         </Web3ReactProvider>
       </HashRouter>
