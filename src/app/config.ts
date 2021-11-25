@@ -191,3 +191,7 @@ export function getFortmaticKeyByNetwork(network: string): string {
     return process.env.REACT_APP_FORTMATIC_KEY_TESTNET || '';
   }
 }
+
+export const getNetworkByChainId = (id: number): INetworkData | undefined => {
+  return Object.values(NETWORK).filter((item) => item.chainId === id)[0];
+};

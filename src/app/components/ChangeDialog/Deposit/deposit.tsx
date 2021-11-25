@@ -21,6 +21,7 @@ import BigNumber from 'bignumber.js';
 
 import useLendingPoolContract from 'app/hooks/useLendingPoolContract';
 import { parseNumber } from 'app/utils';
+import useErc20Contract from 'app/hooks/useErc20Contract';
 
 interface IProps {
   type: 'Deposit' | 'Withdraw';
@@ -192,10 +193,23 @@ export default forwardRef((props, ref) => {
     return () => {};
   }, [params]);
 
+  const [erc20Contract] = useErc20Contract();
   const [lendingPool2] = useLendingPoolContract();
 
   const handleDepositSubmit2 = async () => {
     if (!lendingPool2 || !params?.data || !account || !depositAmount) return;
+    // if (erc20Contract) {
+    //   let isAllowance = await erc20Contract.allowance(account, '');
+    //   isAllowance = Number(isAllowance.toString());
+    //   console.log('is_allowance', !!isAllowance);
+
+    //   if (!isAllowance) {
+    //     const approve_res = await erc20Contract.approve('', 'ethers.constants.MaxUint256');
+    //     await approve_res.wait();
+    //   }
+    // }
+
+    console.log(erc20Contract);
     console.log(
       lendingPool2,
       params.data.underlyingAsset,
@@ -204,20 +218,21 @@ export default forwardRef((props, ref) => {
       storage.get('referralCode') || 0
     );
     try {
-      const a = await lendingPool2.estimateGas.deposit(
-        params.data.underlyingAsset,
-        library?.utils?.toHex(parseNumber(depositAmount, 18)),
-        account,
-        storage.get('referralCode') || 0
-      );
-      console.log(a);
-      // const txs = await lendingPool2.deposit(
+      // const a = await lendingPool2.estimateGas.deposit(
       //   params.data.underlyingAsset,
       //   library?.utils?.toHex(parseNumber(depositAmount, 18)),
       //   account,
       //   storage.get('referralCode') || 0,
       //   { gasLimit: 14400000 }
       // );
+      // console.log(a);
+      const txs = await lendingPool2.deposit(
+        params.data.underlyingAsset,
+        library?.utils?.toHex(parseNumber(depositAmount, 18)),
+        account,
+        storage.get('referralCode') || 0
+        // { gasLimit: 14400000 }
+      );
     } catch (error) {
       console.log(error);
     }

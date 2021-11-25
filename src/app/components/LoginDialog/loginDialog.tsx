@@ -173,10 +173,7 @@ export default forwardRef((props, ref) => {
     },
   }));
 
-  useInactiveListener(
-    providerName ? getWeb3Connector(providerName, network) : undefined,
-    !storage.get('account')
-  );
+  useInactiveListener(providerName ? getWeb3Connector(providerName, network) : undefined, !account);
 
   useEffect(() => {
     if (account) {
