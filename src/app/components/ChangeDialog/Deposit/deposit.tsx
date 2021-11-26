@@ -194,68 +194,6 @@ export default forwardRef((props, ref) => {
     return () => {};
   }, [params]);
 
-  const [erc20Contract] = useErc20Contract();
-  const [lendingPool2] = useLendingPoolContract();
-
-  const handleDepositSubmit2 = async () => {
-    if (!lendingPool2 || !params?.data || !account || !depositAmount) return;
-    // if (erc20Contract) {
-    //   let isAllowance = await erc20Contract.allowance(account, '');
-    //   isAllowance = Number(isAllowance.toString());
-    //   console.log('is_allowance', !!isAllowance);
-
-    //   if (!isAllowance) {
-    //     const approve_res = await erc20Contract.approve('', 'ethers.constants.MaxUint256');
-    //     await approve_res.wait();
-    //   }
-    // }
-
-    console.log(erc20Contract);
-    console.log(
-      lendingPool2,
-      params.data.underlyingAsset,
-      `0x${parseNumber(depositAmount, 18).toString(16)}`,
-      account,
-      storage.get('referralCode') || 0
-    );
-    try {
-      // const a = await lendingPool2.estimateGas.deposit(
-      //   params.data.underlyingAsset,
-      //   parseNumber(depositAmount, 18).toString(16),
-      //   account,
-      //   storage.get('referralCode') || 0,
-      //   { gasLimit: 14400000 }
-      // );
-      // console.log(a);
-      const txs = await lendingPool2.deposit(
-        params.data.underlyingAsset,
-        `0x${parseNumber(depositAmount, 18).toString(16)}`,
-        account,
-        storage.get('referralCode') || 0
-        // { gasLimit: 400000 }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-
-    // try {
-    //   setLoading(true);
-    //   const txs = await lendingPool2.deposit(
-    //     params.data.underlyingAsset,
-    //     valueToBigNumber(depositAmount),
-    //     account,
-    //     storage.get('referralCode') || undefined
-    //   );
-    //   await handleSend(txs, library);
-    //   setLoading(false);
-    //   hide();
-    // } catch (error) {
-    //   console.log(error);
-    //   setLoading(false);
-    //   hide();
-    // }
-  };
-
   return (
     <Modal
       visible={show}
@@ -348,9 +286,6 @@ export default forwardRef((props, ref) => {
           </div>
           <div className="dialogFooter">
             <Button loading={loading} className="submit" onClick={() => handleDepositSubmit()}>
-              提交
-            </Button>
-            <Button loading={loading} className="submit" onClick={() => handleDepositSubmit2()}>
               提交
             </Button>
           </div>
