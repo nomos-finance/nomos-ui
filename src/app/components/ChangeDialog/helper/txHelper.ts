@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 
-import { transactionType, EthereumTransactionTypeExtended } from '@nomosfinance/protocol';
+import { transactionType, EthereumTransactionTypeExtended } from '@aave/protocol-js';
 
 const handleTX = async (extendedTxData: transactionType | undefined, provider: any) => {
   if (!extendedTxData) return;

@@ -4,7 +4,7 @@ import {
   normalize,
   ComputedReserveData,
   UserSummaryData,
-} from '@nomosfinance/protocol';
+} from '@aave/protocol-js';
 import { Input, Table } from 'antd';
 import {
   Borrow,

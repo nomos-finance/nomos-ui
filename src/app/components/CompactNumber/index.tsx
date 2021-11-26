@@ -1,5 +1,5 @@
 import React from 'react';
-import { valueToBigNumber } from '@nomosfinance/protocol';
+import { valueToBigNumber } from '@aave/protocol-js';
 import { formatMoney } from '../../utils/tool';
 
 interface CompactNumberProps {

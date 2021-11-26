@@ -10,7 +10,7 @@ import {
   valueToBigNumber,
   UserSummaryData,
   ComputedUserReserve,
-} from '@nomosfinance/protocol';
+} from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { useWeb3React } from '@web3-react/core';
 import { pow10, formatMoney, filterInput, formatDecimal } from '../../../utils/tool';
@@ -99,6 +99,7 @@ export default forwardRef((props, ref) => {
         amount: `${depositAmount}`,
         referralCode: storage.get('referralCode') || undefined,
       });
+      console.log(library);
       await handleSend(txs, library);
       setLoading(false);
       hide();
@@ -213,14 +214,14 @@ export default forwardRef((props, ref) => {
     console.log(
       lendingPool2,
       params.data.underlyingAsset,
-      library?.utils?.toHex(parseNumber(depositAmount, 18)),
+      `0x${parseNumber(depositAmount, 18).toString(16)}`,
       account,
       storage.get('referralCode') || 0
     );
     try {
       // const a = await lendingPool2.estimateGas.deposit(
       //   params.data.underlyingAsset,
-      //   library?.utils?.toHex(parseNumber(depositAmount, 18)),
+      //   parseNumber(depositAmount, 18).toString(16),
       //   account,
       //   storage.get('referralCode') || 0,
       //   { gasLimit: 14400000 }
@@ -228,10 +229,10 @@ export default forwardRef((props, ref) => {
       // console.log(a);
       const txs = await lendingPool2.deposit(
         params.data.underlyingAsset,
-        library?.utils?.toHex(parseNumber(depositAmount, 18)),
+        `0x${parseNumber(depositAmount, 18).toString(16)}`,
         account,
         storage.get('referralCode') || 0
-        // { gasLimit: 14400000 }
+        // { gasLimit: 400000 }
       );
     } catch (error) {
       console.log(error);

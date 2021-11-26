@@ -12,7 +12,7 @@ import {
   BigNumber,
   UserSummaryData,
   ComputedUserReserve,
-} from '@nomosfinance/protocol';
+} from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { handleSend } from '../helper/txHelper';
 import { useWeb3React } from '@web3-react/core';

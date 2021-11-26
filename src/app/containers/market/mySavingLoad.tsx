@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import classnames from 'classnames';
-import { ComputedReserveData, UserSummaryData, normalize } from '@nomosfinance/protocol';
+import { ComputedReserveData, UserSummaryData, normalize } from '@aave/protocol-js';
 import SymbolIcon from '../../components/SymbolIcon';
 import {
   Borrow,

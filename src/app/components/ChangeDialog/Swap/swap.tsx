@@ -6,7 +6,7 @@ import React, { forwardRef, useState, useImperativeHandle } from 'react';
 import { Modal, Input, Button, Popover } from 'antd';
 import { useThemeContext } from '../../../theme';
 
-import { ComputedReserveData } from '@nomosfinance/protocol';
+import { ComputedReserveData } from '@aave/protocol-js';
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { handleSend } from '../helper/txHelper';
 import { useWeb3React } from '@web3-react/core';

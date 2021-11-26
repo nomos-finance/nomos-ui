@@ -1,7 +1,7 @@
 import './staking.stylus';
 import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import { valueToBigNumber, normalize, BigNumber } from '@nomosfinance/protocol';
+import { valueToBigNumber, normalize, BigNumber } from '@aave/protocol-js';
 import { useThemeContext } from '../../theme';
 import { Input, Button } from 'antd';
 
