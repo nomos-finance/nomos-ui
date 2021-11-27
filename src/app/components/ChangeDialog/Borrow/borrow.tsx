@@ -218,7 +218,13 @@ export default forwardRef((props, ref) => {
                 <i className="balanceNumber">{formatMoney(`${maxAmountToBorrow}`)}</i>
               </div>
               <div className="input">
-                <div className="max" onClick={() => setBorrowAmount(maxAmountToBorrow)}>
+                <div
+                  className="max"
+                  onClick={() => {
+                    setMax(true);
+                    setBorrowAmount(filterInput(`${maxAmountToBorrow}`));
+                  }}
+                >
                   Max
                 </div>
                 <Input
@@ -313,9 +319,9 @@ export default forwardRef((props, ref) => {
                     if (userAssetInfo) {
                       setMax(true);
                       if (interestRateMode === 'Variable') {
-                        setRepayAmount(userAssetInfo.variableBorrows);
+                        setRepayAmount(filterInput(userAssetInfo.variableBorrows));
                       } else {
-                        setRepayAmount(userAssetInfo.stableBorrows);
+                        setRepayAmount(filterInput(userAssetInfo.stableBorrows));
                       }
                     }
                   }}

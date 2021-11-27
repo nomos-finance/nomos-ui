@@ -63,8 +63,6 @@ export default function Markets() {
     fetchBalance();
   }, [data]);
 
-  // console.log(data?.user, data?.reserves);
-
   return (
     <Layout className="page-market">
       <div className="totalBlock">
@@ -184,6 +182,7 @@ export default function Markets() {
           <div className="btn">去DAO&Safety锁仓NOMO</div>
         </div>
       </div>
+
       {data?.user &&
       balance &&
       account &&

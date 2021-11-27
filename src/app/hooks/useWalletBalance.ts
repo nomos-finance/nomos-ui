@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import WalletBalanceProviderContract from '../contracts/WalletBalanceProviderContract';
+import { ethers } from 'ethers';
 
 type WalletBalanceContractData = {
   0: string[];
@@ -20,13 +21,15 @@ const useWalletBalance = (
   const [balance, setBalance] = useState<IBalance>({});
 
   const fetchData = async () => {
-    if (!walletBalanceProvider || !account || !network) return;
+    if (!walletBalanceProvider || !network) return;
+
+    const userAddress = account || ethers.constants.AddressZero;
 
     try {
       const { 0: reserves, 1: balances }: WalletBalanceContractData =
         await WalletBalanceProviderContract(walletBalanceProvider, network).getUserWalletBalances(
           providerAddress,
-          account
+          userAddress
         );
       let obj: IBalance = {};
       reserves.forEach((item, index) => {

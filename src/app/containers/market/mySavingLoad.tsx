@@ -114,7 +114,7 @@ export default function MySavingLoad(props: IProps) {
                       <td>
                         <div>{Number(item.underlyingBalance).toFixed(2)}</div>
                       </td>
-                      <td>{/* {formatDecimal(Number(item.reserve.liquidityRate) * 100)} */}%</td>
+                      <td>{formatDecimal(Number((item.reserve as any).liquidityRate) * 100)}%</td>
                       <td>
                         <span>
                           --

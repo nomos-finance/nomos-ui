@@ -231,8 +231,8 @@ export default forwardRef((props, ref) => {
                 key={index}
                 onClick={() => setSelectProviderName(item.providerName)}
               >
-                <div>
-                  <img src={item.icon} alt="" />
+                <div className={classNames({ cur: item.providerName === selectProviderName })}>
+                  <img src={item.icon} alt={item.title} />
                   {item.title}
                 </div>
               </div>

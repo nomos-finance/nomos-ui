@@ -219,7 +219,7 @@ export default forwardRef((props, ref) => {
           className={classnames('tabItem', { cur: type === 'Withdraw' })}
           onClick={() => setType('Withdraw')}
         >
-          取款
+          赎回
         </div>
       </div>
       {type === 'Deposit' ? (
@@ -229,14 +229,18 @@ export default forwardRef((props, ref) => {
               <div className="balance">
                 <span className="balanceLabel">钱包余额</span>
                 <i className="balanceNumber">
-                  {formatMoney(pow10(params?.balance))}
+                  {formatMoney(pow10(params?.balance, params?.data?.decimals))}
                   <em>{params?.data?.symbol}</em>
                 </i>
               </div>
               <div className={classnames('input', { error: !!depositValidationMessage })}>
                 <div
                   className="max"
-                  onClick={() => setDepositAmount(Number(pow10(params?.balance)))}
+                  onClick={() =>
+                    setDepositAmount(
+                      filterInput(pow10(params?.balance, params?.data?.decimals).toString())
+                    )
+                  }
                 >
                   MAX
                 </div>
@@ -245,6 +249,7 @@ export default forwardRef((props, ref) => {
                   placeholder="请输入金额"
                   value={depositAmount}
                   onChange={(event) => {
+                    setMax(false);
                     handleDepositAmountChange(event.target.value);
                   }}
                 />
@@ -267,6 +272,10 @@ export default forwardRef((props, ref) => {
                   %
                 </div>
               </div>
+              <div className="subItem">
+                <div className="key">奖励年利率</div>
+                <div className="value">xxx</div>
+              </div>
             </div>
             <div className="item">
               <div className="key">抵押品参数</div>
@@ -285,7 +294,12 @@ export default forwardRef((props, ref) => {
             </div>
           </div>
           <div className="dialogFooter">
-            <Button loading={loading} className="submit" onClick={() => handleDepositSubmit()}>
+            <Button
+              disabled={!isMax && +depositAmount > +pow10(params?.balance, params?.data?.decimals)}
+              loading={loading}
+              className="submit"
+              onClick={() => handleDepositSubmit()}
+            >
               提交
             </Button>
           </div>
@@ -295,9 +309,9 @@ export default forwardRef((props, ref) => {
           <div className="block">
             <div className="box">
               <div className="balance">
-                <span className="balanceLabel">钱包余额</span>
+                <span className="balanceLabel">可赎回数量</span>
                 <i className="balanceNumber">
-                  {formatMoney(pow10(params?.balance))}
+                  {formatMoney(userAssetInfo?.underlyingBalance || 0)}
                   <em>{params?.data?.symbol}</em>
                 </i>
               </div>
@@ -306,7 +320,7 @@ export default forwardRef((props, ref) => {
                   onClick={() => {
                     if (userAssetInfo) {
                       setMax(true);
-                      setWithdrawAmount(userAssetInfo.underlyingBalance);
+                      setWithdrawAmount(filterInput(userAssetInfo.underlyingBalance));
                     }
                   }}
                   className="max"
@@ -318,6 +332,7 @@ export default forwardRef((props, ref) => {
                   placeholder="请输入金额"
                   value={withdrawAmount}
                   onChange={(event) => {
+                    setMax(false);
                     handleWithdrawAmountChange(event.target.value);
                   }}
                 />
@@ -359,7 +374,12 @@ export default forwardRef((props, ref) => {
             </div>
           </div>
           <div className="dialogFooter">
-            <Button loading={loading} className="submit" onClick={() => handleWithdrawSubmit()}>
+            <Button
+              disabled={!isMax && withdrawAmount > Number(userAssetInfo?.underlyingBalance)}
+              loading={loading}
+              className="submit"
+              onClick={() => handleWithdrawSubmit()}
+            >
               提交
             </Button>
           </div>
