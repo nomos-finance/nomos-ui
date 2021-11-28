@@ -15,11 +15,13 @@ import MySavingLoad from './mySavingLoad';
 import Chart from '../../components/Chart';
 import { CompactNumber } from '../../components/CompactNumber';
 
-import { useSelector } from 'react-redux';
-import { IRootState } from '../../reducers/RootState';
+import { useSelector, useDispatch } from 'react-redux';
+import { IRootState } from 'app/reducers/RootState';
+import { setRefreshUIPoolData } from 'app/actions/baseAction';
 import { formatMoney } from 'app/utils/tool';
 
 export default function Markets() {
+  const dispatch = useDispatch();
   const [totalLiquidity, setTotalLiquidity] = useState('');
   const [totalDeposit, setTotalDeposit] = useState('');
   const [totalBorrow, setTotalBorrow] = useState('');
@@ -27,7 +29,7 @@ export default function Markets() {
   const [networkInfo] = useNetworkInfo();
   const { currentThemeName } = useThemeContext();
   const { data, refresh } = useProtocolDataWithRpc();
-  const { account } = useSelector((store: IRootState) => store.base);
+  const { account, refreshUIPoolData } = useSelector((store: IRootState) => store.base);
 
   const [balance, fetchBalance] = useWalletBalance(
     networkInfo?.walletBalanceProvider,
@@ -62,6 +64,12 @@ export default function Markets() {
     setTotalBorrow(totalBorrowsInUSD.toString());
     fetchBalance();
   }, [data]);
+
+  useEffect(() => {
+    if (!refreshUIPoolData || !account) return;
+    refresh(account);
+    dispatch(setRefreshUIPoolData(false));
+  }, [refreshUIPoolData, account]);
 
   return (
     <Layout className="page-market">

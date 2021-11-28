@@ -21,6 +21,9 @@ import storage from '../../../utils/storage';
 import SymbolIcon from '../../SymbolIcon';
 import SelectToken from 'app/components/SelectToken/selectToken';
 
+import { useDispatch } from 'react-redux';
+import { setRefreshUIPoolData } from 'app/actions/baseAction';
+
 interface IProps {
   type: 'Borrow' | 'Repay';
   data?: ComputedReserveData;
@@ -33,6 +36,7 @@ export interface IDialog {
 }
 
 export default forwardRef((props, ref) => {
+  const dispatch = useDispatch();
   const [lendingPool] = useTxBuilder();
   const { currentThemeName } = useThemeContext();
   const { account, library } = useWeb3React();
@@ -126,6 +130,7 @@ export default forwardRef((props, ref) => {
       });
       console.log(txs);
       await handleSend(txs, library);
+      dispatch(setRefreshUIPoolData(true));
       setLoading(false);
       hide();
     } catch (error) {
@@ -158,6 +163,7 @@ export default forwardRef((props, ref) => {
         amount: `${isMax ? '-1' : repayAmount}`,
       });
       await handleSend(txs, library);
+      dispatch(setRefreshUIPoolData(true));
       setLoading(false);
       hide();
     } catch (error) {

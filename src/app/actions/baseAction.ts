@@ -10,3 +10,5 @@ export const setProviderName = (data: string): Action<string> =>
   createAction(BASE.SET_PROVIDER_NAME, () => data)();
 export const setAccount = (data: string): Action<string> =>
   createAction(BASE.SET_ACCOUNT, () => data)();
+export const setRefreshUIPoolData = (data: boolean): Action<boolean> =>
+  createAction(BASE.SET_REFRESH_UI_POOL_DATA, () => data)();

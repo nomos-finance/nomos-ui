@@ -8,6 +8,7 @@ export enum BASE {
   SET_NETWORK = 'SET_NETWORK',
   SET_PROVIDER_NAME = 'SET_PROVIDER_NAME',
   SET_ACCOUNT = 'SET_ACCOUNT',
+  SET_REFRESH_UI_POOL_DATA = 'SET_REFRESH_UI_POOL_DATA',
 }
 
 export interface IBaseState {
@@ -15,6 +16,7 @@ export interface IBaseState {
   network: string;
   providerName: string;
   account: string;
+  refreshUIPoolData: boolean;
 }
 
 export const baseState: IBaseState = {
@@ -22,6 +24,7 @@ export const baseState: IBaseState = {
   network: storage.get('network'),
   providerName: storage.get('providerName'),
   account: storage.get('account'),
+  refreshUIPoolData: false,
 };
 
 const reducer = {
@@ -46,6 +49,12 @@ const reducer = {
   [BASE.SET_ACCOUNT]: {
     next: produce((draft: IBaseState, action: { payload: string }) => {
       draft.account = action.payload;
+    }),
+    throw: (state: any, action: any) => errorHandle(state, action),
+  },
+  [BASE.SET_REFRESH_UI_POOL_DATA]: {
+    next: produce((draft: IBaseState, action: { payload: boolean }) => {
+      draft.refreshUIPoolData = action.payload;
     }),
     throw: (state: any, action: any) => errorHandle(state, action),
   },

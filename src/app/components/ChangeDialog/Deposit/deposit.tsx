@@ -19,9 +19,8 @@ import { handleSend } from '../helper/txHelper';
 import SymbolIcon from '../../SymbolIcon';
 import BigNumber from 'bignumber.js';
 
-import useLendingPoolContract from 'app/hooks/useLendingPoolContract';
-import { parseNumber } from 'app/utils';
-import useErc20Contract from 'app/hooks/useErc20Contract';
+import { useDispatch } from 'react-redux';
+import { setRefreshUIPoolData } from 'app/actions/baseAction';
 
 interface IProps {
   type: 'Deposit' | 'Withdraw';
@@ -37,6 +36,7 @@ export interface IDialog {
 }
 
 export default forwardRef((props, ref) => {
+  const dispatch = useDispatch();
   const [lendingPool] = useTxBuilder();
   const { currentThemeName } = useThemeContext();
   const { account, library } = useWeb3React();
@@ -87,20 +87,14 @@ export default forwardRef((props, ref) => {
     if (!lendingPool || !params?.data || !account || !depositAmount) return;
     try {
       setLoading(true);
-      console.log({
-        user: account,
-        reserve: params.data.underlyingAsset,
-        amount: `${depositAmount}`,
-        referralCode: storage.get('referralCode') || undefined,
-      });
       const txs = await lendingPool.deposit({
         user: account,
         reserve: params.data.underlyingAsset,
         amount: `${depositAmount}`,
         referralCode: storage.get('referralCode') || undefined,
       });
-      console.log(library);
       await handleSend(txs, library);
+      dispatch(setRefreshUIPoolData(true));
       setLoading(false);
       hide();
     } catch (error) {
@@ -133,10 +127,13 @@ export default forwardRef((props, ref) => {
         aTokenAddress: params.data.aTokenAddress,
       });
       await handleSend(txs, library);
+      dispatch(setRefreshUIPoolData(true));
       setLoading(false);
+      hide();
     } catch (error) {
       console.log(error);
       setLoading(false);
+      hide();
     }
   };
 
@@ -229,8 +226,8 @@ export default forwardRef((props, ref) => {
               <div className="balance">
                 <span className="balanceLabel">钱包余额</span>
                 <i className="balanceNumber">
-                  {formatMoney(pow10(params?.balance, params?.data?.decimals))}
-                  <em>{params?.data?.symbol}</em>
+                  <em>{formatMoney(pow10(params?.balance, params?.data?.decimals))}</em>
+                  {params?.data?.symbol}
                 </i>
               </div>
               <div className={classnames('input', { error: !!depositValidationMessage })}>
@@ -311,8 +308,8 @@ export default forwardRef((props, ref) => {
               <div className="balance">
                 <span className="balanceLabel">可赎回数量</span>
                 <i className="balanceNumber">
-                  {formatMoney(userAssetInfo?.underlyingBalance || 0)}
-                  <em>{params?.data?.symbol}</em>
+                  <em>{formatMoney(userAssetInfo?.underlyingBalance || 0)}</em>
+                  {params?.data?.symbol}
                 </i>
               </div>
               <div className="input">

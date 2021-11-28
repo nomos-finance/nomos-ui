@@ -1,6 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import { ComputedReserveData, UserSummaryData, normalize } from '@aave/protocol-js';
+import {
+  ComputedReserveData,
+  UserSummaryData,
+  normalize,
+  ComputedUserReserve,
+} from '@aave/protocol-js';
 import SymbolIcon from '../../components/SymbolIcon';
 import {
   Borrow,
@@ -10,7 +15,7 @@ import {
   IDepositDialog,
   ISwapDialog,
 } from '../../components/ChangeDialog/';
-import { formatDecimal, formatMoney } from 'app/utils/tool';
+import { formatDecimal, formatMoney, chunk } from 'app/utils/tool';
 import { Switch } from 'antd';
 
 interface IProps {
@@ -29,6 +34,12 @@ export default function MySavingLoad(props: IProps) {
   const DepositDialogRef = useRef<IDepositDialog>();
   const SwapDialogRef = useRef<ISwapDialog>();
   const [tab, setTab] = useState('deposit');
+  const [depositData, setDepositData] = useState<ComputedUserReserve[][]>([]);
+  const [borrowData, setBorrowData] = useState<ComputedUserReserve[][]>([]);
+  const [depositDataTmp, setDepositDataTmp] = useState<ComputedUserReserve[]>([]);
+  const [borrowDataTmp, setBorrowDataTmp] = useState<ComputedUserReserve[]>([]);
+  const [depositIndex, setDepositIndex] = useState(0);
+  const [borrowIndex, setBorrowIndex] = useState(0);
   const obj: any = {};
 
   props.user.reservesData.forEach((userReserve) => {
@@ -47,6 +58,41 @@ export default function MySavingLoad(props: IProps) {
     //       : poolReserve.underlyingAsset,
     //   usageAsCollateral: status,
     // });
+  };
+
+  useEffect(() => {
+    let depositArr: ComputedUserReserve[] = [];
+    let borrowArr: ComputedUserReserve[] = [];
+    props.user.reservesData.forEach((item) => {
+      if (Number(item?.underlyingBalance)) {
+        depositArr.push(item);
+      }
+      if (Number(item?.scaledVariableDebt)) {
+        borrowArr.push(item);
+      }
+    });
+    const depositTmp = chunk(depositArr, 5);
+    const borrowTmp = chunk(borrowArr, 5);
+    setDepositData(depositTmp);
+    setBorrowData(borrowTmp);
+    setDepositDataTmp(depositTmp[0]);
+    setBorrowDataTmp(borrowTmp[0]);
+    return () => {
+      setDepositData([]);
+      setBorrowData([]);
+      setDepositDataTmp([]);
+      setBorrowDataTmp([]);
+    };
+  }, [props.user.reservesData]);
+
+  const changeDepositData = () => {
+    setDepositDataTmp(depositDataTmp.concat(depositData[depositIndex + 1]));
+    setDepositIndex(depositIndex + 1);
+  };
+
+  const changeBorrowData = () => {
+    setBorrowDataTmp(borrowDataTmp.concat(borrowData[borrowIndex + 1]));
+    setBorrowIndex(borrowIndex + 1);
   };
 
   return (
@@ -70,7 +116,7 @@ export default function MySavingLoad(props: IProps) {
           想把抵押资产换成其他资产，不用赎回，一键可完成 &gt;
         </div>
       </div>
-      {props.user.reservesData.length ? (
+      {depositDataTmp.length ? (
         <div style={{ display: tab === 'deposit' ? 'block' : 'none' }}>
           <table>
             <thead>
@@ -90,7 +136,7 @@ export default function MySavingLoad(props: IProps) {
               </tr>
             </thead>
             <tbody>
-              {props.user.reservesData.map((item) => {
+              {depositDataTmp.map((item) => {
                 if (Number(item?.underlyingBalance)) {
                   return (
                     <tr
@@ -135,15 +181,17 @@ export default function MySavingLoad(props: IProps) {
               })}
             </tbody>
           </table>
-          <div className="btnWrap">
-            <div className="btn" onClick={() => alert('查看更多')}>
-              查看更多
+          {depositData.length > 1 && depositIndex < depositData.length - 1 ? (
+            <div className="btnWrap">
+              <div className="btn" onClick={() => changeDepositData()}>
+                查看更多
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       ) : null}
 
-      {props.user.reservesData.length ? (
+      {borrowDataTmp.length ? (
         <div style={{ display: tab !== 'deposit' ? 'block' : 'none' }}>
           <table>
             <thead>
@@ -154,7 +202,7 @@ export default function MySavingLoad(props: IProps) {
               </tr>
             </thead>
             <tbody>
-              {props.user.reservesData.map((item) => {
+              {borrowDataTmp.map((item) => {
                 if (Number(item?.scaledVariableDebt)) {
                   return (
                     <tr
@@ -195,11 +243,13 @@ export default function MySavingLoad(props: IProps) {
               })}
             </tbody>
           </table>
-          <div className="btnWrap">
-            <div className="btn" onClick={() => alert('查看更多')}>
-              查看更多
+          {borrowData.length > 1 && borrowIndex < borrowData.length - 1 ? (
+            <div className="btnWrap">
+              <div className="btn" onClick={() => changeBorrowData()}>
+                查看更多
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       ) : null}
       <Borrow ref={BorrowDialogRef} />

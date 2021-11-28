@@ -59,3 +59,20 @@ export function filterInput(val: string): string {
     .replace(/^0(\d)/, '$1')
     .replace(/^(\-)*(\d+)\.(\d{0,6}).*$/, '$1$2.$3');
 }
+
+export function chunk(arr: any[], size: number): any[] {
+  let objArr = [];
+  let index = 0;
+  let objArrLen = arr.length / size;
+  for (let i = 0; i < objArrLen; i++) {
+    let arrTemp = [];
+    for (let j = 0; j < size; j++) {
+      arrTemp[j] = arr[index++];
+      if (index === arr.length) {
+        break;
+      }
+    }
+    objArr[i] = arrTemp;
+  }
+  return objArr;
+}
