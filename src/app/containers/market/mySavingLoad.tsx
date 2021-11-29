@@ -116,7 +116,7 @@ export default function MySavingLoad(props: IProps) {
           想把抵押资产换成其他资产，不用赎回，一键可完成 &gt;
         </div>
       </div>
-      {depositDataTmp.length ? (
+      {depositDataTmp?.length ? (
         <div style={{ display: tab === 'deposit' ? 'block' : 'none' }}>
           <table>
             <thead>
@@ -191,7 +191,7 @@ export default function MySavingLoad(props: IProps) {
         </div>
       ) : null}
 
-      {borrowDataTmp.length ? (
+      {borrowDataTmp?.length ? (
         <div style={{ display: tab !== 'deposit' ? 'block' : 'none' }}>
           <table>
             <thead>
