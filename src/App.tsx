@@ -1,26 +1,26 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import Lending from './app/containers/lending';
 import Market from './app/containers/market';
-import Data from './app/containers/data';
 import Dao from './app/containers/dao';
-import Voting from './app/containers/voting';
-import votingDetail from './app/containers/voting/votingDetail';
+import Governance from './app/containers/governance';
+import GovernanceDetail from './app/containers/governance/governanceDetail';
 import Staking from './app/containers/staking';
-import Position from './app/containers/position';
-import Protocol from './app/containers/protocol';
+import Notification from './app/containers/notification';
+import Subprotocol from './app/containers/subprotocol';
 
 const App: React.FC = () => {
   return (
     <Switch>
-      <Route path="/data" component={Data} />
+      <Route path="/market" component={Market} />
       <Route path="/dao" component={Dao} />
-      <Route path="/voting/detail/:id" component={votingDetail} exact />
-      <Route path="/voting" component={Voting} />
+      <Route path="/governance/detail/:id" component={GovernanceDetail} exact />
+      <Route path="/governance" component={Governance} />
       <Route path="/staking" component={Staking} />
-      <Route path="/position" component={Position} />
-      <Route path="/protocol" component={Protocol} />
-      <Route path="/" component={Market} />
+      <Route path="/notification" component={Notification} />
+      <Route path="/subprotocol" component={Subprotocol} />
+      <Route path="/" component={Lending} />
     </Switch>
   );
 };

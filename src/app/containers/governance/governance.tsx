@@ -1,4 +1,4 @@
-import './voting.stylus';
+import './governance.stylus';
 import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { valueToBigNumber, normalize, BigNumber } from '@aave/protocol-js';

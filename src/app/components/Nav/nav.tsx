@@ -25,30 +25,30 @@ export default (): React.ReactElement => {
     <nav className={classnames('lt-nav')}>
       <Link className={classnames('logo', currentThemeName)} to="/" />
       <div className="menu">
-        <Link
-          className={classnames('item', { cur: pathname === '/' || /market/.test(pathname) })}
-          to="/"
-        >
+        <Link className={classnames('item', { cur: pathname === '/' })} to="/">
           <i>
-            <Icon name="market" />
+            <Icon name="lending" />
           </i>
           <span>{t('Lending')}</span>
         </Link>
-        <Link className={classnames('item', { cur: /data/.test(pathname) })} to="/data">
+        <Link className={classnames('item', { cur: /market/.test(pathname) })} to="/market">
           <i>
-            <Icon name="data" />
+            <Icon name="market" />
           </i>
           <span>{t('Market')}</span>
         </Link>
-        <Link className={classnames('item', { cur: /dao/.test(pathname) })} to="/dao">
+        <Link
+          className={classnames('item', { cur: /subprotocol/.test(pathname) })}
+          to="/subprotocol"
+        >
           <i>
-            <Icon name="dao" />
+            <Icon name="subprotocol" />
           </i>
           <span>Subprotocol</span>
         </Link>
         <Link className={classnames('item', { cur: /dao/.test(pathname) })} to="/dao">
           <i>
-            <Icon name="dao" />
+            <Icon name="subprotocol" />
           </i>
           <span>DAO&Safety</span>
         </Link>
@@ -58,24 +58,21 @@ export default (): React.ReactElement => {
           </i>
           <span>Staking</span>
         </Link>
-        <Link className={classnames('item', { cur: /voting/.test(pathname) })} to="/voting">
+        <Link className={classnames('item', { cur: /governance/.test(pathname) })} to="/governance">
           <i>
             <Icon name="voting" />
           </i>
           <span>Governance</span>
         </Link>
-        <Link className={classnames('item', { cur: /invitation/.test(pathname) })} to="/invitation">
-          <i>
-            <Icon name="invitation" />
-          </i>
-          <span>Notification</span>
-        </Link>
-        {/* <Link className={classnames('item', { cur: /position/.test(pathname) })} to="/position">
+        <Link
+          className={classnames('item', { cur: /notification/.test(pathname) })}
+          to="/notification"
+        >
           <i>
             <Icon name="position" />
           </i>
-          <span>Position</span>
-        </Link> */}
+          <span>Notification</span>
+        </Link>
         <div className="doc">
           <div className="item">
             <i>
