@@ -45,8 +45,6 @@
                     .symbolIcon
                         margin: 0 10px 0 0
 
-                .money
-                    text-align: right
 
         span
             position relative

@@ -32,31 +32,25 @@ export default (): React.ReactElement => {
           <i>
             <Icon name="market" />
           </i>
-          <span>{t('Market')}</span>
+          <span>{t('Lending')}</span>
         </Link>
         <Link className={classnames('item', { cur: /data/.test(pathname) })} to="/data">
           <i>
             <Icon name="data" />
           </i>
-          <span>{t('Data')}</span>
+          <span>{t('Market')}</span>
         </Link>
         <Link className={classnames('item', { cur: /dao/.test(pathname) })} to="/dao">
           <i>
             <Icon name="dao" />
           </i>
-          <span>DAO</span>
+          <span>Subprotocol</span>
         </Link>
-        <Link className={classnames('item', { cur: /voting/.test(pathname) })} to="/voting">
+        <Link className={classnames('item', { cur: /dao/.test(pathname) })} to="/dao">
           <i>
-            <Icon name="voting" />
+            <Icon name="dao" />
           </i>
-          <span>Voting</span>
-        </Link>
-        <Link className={classnames('item', { cur: /invitation/.test(pathname) })} to="/invitation">
-          <i>
-            <Icon name="invitation" />
-          </i>
-          <span>Invitation</span>
+          <span>DAO&Safety</span>
         </Link>
         <Link className={classnames('item', { cur: /staking/.test(pathname) })} to="/staking">
           <i>
@@ -64,27 +58,42 @@ export default (): React.ReactElement => {
           </i>
           <span>Staking</span>
         </Link>
-        <Link className={classnames('item', { cur: /position/.test(pathname) })} to="/position">
+        <Link className={classnames('item', { cur: /voting/.test(pathname) })} to="/voting">
+          <i>
+            <Icon name="voting" />
+          </i>
+          <span>Governance</span>
+        </Link>
+        <Link className={classnames('item', { cur: /invitation/.test(pathname) })} to="/invitation">
+          <i>
+            <Icon name="invitation" />
+          </i>
+          <span>Notification</span>
+        </Link>
+        {/* <Link className={classnames('item', { cur: /position/.test(pathname) })} to="/position">
           <i>
             <Icon name="position" />
           </i>
           <span>Position</span>
-        </Link>
+        </Link> */}
         <div className="doc">
           <div className="item">
             <i>
               <Icon name="announcement" />
             </i>
-            <span>Announcement</span>
+            <span>WhitePaper</span>
           </div>
           <div className="item">
             <i>
               <Icon name="file" />
             </i>
-            <span>File</span>
-            <em>
-              <Icon name="down" />
-            </em>
+            <span>Docs</span>
+          </div>
+          <div className="item">
+            <i>
+              <Icon name="file" />
+            </i>
+            <span>Medium</span>
           </div>
         </div>
       </div>

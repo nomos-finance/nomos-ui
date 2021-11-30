@@ -17,6 +17,7 @@ import {
 } from '../../components/ChangeDialog/';
 import { formatDecimal, formatMoney, chunk } from 'app/utils/tool';
 import { Switch } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   reserves: ComputedReserveData[];
@@ -30,6 +31,7 @@ interface IBalance {
 }
 
 export default function MySavingLoad(props: IProps) {
+  const [t] = useTranslation();
   const BorrowDialogRef = useRef<IBorrowDialog>();
   const DepositDialogRef = useRef<IDepositDialog>();
   const SwapDialogRef = useRef<ISwapDialog>();
@@ -103,17 +105,17 @@ export default function MySavingLoad(props: IProps) {
             className={classnames('tabItem', { cur: tab === 'deposit' })}
             onClick={() => setTab('deposit')}
           >
-            我的存款
+            {t('lending.myDeposits')}
           </div>
           <div
             className={classnames('tabItem', { cur: tab === 'borrow' })}
             onClick={() => setTab('borrow')}
           >
-            我的贷款
+            {t('lending.myLoans')}
           </div>
         </div>
         <div className="more" onClick={() => SwapDialogRef.current?.show()}>
-          想把抵押资产换成其他资产，不用赎回，一键可完成 &gt;
+          {t('lending.one-click')} &gt;
         </div>
       </div>
       {depositDataTmp?.length ? (
@@ -121,18 +123,18 @@ export default function MySavingLoad(props: IProps) {
           <table>
             <thead>
               <tr>
-                <th>资产</th>
-                <th>存款数量</th>
-                <th>存款APY</th>
+                <th>{t('lending.depositAsset')}</th>
+                <th>{t('lending.depositBalance')}</th>
+                <th>{t('lending.depositAPY')}</th>
                 <th>
                   <span>
-                    奖励APR
+                    {t('lending.rewardAPR')}
                     <em className="tag">
-                      <i>加成比例</i>
+                      <i>{t('lending.myBoost')}</i>
                     </em>
                   </span>
                 </th>
-                <th>抵押品</th>
+                <th>{t('lending.collateral')}</th>
               </tr>
             </thead>
             <tbody>
@@ -184,7 +186,7 @@ export default function MySavingLoad(props: IProps) {
           {depositData.length > 1 && depositIndex < depositData.length - 1 ? (
             <div className="btnWrap">
               <div className="btn" onClick={() => changeDepositData()}>
-                查看更多
+                {t('lending.more')}
               </div>
             </div>
           ) : null}
@@ -196,9 +198,18 @@ export default function MySavingLoad(props: IProps) {
           <table>
             <thead>
               <tr>
-                <th>资产</th>
-                <th>已借</th>
-                <th>利率</th>
+                <th>{t('lending.borrowAsset')}</th>
+                <th>{t('lending.borrowBalance')}</th>
+                <th>{t('lending.variableLoanAPR')}</th>
+                <th>{t('lending.stableLoanAPR')}</th>
+                <th>
+                  <span>
+                    {t('lending.rewardAPR')}
+                    <em className="tag">
+                      <i>{t('lending.myBoost')}</i>
+                    </em>
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -222,20 +233,25 @@ export default function MySavingLoad(props: IProps) {
                         </div>
                       </td>
                       <td>
-                        <div>
+                        {(+item.stableBorrows || +item.variableBorrows).toFixed(2)}
+                        {/* <div>
                           <span>stable: {Number(item.stableBorrows).toFixed(2)}</span>
                         </div>
                         <div>
                           <span>variable: {Number(item.variableBorrows).toFixed(2)}</span>
-                        </div>
+                        </div> */}
                       </td>
                       <td>
-                        <div>stable: {formatDecimal(Number(item.stableBorrowRate) * 100)}% </div>
-                        <div>
-                          variable:
-                          {formatDecimal(Number(obj[item.reserve.symbol].variableBorrowRate) * 100)}
-                          %
-                        </div>
+                        {formatDecimal(Number(obj[item.reserve.symbol].variableBorrowRate) * 100)}%
+                      </td>
+                      <td>{formatDecimal(Number(item.stableBorrowRate) * 100)}%</td>
+                      <td>
+                        <span>
+                          --
+                          <em className="tag">
+                            <i>1.6x</i>
+                          </em>
+                        </span>
                       </td>
                     </tr>
                   );
@@ -246,7 +262,7 @@ export default function MySavingLoad(props: IProps) {
           {borrowData.length > 1 && borrowIndex < borrowData.length - 1 ? (
             <div className="btnWrap">
               <div className="btn" onClick={() => changeBorrowData()}>
-                查看更多
+                {t('lending.more')}
               </div>
             </div>
           ) : null}

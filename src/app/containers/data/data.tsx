@@ -44,21 +44,24 @@ export default function Markets() {
     },
   ];
 
-  const columns: Array<ColumnProps<{ name: string }>> = [
+  const columns: Array<ColumnProps<{ name: string; age: number }>> = [
     {
       title: 'Market',
       dataIndex: 'name',
       key: 'name',
       sorter: true,
+      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Total Supply',
+      sorter: (a, b) => a.age - b.age,
       render: (item) => {
         return <div>{item.name}</div>;
       },
     },
     {
       title: 'Supply APY',
+      sorter: true,
       render: (item) => {
         return (
           <div>
@@ -70,11 +73,13 @@ export default function Markets() {
     },
     {
       title: 'Total Borrow',
+      sorter: true,
       dataIndex: 'address',
       key: 'address',
     },
     {
       title: 'Borrow APR',
+      sorter: true,
       render: (item) => {
         return (
           <div>

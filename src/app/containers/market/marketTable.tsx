@@ -18,6 +18,7 @@ import { formatDecimal, formatMoney, pow10 } from '../../utils/tool';
 import Icon from '../../../assets/icons';
 import classNames from 'classnames';
 import SymbolIcon from '../../components/SymbolIcon';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   reserves: ComputedReserveData[];
@@ -31,6 +32,7 @@ interface IBalance {
 }
 
 export default function MarketTable(props: IProps) {
+  const [t] = useTranslation();
   let totalLockedInUsd = valueToBigNumber('0');
   const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
   const BorrowDialogRef = useRef<IBorrowDialog>();
@@ -87,12 +89,12 @@ export default function MarketTable(props: IProps) {
   return (
     <div className="marketBlock">
       <div className="block">
-        <div className="title">存款市场</div>
+        <div className="title">{t('lending.supplyMarkets')}</div>
         <div className="search">
           <em>
             <Icon name="search" />
           </em>
-          <Input bordered={false} placeholder="搜寻存款资产" />
+          <Input bordered={false} placeholder={t('lending.search')} />
           <span>
             所有资产
             <i>
@@ -103,9 +105,10 @@ export default function MarketTable(props: IProps) {
         <table>
           <thead>
             <tr>
-              <th>资产</th>
-              <th>存款APY</th>
-              <th>钱包余额</th>
+              <th>{t('lending.depositAsset')}</th>
+              <th>{t('lending.depositAPY')}</th>
+              <th>{t('lending.rewardAPR')}</th>
+              <th>{t('lending.walletBalance')}</th>
             </tr>
           </thead>
           <tbody>
@@ -129,6 +132,7 @@ export default function MarketTable(props: IProps) {
                   </div>
                 </td>
                 <td>{formatDecimal(item.depositAPY * 100)}%</td>
+                <td>xxx</td>
                 <td>
                   <div className="money">
                     {formatMoney(pow10(props.balance[item.underlyingAsset], item.reserve.decimals))}
@@ -141,7 +145,7 @@ export default function MarketTable(props: IProps) {
       </div>
       <div className="block">
         <div className="title">
-          <span>贷款市场</span>
+          <span>{t('lending.supplyMarkets')}</span>
           <div className="tab">
             <div
               className={classNames('item', { cur: borrowType === 'USD' })}
@@ -172,7 +176,7 @@ export default function MarketTable(props: IProps) {
         <table>
           <thead>
             <tr>
-              <th>资产</th>
+              <th>{t('lending.borrowAsset')}</th>
               <th>stable 贷款APY</th>
               <th>variable 贷款APY</th>
             </tr>

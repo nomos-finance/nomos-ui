@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { valueToBigNumber, normalize, BigNumber } from '@aave/protocol-js';
 import { useThemeContext } from '../../theme';
+import { useTranslation } from 'react-i18next';
 
 import Icon from '../../../assets/icons';
 import Layout from '../../components/Layout';
@@ -21,6 +22,7 @@ import { setRefreshUIPoolData } from 'app/actions/baseAction';
 import { formatMoney } from 'app/utils/tool';
 
 export default function Markets() {
+  const [t] = useTranslation();
   const dispatch = useDispatch();
   const [totalLiquidity, setTotalLiquidity] = useState('');
   const [totalDeposit, setTotalDeposit] = useState('');
@@ -78,7 +80,7 @@ export default function Markets() {
           <div className={classnames('inner', currentThemeName)}>
             <div className="text">
               <span>
-                总流动性
+                {t('lending.totalLiquidity')}
                 <Icon name="question" className="question" />
               </span>
             </div>
@@ -92,7 +94,7 @@ export default function Markets() {
           <div className={classnames('inner', currentThemeName)}>
             <div className="text">
               <span>
-                总存款
+                {t('lending.totalDeposited')}
                 <Icon name="question" className="question" />
               </span>
             </div>
@@ -106,7 +108,7 @@ export default function Markets() {
           <div className={classnames('inner', currentThemeName)}>
             <div className="text">
               <span>
-                总贷款
+                {t('lending.totalBorrowed')}
                 <Icon name="question" className="question" />
               </span>
             </div>
@@ -122,40 +124,40 @@ export default function Markets() {
         <div className="userBlock">
           <div className="block userInfo">
             <div className="title">
-              <span>我的账户</span>
-              <span className="btn">领取奖励</span>
+              <span>{t('lending.myAddress')}</span>
+              <span className="btn">{t('lending.claim')}</span>
             </div>
             <div className="main">
               <div className="item">
                 <Icon name="deposit" />
-                <div className="text">我的存款</div>
+                <div className="text">{t('lending.myDeposits')}</div>
                 <div className="number">${formatMoney(data?.user?.totalLiquidityUSD)}</div>
               </div>
               <div className="item">
                 <Icon name="loan" />
-                <div className="text">我的贷款</div>
+                <div className="text">{t('lending.myLoans')}</div>
                 <div className="number">${formatMoney(data?.user?.totalBorrowsUSD)}</div>
               </div>
               <div className="item">
                 <Icon name="rate" />
-                <div className="text">总收益年利率</div>
+                <div className="text">{t('lending.totalAPR')}</div>
                 <div className="number">--</div>
               </div>
               <div className="item">
                 <Icon name="reward" />
-                <div className="text">可领取奖励NOMO</div>
+                <div className="text">{t('lending.claimable')}</div>
                 <div className="number">${formatMoney(data?.user?.totalRewardsUSD)}</div>
               </div>
             </div>
           </div>
           <div className="block charts">
             <div className="title">
-              <span>健康因子</span>
+              <span>{t('lending.healthFactor')}</span>
             </div>
             <div className="main">
               <Chart
                 percentage={60}
-                text={`贷款上限<br />$${
+                text={`${t('lending.maxBorrowLimit')}<br />$${
                   data && data.user
                     ? formatMoney(
                         new BigNumber(data.user.availableBorrowsETH)
@@ -173,21 +175,21 @@ export default function Markets() {
       <div className="block voteBlock">
         <div className="header">
           <div className="text">
-            <span>锁仓NOMO</span>
-            <i>可在所有市场获得加成奖励</i>
+            <span>{t('lending.nomoLock-up')}</span>
+            <i>{t('lending.getBonusRewards')}</i>
           </div>
-          <div className="more">了解更多 &gt;</div>
+          <div className="more">{t('lending.details')} &gt;</div>
         </div>
         <div className="main">
           <div className="item">
-            <span>已锁仓NOMO</span>
+            <span>{t('lending.nomoLocked')}</span>
             <i>10,000.00</i>
           </div>
           <div className="item">
-            <span>收益加成</span>
-            <i>10,000.00</i>
+            <span>{t('lending.myBoost')}</span>
+            <i>1.5x</i>
           </div>
-          <div className="btn">去DAO&Safety锁仓NOMO</div>
+          <div className="btn">{t('lending.DAO&Safety')}</div>
         </div>
       </div>
 
