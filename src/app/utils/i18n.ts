@@ -18,6 +18,11 @@ i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     fallbackLng: 'zh_CN',
+    react: {
+      // https://react.i18next.com/latest/trans-component#trans-props
+      transSupportBasicHtmlNodes: true,
+      transKeepBasicHtmlNodesFor: ['br', 'strong', 'b', 'i'],
+    },
     resources,
     lng,
     keySeparator: false, // we do not use keys in form messages.welcome

@@ -60,7 +60,7 @@ export default (): React.ReactElement => {
         </Link>
         <Link className={classnames('item', { cur: /governance/.test(pathname) })} to="/governance">
           <i>
-            <Icon name="voting" />
+            <Icon name="position" />
           </i>
           <span>Governance</span>
         </Link>

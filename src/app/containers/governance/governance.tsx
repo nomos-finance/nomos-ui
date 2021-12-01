@@ -80,7 +80,7 @@ export default function Markets() {
         </div>
         {tab === 'all' ? (
           <div className="tabMain all">
-            <div className="item" onClick={() => history.push(`voting/detail/1212`)}>
+            <div className="item" onClick={() => history.push(`governance/detail/1212`)}>
               <div className="left">
                 <div className="title">提案号：0001关于XXXX的提案</div>
                 <div className="text">
