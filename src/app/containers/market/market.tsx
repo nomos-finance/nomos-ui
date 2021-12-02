@@ -1,7 +1,7 @@
 import './market.stylus';
 import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import { valueToBigNumber, normalize, BigNumber } from '@aave/protocol-js';
+import { valueToBigNumber, normalize, ComputedReserveData } from '@aave/protocol-js';
 import { useThemeContext } from '../../theme';
 import { Input, Button, Form, Table } from 'antd';
 import { ColumnProps } from 'antd/es/table';
@@ -12,6 +12,8 @@ import Layout from '../../components/Layout';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../reducers/RootState';
 import { formatMoney } from 'app/utils/tool';
+import useProtocolDataWithRpc from 'app/hooks/usePoolData';
+import SymbolIcon from '../../components/SymbolIcon';
 
 const progress = (name: string, num: number) => (
   <div className="progress">
@@ -28,29 +30,25 @@ const progress = (name: string, num: number) => (
 export default function Markets() {
   const { currentThemeName } = useThemeContext();
   const { account } = useSelector((store: IRootState) => store.base);
+  const { data, refresh } = useProtocolDataWithRpc();
+  const [sortedData, setSortedData] = useState<any[]>([]);
 
-  const dataSource = [
-    {
-      key: '1',
-      name: '3',
-      age: 32,
-      address: '2',
-    },
-    {
-      key: '2',
-      name: '1',
-      age: 42,
-      address: '3',
-    },
-  ];
-
-  const columns: Array<ColumnProps<{ name: string; age: number }>> = [
+  const columns: Array<ColumnProps<any>> = [
     {
       title: 'Market',
-      dataIndex: 'name',
-      key: 'name',
-      sorter: true,
+      key: 'id',
+      sorter: (a, b): any => {
+        return a.currencySymbol > b.currencySymbol;
+      },
       sortDirections: ['ascend', 'descend'],
+      render: (item) => {
+        return (
+          <div className="asset">
+            <SymbolIcon symbol={item.currencySymbol} />
+            <span>{item.currencySymbol}</span>
+          </div>
+        );
+      },
     },
     {
       title: 'Total Supply',
@@ -90,6 +88,65 @@ export default function Markets() {
       },
     },
   ];
+
+  useEffect(() => {
+    if (data) {
+      const marketRefPriceInUsd = normalize(data.usdPriceEth, 18);
+      let totalLockedInUsd = valueToBigNumber('0');
+      let sortedData = data.reserves
+        .filter((res) => res.isActive)
+        .map((reserve) => {
+          totalLockedInUsd = totalLockedInUsd.plus(
+            valueToBigNumber(reserve.totalLiquidity)
+              .multipliedBy(reserve.price.priceInEth)
+              .dividedBy(marketRefPriceInUsd)
+          );
+
+          const totalLiquidity = Number(reserve.totalLiquidity);
+          const totalLiquidityInUSD = valueToBigNumber(reserve.totalLiquidity)
+            .multipliedBy(reserve.price.priceInEth)
+            .dividedBy(marketRefPriceInUsd)
+            .toNumber();
+
+          const totalBorrows = Number(reserve.totalDebt);
+          const totalBorrowsInUSD = valueToBigNumber(reserve.totalDebt)
+            .multipliedBy(reserve.price.priceInEth)
+            .dividedBy(marketRefPriceInUsd)
+            .toNumber();
+
+          return {
+            reserve,
+            totalLiquidity,
+            totalLiquidityInUSD,
+            totalBorrows: reserve.borrowingEnabled ? totalBorrows : -1,
+            totalBorrowsInUSD: reserve.borrowingEnabled ? totalBorrowsInUSD : -1,
+            id: reserve.id,
+            underlyingAsset: reserve.underlyingAsset,
+            currencySymbol: reserve.symbol,
+            depositAPY: reserve.borrowingEnabled ? Number(reserve.liquidityRate) : -1,
+            avg30DaysLiquidityRate: Number(reserve.avg30DaysLiquidityRate),
+            stableBorrowRate:
+              reserve.stableBorrowRateEnabled && reserve.borrowingEnabled
+                ? Number(reserve.stableBorrowRate)
+                : -1,
+            variableBorrowRate: reserve.borrowingEnabled ? Number(reserve.variableBorrowRate) : -1,
+            avg30DaysVariableRate: Number(reserve.avg30DaysVariableBorrowRate),
+            borrowingEnabled: reserve.borrowingEnabled,
+            stableBorrowRateEnabled: reserve.stableBorrowRateEnabled,
+            isFreezed: reserve.isFrozen,
+            aIncentivesAPY: reserve.aIncentivesAPY,
+            vIncentivesAPY: reserve.vIncentivesAPY,
+            sIncentivesAPY: reserve.sIncentivesAPY,
+          };
+        });
+
+      setSortedData(sortedData);
+    }
+
+    return () => {
+      setSortedData([]);
+    };
+  }, [data]);
 
   return (
     <Layout className="page-data">
@@ -137,7 +194,14 @@ export default function Markets() {
       </div>
       <div className="block marketBlock">
         <div className="blockTitle">ALL Markets</div>
-        <Table dataSource={dataSource} columns={columns} pagination={false} />
+        <Table
+          dataSource={sortedData}
+          columns={columns}
+          pagination={false}
+          rowKey={(key) => {
+            return key.id;
+          }}
+        />
       </div>
     </Layout>
   );
