@@ -3,10 +3,10 @@
         display: none
 
     .ant-popover-inner
-        background: #2E3136
+        background: var(--var-header-user-popover)
         box-shadow: 0px 12px 21px 0px rgba(0, 0, 0, 0.15)
         border-radius: 16px
-        border: 1px solid #43464A
+        border: 1px solid var(--var-header-user-popover-cur)
         width: 320px
         overflow: hidden
 
@@ -21,16 +21,17 @@
             width: 256px
             height: 40px
             line-height: @height
-            background: #101112
+            background: var(--var-bg)
+            border: 1px solid var(--var-border)
             border-radius: 24px
             display: flex
-            color: #fff
+            color: var(--var-text-color)
 
             em
                 padding: 10px 0 10px 10px
 
             input
-                color: #fff
+                color: var(--var-text-color)
 
         .list
             .item
@@ -68,7 +69,8 @@
 
 .selectToken
     display: flex
-    background: #2E3136
+    background: var(--var-bg)
+    border: 1px solid var(--var-border)
     border-radius: 20px
     box-sizing: border-box
     padding: 8px

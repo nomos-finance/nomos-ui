@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle, useEffect } from 'react';
 import { Modal, Input, Button } from 'antd';
 import { useThemeContext } from '../../../theme';
+import { useTranslation } from 'react-i18next';
 
 import {
   ComputedReserveData,
@@ -36,12 +37,13 @@ export interface IDialog {
 }
 
 export default forwardRef((props, ref) => {
+  const [t] = useTranslation();
   const dispatch = useDispatch();
   const [lendingPool] = useTxBuilder();
   const { currentThemeName } = useThemeContext();
   const { account, library } = useWeb3React();
   const [params, setParams] = useState<IProps>();
-  const [type, setType] = useState(params ? params.type : 'Borrow');
+  const [type, setType] = useState<IProps['type']>();
   const [show, setShow] = useState(false);
   const [borrowValidationMessage, setBorrowValidationMessage] = useState('');
   const [repayValidationMessage, setRepayValidationMessage] = useState('');
@@ -55,7 +57,7 @@ export default forwardRef((props, ref) => {
   const [collateralMode, setCollateralMode] = useState('Collateral');
 
   const hide = () => {
-    setType(params ? params.type : 'Borrow');
+    setType(undefined);
     setShow(false);
     setParams(undefined);
     setBorrowAmount('');
@@ -70,6 +72,7 @@ export default forwardRef((props, ref) => {
     show: (openProps: IProps) => {
       setParams(openProps);
       setShow(true);
+      setType(openProps.type);
     },
     hide,
   }));
@@ -192,13 +195,13 @@ export default forwardRef((props, ref) => {
           className={classnames('tabItem', { cur: type === 'Borrow' })}
           onClick={() => setType('Borrow')}
         >
-          贷款
+          {t('changeDialog.borrow')}
         </div>
         <div
           className={classnames('tabItem', { cur: type === 'Repay' })}
           onClick={() => setType('Repay')}
         >
-          还款
+          {t('changeDialog.repay')}
         </div>
       </div>
       {type === 'Borrow' ? (
@@ -208,19 +211,19 @@ export default forwardRef((props, ref) => {
               className={classnames('typeTabItem', { cur: interestRateMode === 'Variable' })}
               onClick={() => setInterestRateMode('Variable')}
             >
-              可变利率
+              {t('changeDialog.variableRate')}
             </div>
             <div
               className={classnames('typeTabItem', { cur: interestRateMode === 'Stable' })}
               onClick={() => setInterestRateMode('Stable')}
             >
-              稳定利率
+              {t('changeDialog.stableRate')}
             </div>
           </div>
           <div className="block">
             <div className="box">
               <div className="balance">
-                <span className="balanceLabel">可贷款数量</span>
+                <span className="balanceLabel">{t('changeDialog.availableLoanAmt')}</span>
                 <i className="balanceNumber">{formatMoney(`${maxAmountToBorrow}`)}</i>
               </div>
               <div className="input">
@@ -235,7 +238,7 @@ export default forwardRef((props, ref) => {
                 </div>
                 <Input
                   bordered={false}
-                  placeholder="请输入金额"
+                  placeholder={t('changeDialog.enterAmount')}
                   value={borrowAmount}
                   onChange={(event) => {
                     handleBorrowAmountChange(event.target.value);
@@ -246,40 +249,41 @@ export default forwardRef((props, ref) => {
           </div>
           <div className="info">
             <div className="item">
-              <div className="key">健康因子</div>
+              <div className="key">{t('changeDialog.healthFactor')}</div>
               <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
             </div>
             <div className="item">
-              <div className="key">存款收益</div>
+              <div className="key">{t('changeDialog.loanInfo')}</div>
               <div className="subItem">
-                <div className="key">存款年利率</div>
+                <div className="key">{t('changeDialog.variableBorrowAPR')}</div>
                 <div className="value">
-                  {params?.data?.borrowingEnabled
-                    ? formatDecimal(Number(params?.data?.liquidityRate) * 100)
-                    : -1}
-                  %
+                  {formatDecimal(Number(params?.data?.variableBorrowAPR) * 100)}%
                 </div>
+              </div>
+              <div className="subItem">
+                <div className="key">{t('changeDialog.rewardAPR')}</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">{t('changeDialog.remainingLoanPool')}</div>
+                <div className="value">xxx</div>
               </div>
             </div>
             <div className="item">
-              <div className="key">抵押品参数</div>
+              <div className="key">{t('changeDialog.borrowLimit')}</div>
               <div className="subItem">
-                <div className="key">抵押率</div>
+                <div className="key">{t('changeDialog.availableLoanValue')}</div>
                 <div className="value">xxx</div>
               </div>
               <div className="subItem">
-                <div className="key">可贷款价值</div>
-                <div className="value">xxx</div>
-              </div>
-              <div className="subItem">
-                <div className="key">已贷款价值</div>
+                <div className="key">{t('changeDialog.borrowedValue')}</div>
                 <div className="value">xxx</div>
               </div>
             </div>
           </div>
           <div className="dialogFooter">
             <Button loading={loading} className="submit" onClick={() => handleBorrowSubmit()}>
-              提交
+              {t('changeDialog.submit')}
             </Button>
           </div>
         </div>
@@ -290,13 +294,13 @@ export default forwardRef((props, ref) => {
               className={classnames('typeTabItem', { cur: collateralMode === 'Ordinary' })}
               onClick={() => setCollateralMode('Ordinary')}
             >
-              普通还款
+              {t('changeDialog.normal')}
             </div>
             <div
               className={classnames('typeTabItem', { cur: collateralMode === 'Collateral' })}
               onClick={() => setCollateralMode('Collateral')}
             >
-              抵押品还款
+              {t('changeDialog.collateral')}
             </div>
           </div>
           <div className="block">
@@ -308,7 +312,7 @@ export default forwardRef((props, ref) => {
             ) : null}
             <div className="box">
               <div className="balance">
-                <span className="balanceLabel">已贷款数量</span>
+                <span className="balanceLabel">{t('changeDialog.availableLoanAmt')}</span>
                 <i className="balanceNumber">
                   {userAssetInfo
                     ? formatMoney(
@@ -337,7 +341,7 @@ export default forwardRef((props, ref) => {
                 </div>
                 <Input
                   bordered={false}
-                  placeholder="请输入金额"
+                  placeholder={t('changeDialog.enterAmount')}
                   value={repayAmount}
                   onChange={(event) => {
                     handleRepayAmountChange(event.target.value);
@@ -348,40 +352,41 @@ export default forwardRef((props, ref) => {
           </div>
           <div className="info">
             <div className="item">
-              <div className="key">健康因子</div>
+              <div className="key">{t('changeDialog.healthFactor')}</div>
               <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
             </div>
             <div className="item">
-              <div className="key">存款收益</div>
+              <div className="key">{t('changeDialog.loanInfo')}</div>
               <div className="subItem">
-                <div className="key">存款年利率</div>
+                <div className="key">{t('changeDialog.stableLoanAPR')}</div>
                 <div className="value">
-                  {params?.data?.borrowingEnabled
-                    ? formatDecimal(Number(params?.data?.liquidityRate) * 100)
-                    : -1}
-                  %
+                  {formatDecimal(Number(params?.data?.stableBorrowRate) * 100)}%
                 </div>
+              </div>
+              <div className="subItem">
+                <div className="key">{t('changeDialog.rewardAPR')}</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">{t('changeDialog.remainingLoanPool')}</div>
+                <div className="value">xxx</div>
               </div>
             </div>
             <div className="item">
-              <div className="key">抵押品参数</div>
+              <div className="key">{t('changeDialog.borrowLimit')}</div>
               <div className="subItem">
-                <div className="key">抵押率</div>
+                <div className="key">{t('changeDialog.availableLoanValue')}</div>
                 <div className="value">xxx</div>
               </div>
               <div className="subItem">
-                <div className="key">可贷款价值</div>
-                <div className="value">xxx</div>
-              </div>
-              <div className="subItem">
-                <div className="key">已贷款价值</div>
+                <div className="key">{t('changeDialog.borrowedValue')}</div>
                 <div className="value">xxx</div>
               </div>
             </div>
           </div>
           <div className="dialogFooter">
             <Button loading={loading} className="submit" onClick={() => handleRepaySubmit()}>
-              提交
+              {t('changeDialog.submit')}
             </Button>
           </div>
         </div>

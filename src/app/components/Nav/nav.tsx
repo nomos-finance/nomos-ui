@@ -29,13 +29,13 @@ export default (): React.ReactElement => {
           <i>
             <Icon name="lending" />
           </i>
-          <span>{t('Lending')}</span>
+          <span>{t('nav.lending')}</span>
         </Link>
         <Link className={classnames('item', { cur: /market/.test(pathname) })} to="/market">
           <i>
             <Icon name="market" />
           </i>
-          <span>{t('Market')}</span>
+          <span>{t('nav.market')}</span>
         </Link>
         <Link
           className={classnames('item', { cur: /subprotocol/.test(pathname) })}
@@ -44,25 +44,25 @@ export default (): React.ReactElement => {
           <i>
             <Icon name="subprotocol" />
           </i>
-          <span>Subprotocol</span>
+          <span>{t('nav.subprotocol')}</span>
         </Link>
         <Link className={classnames('item', { cur: /dao/.test(pathname) })} to="/dao">
           <i>
             <Icon name="subprotocol" />
           </i>
-          <span>DAO&Safety</span>
+          <span>{t('nav.dao')}</span>
         </Link>
         <Link className={classnames('item', { cur: /staking/.test(pathname) })} to="/staking">
           <i>
             <Icon name="staking" />
           </i>
-          <span>Staking</span>
+          <span>{t('nav.staking')}</span>
         </Link>
         <Link className={classnames('item', { cur: /governance/.test(pathname) })} to="/governance">
           <i>
             <Icon name="position" />
           </i>
-          <span>Governance</span>
+          <span>{t('nav.governance')}</span>
         </Link>
         <Link
           className={classnames('item', { cur: /notification/.test(pathname) })}
@@ -71,20 +71,20 @@ export default (): React.ReactElement => {
           <i>
             <Icon name="position" />
           </i>
-          <span>Notification</span>
+          <span>{t('nav.notification')}</span>
         </Link>
         <div className="doc">
           <div className="item">
             <i>
               <Icon name="announcement" />
             </i>
-            <span>WhitePaper</span>
+            <span>{t('nav.whitePaper')}</span>
           </div>
           <div className="item">
             <i>
               <Icon name="file" />
             </i>
-            <span>Docs</span>
+            <span>{t('nav.docs')}</span>
           </div>
           <div className="item">
             <i>

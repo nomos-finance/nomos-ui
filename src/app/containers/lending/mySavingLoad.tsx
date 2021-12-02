@@ -244,7 +244,10 @@ export default function MySavingLoad(props: IProps) {
                       <td>
                         {formatDecimal(Number(obj[item.reserve.symbol].variableBorrowRate) * 100)}%
                       </td>
-                      <td>{formatDecimal(Number(item.stableBorrowRate) * 100)}%</td>
+                      <td>
+                        {formatDecimal(Number(obj[item.reserve.symbol].stableBorrowRate) * 100)}%
+                        {/* {formatDecimal(Number(item.stableBorrowRate) * 100)}% */}
+                      </td>
                       <td>
                         <span>
                           --

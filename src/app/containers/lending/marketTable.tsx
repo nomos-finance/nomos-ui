@@ -165,7 +165,7 @@ export default function MarketTable(props: IProps) {
           <em>
             <Icon name="search" />
           </em>
-          <Input bordered={false} placeholder="搜寻贷款资产" />
+          <Input bordered={false} placeholder={t('lending.search')} />
           <span>
             所有资产
             <i>

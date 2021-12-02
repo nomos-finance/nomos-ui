@@ -23,7 +23,7 @@ export const formatDecimal = (number: number | string | undefined, decimal: numb
 };
 
 export const formatMoney = (value: string | number, n: number = 2): number | string => {
-  if (isNaN(Number(value))) return Number(0).toFixed(n > 0 ? n : 0);
+  if (isNaN(Number(value)) || Number(value).toFixed(n)) return Number(0).toFixed(n > 0 ? n : 0);
   const isNegative = value < 0;
   const v = formatDecimal(Math.abs(Number(value)), n > 0 ? n : 0);
   const l = v.split('.')[0].split('').reverse();
@@ -51,13 +51,14 @@ export function getShortenAddress2(address: string): string {
 }
 
 export function filterInput(val: string): string {
-  return val
+  const v = val
     .replace('-', '')
     .replace(/^\.+|[^\d.]/g, '')
     .replace(/^0\d+\./g, '0.')
     .replace(/\.{6,}/, '')
     .replace(/^0(\d)/, '$1')
     .replace(/^(\-)*(\d+)\.(\d{0,6}).*$/, '$1$2.$3');
+  return Number(v) > 0 ? v : '';
 }
 
 export function chunk(arr: any[], size: number): any[] {

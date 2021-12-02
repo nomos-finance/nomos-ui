@@ -1,1 +1,1 @@
-export { default } from './position';
+export { default } from './notification';

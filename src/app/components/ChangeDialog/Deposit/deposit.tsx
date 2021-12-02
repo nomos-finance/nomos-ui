@@ -5,6 +5,8 @@ import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle, useEffect } from 'react';
 import { Modal, Input, Button } from 'antd';
 import { useThemeContext } from '../../../theme';
+import { useTranslation } from 'react-i18next';
+
 import {
   ComputedReserveData,
   valueToBigNumber,
@@ -36,12 +38,13 @@ export interface IDialog {
 }
 
 export default forwardRef((props, ref) => {
+  const [t] = useTranslation();
   const dispatch = useDispatch();
   const [lendingPool] = useTxBuilder();
   const { currentThemeName } = useThemeContext();
   const { account, library } = useWeb3React();
   const [params, setParams] = useState<IProps>();
-  const [type, setType] = useState(params ? params.type : 'Deposit');
+  const [type, setType] = useState<IProps['type']>();
   const [show, setShow] = useState(false);
   const [depositValidationMessage, setDepositValidationMessage] = useState('');
   const [withdrawValidationMessage, setWithdrawValidationMessage] = useState('');
@@ -52,7 +55,7 @@ export default forwardRef((props, ref) => {
   const [isMax, setMax] = useState(false);
 
   const hide = () => {
-    setType(params ? params.type : 'Deposit');
+    setType(undefined);
     setShow(false);
     setParams(undefined);
     setDepositAmount('');
@@ -67,6 +70,7 @@ export default forwardRef((props, ref) => {
     show: (openProps: IProps) => {
       setParams(openProps);
       setShow(true);
+      setType(openProps.type);
     },
     hide,
   }));
@@ -210,13 +214,13 @@ export default forwardRef((props, ref) => {
           className={classnames('tabItem', { cur: type === 'Deposit' })}
           onClick={() => setType('Deposit')}
         >
-          存款
+          {t('changeDialog.deposit')}
         </div>
         <div
           className={classnames('tabItem', { cur: type === 'Withdraw' })}
           onClick={() => setType('Withdraw')}
         >
-          赎回
+          {t('changeDialog.withdraw')}
         </div>
       </div>
       {type === 'Deposit' ? (
@@ -224,7 +228,7 @@ export default forwardRef((props, ref) => {
           <div className="block">
             <div className="box">
               <div className="balance">
-                <span className="balanceLabel">钱包余额</span>
+                <span className="balanceLabel">{t('changeDialog.walletBalance')}</span>
                 <i className="balanceNumber">
                   <em>{formatMoney(pow10(params?.balance, params?.data?.decimals))}</em>
                   {params?.data?.symbol}
@@ -243,7 +247,7 @@ export default forwardRef((props, ref) => {
                 </div>
                 <Input
                   bordered={false}
-                  placeholder="请输入金额"
+                  placeholder={t('changeDialog.enterAmount')}
                   value={depositAmount}
                   onChange={(event) => {
                     setMax(false);
@@ -255,13 +259,13 @@ export default forwardRef((props, ref) => {
           </div>
           <div className="info">
             <div className="item">
-              <div className="key">健康因子</div>
+              <div className="key">{t('changeDialog.healthFactor')}</div>
               <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
             </div>
             <div className="item">
-              <div className="key">存款收益</div>
+              <div className="key">{t('changeDialog.depositInfo')}</div>
               <div className="subItem">
-                <div className="key">存款年利率</div>
+                <div className="key">{t('changeDialog.depositAPY')}</div>
                 <div className="value">
                   {params?.data?.borrowingEnabled
                     ? formatDecimal(Number(params?.data?.liquidityRate) * 100)
@@ -270,22 +274,26 @@ export default forwardRef((props, ref) => {
                 </div>
               </div>
               <div className="subItem">
-                <div className="key">奖励年利率</div>
+                <div className="key">{t('changeDialog.rewardAPR')}</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">{t('changeDialog.LTV')}</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">{t('changeDialog.remainingDepositPool')}</div>
                 <div className="value">xxx</div>
               </div>
             </div>
             <div className="item">
-              <div className="key">抵押品参数</div>
+              <div className="key">{t('changeDialog.borrowLimit')}</div>
               <div className="subItem">
-                <div className="key">抵押率</div>
+                <div className="key">{t('changeDialog.availableLoanValue')}</div>
                 <div className="value">xxx</div>
               </div>
               <div className="subItem">
-                <div className="key">可贷款价值</div>
-                <div className="value">xxx</div>
-              </div>
-              <div className="subItem">
-                <div className="key">已贷款价值</div>
+                <div className="key">{t('changeDialog.borrowedValue')}</div>
                 <div className="value">xxx</div>
               </div>
             </div>
@@ -297,7 +305,7 @@ export default forwardRef((props, ref) => {
               className="submit"
               onClick={() => handleDepositSubmit()}
             >
-              提交
+              {t('changeDialog.submit')}
             </Button>
           </div>
         </div>
@@ -326,7 +334,7 @@ export default forwardRef((props, ref) => {
                 </div>
                 <Input
                   bordered={false}
-                  placeholder="请输入金额"
+                  placeholder={t('changeDialog.enterAmount')}
                   value={withdrawAmount}
                   onChange={(event) => {
                     setMax(false);
@@ -338,34 +346,41 @@ export default forwardRef((props, ref) => {
           </div>
           <div className="info">
             <div className="item">
-              <div className="key">健康因子</div>
+              <div className="key">{t('changeDialog.healthFactor')}</div>
               <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
             </div>
             <div className="item">
-              <div className="key">存款收益</div>
+              <div className="key">{t('changeDialog.depositInfo')}</div>
               <div className="subItem">
-                <div className="key">存款年利率</div>
+                <div className="key">{t('changeDialog.depositAPY')}</div>
                 <div className="value">
-                  {params?.data?.borrowingEnabled ? Number(params?.data?.liquidityRate) : -1}%
+                  {params?.data?.borrowingEnabled
+                    ? formatDecimal(Number(params?.data?.liquidityRate) * 100)
+                    : -1}
+                  %
                 </div>
               </div>
               <div className="subItem">
-                <div className="key">奖励年利率</div>
+                <div className="key">{t('changeDialog.rewardAPR')}</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">{t('changeDialog.LTV')}</div>
+                <div className="value">xxx</div>
+              </div>
+              <div className="subItem">
+                <div className="key">{t('changeDialog.remainingDepositPool')}</div>
                 <div className="value">xxx</div>
               </div>
             </div>
             <div className="item">
-              <div className="key">抵押品参数</div>
+              <div className="key">{t('changeDialog.borrowLimit')}</div>
               <div className="subItem">
-                <div className="key">抵押率</div>
+                <div className="key">{t('changeDialog.availableLoanValue')}</div>
                 <div className="value">xxx</div>
               </div>
               <div className="subItem">
-                <div className="key">可贷款价值</div>
-                <div className="value">xxx</div>
-              </div>
-              <div className="subItem">
-                <div className="key">已贷款价值</div>
+                <div className="key">{t('changeDialog.borrowedValue')}</div>
                 <div className="value">xxx</div>
               </div>
             </div>
@@ -377,7 +392,7 @@ export default forwardRef((props, ref) => {
               className="submit"
               onClick={() => handleWithdrawSubmit()}
             >
-              提交
+              {t('changeDialog.submit')}
             </Button>
           </div>
         </div>
