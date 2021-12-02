@@ -23,7 +23,8 @@ export const formatDecimal = (number: number | string | undefined, decimal: numb
 };
 
 export const formatMoney = (value: string | number, n: number = 2): number | string => {
-  if (isNaN(Number(value)) || Number(value).toFixed(n)) return Number(0).toFixed(n > 0 ? n : 0);
+  if (isNaN(Number(value)) || !Number(Number(value).toFixed(n)))
+    return Number(0).toFixed(n > 0 ? n : 0);
   const isNegative = value < 0;
   const v = formatDecimal(Math.abs(Number(value)), n > 0 ? n : 0);
   const l = v.split('.')[0].split('').reverse();
