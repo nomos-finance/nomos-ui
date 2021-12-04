@@ -20,8 +20,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { IRootState } from 'app/reducers/RootState';
 import { setRefreshUIPoolData } from 'app/actions/baseAction';
 import { formatMoney } from 'app/utils/tool';
+import { useHistory } from 'react-router';
 
 export default function Markets() {
+  const history = useHistory();
   const [t] = useTranslation();
   const dispatch = useDispatch();
   const [totalLiquidity, setTotalLiquidity] = useState('');
@@ -189,7 +191,9 @@ export default function Markets() {
             <span>{t('lending.myBoost')}</span>
             <i>1.5x</i>
           </div>
-          <div className="btn">{t('lending.DAO&Safety')}</div>
+          <div className="btn" onClick={() => history.push('/dao')}>
+            {t('lending.DAO&Safety')}
+          </div>
         </div>
       </div>
 

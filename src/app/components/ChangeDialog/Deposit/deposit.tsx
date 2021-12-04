@@ -89,8 +89,8 @@ export default forwardRef((props, ref) => {
 
   const handleDepositSubmit = async () => {
     if (!lendingPool || !params?.data || !account || !depositAmount) return;
+    setLoading(true);
     try {
-      setLoading(true);
       const txs = await lendingPool.deposit({
         user: account,
         reserve: params.data.underlyingAsset,
@@ -99,13 +99,12 @@ export default forwardRef((props, ref) => {
       });
       await handleSend(txs, library);
       dispatch(setRefreshUIPoolData(true));
-      setLoading(false);
       hide();
     } catch (error) {
       console.log(error);
-      setLoading(false);
       hide();
     }
+    setLoading(false);
   };
 
   const handleWithdrawAmountChange = (amount: string): void => {
@@ -122,8 +121,8 @@ export default forwardRef((props, ref) => {
 
   const handleWithdrawSubmit = async () => {
     if (!lendingPool || !params?.data || !account || !withdrawAmount) return;
+    setLoading(true);
     try {
-      setLoading(true);
       const txs = await lendingPool.withdraw({
         user: account,
         reserve: params.data.underlyingAsset,
@@ -132,13 +131,12 @@ export default forwardRef((props, ref) => {
       });
       await handleSend(txs, library);
       dispatch(setRefreshUIPoolData(true));
-      setLoading(false);
       hide();
     } catch (error) {
       console.log(error);
-      setLoading(false);
       hide();
     }
+    setLoading(false);
   };
 
   useEffect(() => {

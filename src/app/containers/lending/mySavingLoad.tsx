@@ -11,9 +11,11 @@ import {
   Borrow,
   Deposit,
   Swap,
+  UsageAsCollateral,
   IBorrowDialog,
   IDepositDialog,
   ISwapDialog,
+  IUsageAsCollateralDialog,
 } from '../../components/ChangeDialog/';
 import { formatDecimal, formatMoney, chunk } from 'app/utils/tool';
 import { Switch } from 'antd';
@@ -35,6 +37,7 @@ export default function MySavingLoad(props: IProps) {
   const BorrowDialogRef = useRef<IBorrowDialog>();
   const DepositDialogRef = useRef<IDepositDialog>();
   const SwapDialogRef = useRef<ISwapDialog>();
+  const UsageAsCollateralRef = useRef<IUsageAsCollateralDialog>();
   const [tab, setTab] = useState('deposit');
   const [depositData, setDepositData] = useState<ComputedUserReserve[][]>([]);
   const [borrowData, setBorrowData] = useState<ComputedUserReserve[][]>([]);
@@ -50,17 +53,6 @@ export default function MySavingLoad(props: IProps) {
   });
 
   const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
-
-  const handleChange = async (status: boolean) => {
-    // await lendingPool.setUsageAsCollateral({
-    //   user: account,
-    //   reserve:
-    //     poolReserve.symbol === networkConfig.baseAsset
-    //       ? WrappedBaseNetworkAssetAddress
-    //       : poolReserve.underlyingAsset,
-    //   usageAsCollateral: status,
-    // });
-  };
 
   useEffect(() => {
     let depositArr: ComputedUserReserve[] = [];
@@ -174,7 +166,12 @@ export default function MySavingLoad(props: IProps) {
                       <td onClick={(e) => e.stopPropagation()}>
                         <Switch
                           checked={item.usageAsCollateralEnabledOnUser}
-                          onChange={(status) => handleChange(status)}
+                          onChange={(status) =>
+                            UsageAsCollateralRef.current?.show({
+                              status,
+                              data: obj[item.reserve.symbol],
+                            })
+                          }
                         ></Switch>
                       </td>
                     </tr>
@@ -274,6 +271,7 @@ export default function MySavingLoad(props: IProps) {
       <Borrow ref={BorrowDialogRef} />
       <Deposit ref={DepositDialogRef} />
       <Swap ref={SwapDialogRef} />
+      <UsageAsCollateral ref={UsageAsCollateralRef} />
     </div>
   );
 }
