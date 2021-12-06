@@ -11,7 +11,7 @@ import Layout from '../../components/Layout';
 
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../reducers/RootState';
-import { formatMoney } from 'app/utils/tool';
+import { formatDecimal, formatMoney } from 'app/utils/tool';
 import useProtocolDataWithRpc from 'app/hooks/usePoolData';
 import SymbolIcon from '../../components/SymbolIcon';
 
@@ -52,13 +52,6 @@ export default function Markets() {
     },
     {
       title: 'Total Supply',
-      sorter: (a, b) => a.age - b.age,
-      render: (item) => {
-        return <div>{item.name}</div>;
-      },
-    },
-    {
-      title: 'Supply APY',
       sorter: true,
       render: (item) => {
         return (
@@ -70,10 +63,20 @@ export default function Markets() {
       },
     },
     {
+      title: 'Supply APY',
+      sorter: (a, b) => a.depositAPY - b.depositAPY,
+      render: (item) => {
+        console.log(item);
+        return <div>{formatDecimal(item.depositAPY * 100)}%</div>;
+      },
+    },
+
+    {
       title: 'Total Borrow',
       sorter: true,
-      dataIndex: 'address',
-      key: 'address',
+      render: (item) => {
+        return <div>{item.totalLiquidity}</div>;
+      },
     },
     {
       title: 'Borrow APR',

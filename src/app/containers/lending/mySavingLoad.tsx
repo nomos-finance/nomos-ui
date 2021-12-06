@@ -170,6 +170,7 @@ export default function MySavingLoad(props: IProps) {
                             UsageAsCollateralRef.current?.show({
                               status,
                               data: obj[item.reserve.symbol],
+                              healthFactor: 111,
                             })
                           }
                         ></Switch>

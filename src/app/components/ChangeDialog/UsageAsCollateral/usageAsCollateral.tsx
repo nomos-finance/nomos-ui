@@ -17,6 +17,7 @@ import {
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { handleSend } from '../helper/txHelper';
 import { useWeb3React } from '@web3-react/core';
+import SymbolIcon from '../../SymbolIcon';
 
 import { useDispatch } from 'react-redux';
 import { setRefreshUIPoolData } from 'app/actions/baseAction';
@@ -24,6 +25,7 @@ import { setRefreshUIPoolData } from 'app/actions/baseAction';
 interface IProps {
   status: boolean;
   data: ComputedReserveData;
+  healthFactor: number | string;
 }
 
 export interface IDialog {
@@ -84,7 +86,21 @@ export default forwardRef((props, ref) => {
       destroyOnClose={true}
       closable={false}
     >
-      <div>抵押品</div>
+      <div className="symbol">
+        <SymbolIcon symbol={params?.data?.symbol} size={96} />
+        <div className="text">{params?.data?.symbol}</div>
+      </div>
+      <div className="usageAsCollateral">
+        <div className="item">
+          <div className="key">Currency Health Factor</div>
+          <div className="value">{params?.healthFactor}</div>
+        </div>
+        <div className="item">
+          <div className="key">Next Health Factor</div>
+          <div className="value">xxx</div>
+        </div>
+        <div className="notice">健康因子大于90%，所以无法取消该资产作为抵押品</div>
+      </div>
       <div className="dialogFooter">
         <Button loading={loading} className="submit" onClick={() => handleSubmit()}>
           {t('changeDialog.submit')}

@@ -16,7 +16,7 @@ import {
 } from '../../components/ChangeDialog/';
 import { formatDecimal, formatMoney, pow10 } from '../../utils/tool';
 import Icon from '../../../assets/icons';
-import classNames from 'classnames';
+import classnames from 'classnames';
 import SymbolIcon from '../../components/SymbolIcon';
 import { useTranslation } from 'react-i18next';
 
@@ -38,6 +38,7 @@ export default function MarketTable(props: IProps) {
   const BorrowDialogRef = useRef<IBorrowDialog>();
   const DepositDialogRef = useRef<IDepositDialog>();
   const [borrowType, setBorrowType] = useState('USD');
+  const [tab, setTab] = useState('deposit');
 
   let sortedData = props.reserves
     .filter((res) => res.isActive)
@@ -87,9 +88,22 @@ export default function MarketTable(props: IProps) {
     });
 
   return (
-    <div className="marketBlock">
-      <div className="block">
-        <div className="title">{t('lending.supplyMarkets')}</div>
+    <div className="block marketBlock">
+      <div className="header">
+        <div className="tab">
+          <div
+            className={classnames('tabItem', { cur: tab === 'deposit' })}
+            onClick={() => setTab('deposit')}
+          >
+            {t('lending.supplyMarkets')}
+          </div>
+          <div
+            className={classnames('tabItem', { cur: tab === 'borrow' })}
+            onClick={() => setTab('borrow')}
+          >
+            {t('lending.borrowMarkets')}
+          </div>
+        </div>
         <div className="search">
           <em>
             <Icon name="search" />
@@ -102,6 +116,24 @@ export default function MarketTable(props: IProps) {
             </i>
           </span>
         </div>
+        {tab === 'borrow' ? (
+          <div className="type">
+            <div
+              className={classnames('item', { cur: borrowType === 'USD' })}
+              onClick={() => setBorrowType('USD')}
+            >
+              USD
+            </div>
+            <div
+              className={classnames('item', { cur: borrowType === 'Amount' })}
+              onClick={() => setBorrowType('Amount')}
+            >
+              Amount
+            </div>
+          </div>
+        ) : null}
+      </div>
+      <div style={{ display: tab === 'deposit' ? 'block' : 'none' }}>
         <table>
           <thead>
             <tr>
@@ -143,42 +175,17 @@ export default function MarketTable(props: IProps) {
           </tbody>
         </table>
       </div>
-      <div className="block">
-        <div className="title">
-          <span>{t('lending.supplyMarkets')}</span>
-          <div className="tab">
-            <div
-              className={classNames('item', { cur: borrowType === 'USD' })}
-              onClick={() => setBorrowType('USD')}
-            >
-              USD
-            </div>
-            <div
-              className={classNames('item', { cur: borrowType === 'Amount' })}
-              onClick={() => setBorrowType('Amount')}
-            >
-              Amount
-            </div>
-          </div>
-        </div>
-        <div className="search">
-          <em>
-            <Icon name="search" />
-          </em>
-          <Input bordered={false} placeholder={t('lending.search')} />
-          <span>
-            所有资产
-            <i>
-              <Icon name="down" />
-            </i>
-          </span>
-        </div>
+      <div style={{ display: tab === 'borrow' ? 'block' : 'none' }}>
         <table>
           <thead>
             <tr>
               <th>{t('lending.borrowAsset')}</th>
-              <th>stable 贷款APY</th>
-              <th>variable 贷款APY</th>
+              <th>稳定利率贷款APR</th>
+              <th>浮动利率贷款APR</th>
+              <th>奖励APR</th>
+              <th>债务上限</th>
+              <th>剩余债务额度</th>
+              <th>流动结构性</th>
             </tr>
           </thead>
           <tbody>
@@ -204,6 +211,15 @@ export default function MarketTable(props: IProps) {
                   %
                 </td>
                 <td>{formatDecimal(item.variableBorrowRate * 100)}%</td>
+                <td>xxx</td>
+                <td>xxx</td>
+                <td>xxx</td>
+                <td>
+                  {formatMoney(
+                    borrowType === 'USD' ? item.totalLiquidityInUSD : item.totalLiquidity,
+                    2
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
