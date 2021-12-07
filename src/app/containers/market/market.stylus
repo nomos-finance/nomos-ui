@@ -111,6 +111,15 @@
                 &.ant-table-column-sort
                     background: var(--var-table-td-hover)
 
+                .asset
+                    height: 32px
+                    line-height: 32px
+                    text-align: left
+                    display: flex
+
+                    .symbolIcon
+                        margin: 0 10px 0 0
+
             tr.ant-table-row:hover > td
                 background: var(--var-table-td-hover)
 

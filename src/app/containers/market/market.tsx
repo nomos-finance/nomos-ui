@@ -19,10 +19,10 @@ const progress = (name: string, num: number) => (
   <div className="progress">
     <div className="progressText">
       <div>{name}</div>
-      <div>{num}%</div>
+      <div>{num.toFixed(2)}%</div>
     </div>
     <div className="progressBar">
-      <div style={{ width: `${num}%` }}></div>
+      <div style={{ width: `${num.toFixed(2)}%` }}></div>
     </div>
   </div>
 );
@@ -32,6 +32,9 @@ export default function Markets() {
   const { account } = useSelector((store: IRootState) => store.base);
   const { data, refresh } = useProtocolDataWithRpc();
   const [sortedData, setSortedData] = useState<any[]>([]);
+  const [borrowTopData, setBorrowTopData] = useState<any[]>([]);
+  const [totalBorrow, setTotalBorrow] = useState<number>(0);
+  const [totalBorrowUSD, setTotalBorrowUSD] = useState<number>(0);
 
   const columns: Array<ColumnProps<any>> = [
     {
@@ -57,7 +60,7 @@ export default function Markets() {
         return (
           <div>
             <div>{item.name}</div>
-            <div>Max reward 2.20%</div>
+            <div>xxx</div>
           </div>
         );
       },
@@ -66,7 +69,6 @@ export default function Markets() {
       title: 'Supply APY',
       sorter: (a, b) => a.depositAPY - b.depositAPY,
       render: (item) => {
-        console.log(item);
         return <div>{formatDecimal(item.depositAPY * 100)}%</div>;
       },
     },
@@ -75,19 +77,25 @@ export default function Markets() {
       title: 'Total Borrow',
       sorter: true,
       render: (item) => {
-        return <div>{item.totalLiquidity}</div>;
+        return <div>{formatDecimal(item.totalLiquidity)}</div>;
       },
     },
     {
-      title: 'Borrow APR',
-      sorter: true,
+      title: '浮动利率贷款APR',
+      sorter: (a, b) => a.stableBorrowRate - b.stableBorrowRate,
       render: (item) => {
         return (
           <div>
-            <div>{item.name}</div>
-            <div>Max reward 2.20%</div>
+            {formatDecimal(item.stableBorrowRate * 100 < 0 ? 0 : item.stableBorrowRate * 100)}%
           </div>
         );
+      },
+    },
+    {
+      title: '稳定利率贷款APR',
+      sorter: (a, b) => a.variableBorrowRate - b.variableBorrowRate,
+      render: (item) => {
+        return <div>{formatDecimal(item.variableBorrowRate * 100)}%</div>;
       },
     },
   ];
@@ -117,6 +125,9 @@ export default function Markets() {
             .dividedBy(marketRefPriceInUsd)
             .toNumber();
 
+          setTotalBorrow((i) => totalBorrows + i);
+          setTotalBorrowUSD((i) => valueToBigNumber(totalBorrowsInUSD).plus(i).toNumber());
+
           return {
             reserve,
             totalLiquidity,
@@ -144,6 +155,11 @@ export default function Markets() {
         });
 
       setSortedData(sortedData);
+
+      const tmpData = sortedData.concat([]);
+      tmpData.sort((a, b) => b.totalBorrows - a.totalBorrows);
+
+      setBorrowTopData(tmpData);
     }
 
     return () => {
@@ -170,13 +186,18 @@ export default function Markets() {
           <div className="proportionItem">
             <div className="header">
               <div className="text">Total Borrow</div>
-              <div className="number">$34,163.00</div>
+              <div className="number">${formatMoney(totalBorrowUSD)}</div>
             </div>
             <div className="main">
               <div className="title">Top 3 markets</div>
-              <div className="item">{progress('BTC', 20)}</div>
-              <div className="item">{progress('BTC', 40)}</div>
-              <div className="item">{progress('BTC', 21.5)}</div>
+              {borrowTopData.map((item, index) => {
+                if (index > 2) return null;
+                return (
+                  <div className="item" key={item.id}>
+                    {progress(item.currencySymbol, (item.totalBorrows / totalBorrow) * 100)}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
