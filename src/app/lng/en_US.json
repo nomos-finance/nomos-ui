@@ -110,7 +110,7 @@
   "changeDialog.depositAPY": "Deposit APY",
   "changeDialog.rewardAPR": "Reward APR",
   "changeDialog.LTV":"LTV",
-  "changeDialog.remainingDepositPool":"Remaining Deposit Poo",
+  "changeDialog.remainingDepositPool":"Remaining Deposit Pool",
   "changeDialog.borrowLimit":"Borrow Limit",
   "changeDialog.availableLoanValue":"Available Loan Value",
   "changeDialog.borrowedValue":"Borrowed Value",

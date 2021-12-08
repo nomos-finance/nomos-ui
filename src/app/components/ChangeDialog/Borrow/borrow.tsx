@@ -3,7 +3,7 @@ import './borrow.styl';
 
 import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle, useEffect } from 'react';
-import { Modal, Input, Button } from 'antd';
+import { Modal, Input, Button, Select } from 'antd';
 import { useThemeContext } from '../../../theme';
 import { useTranslation } from 'react-i18next';
 
@@ -21,6 +21,7 @@ import { formatDecimal, pow10, formatMoney, filterInput } from '../../../utils/t
 import storage from '../../../utils/storage';
 import SymbolIcon from '../../SymbolIcon';
 import SelectToken from 'app/components/SelectToken/selectToken';
+import Icon from 'assets/icons';
 
 import { useDispatch } from 'react-redux';
 import { setRefreshUIPoolData } from 'app/actions/baseAction';
@@ -35,6 +36,8 @@ export interface IDialog {
   show(openProps: IProps): void;
   hide(): void;
 }
+
+const { Option } = Select;
 
 export default forwardRef((props, ref) => {
   const [t] = useTranslation();
@@ -195,31 +198,17 @@ export default forwardRef((props, ref) => {
           className={classnames('tabItem', { cur: type === 'Borrow' })}
           onClick={() => setType('Borrow')}
         >
-          {t('changeDialog.borrow')}
+          {t('changeDialog.variableRate')}
         </div>
         <div
           className={classnames('tabItem', { cur: type === 'Repay' })}
           onClick={() => setType('Repay')}
         >
-          {t('changeDialog.repay')}
+          {t('changeDialog.stableRate')}
         </div>
       </div>
       {type === 'Borrow' ? (
         <div className="tabMain">
-          <div className="typeTab">
-            <div
-              className={classnames('typeTabItem', { cur: interestRateMode === 'Variable' })}
-              onClick={() => setInterestRateMode('Variable')}
-            >
-              {t('changeDialog.variableRate')}
-            </div>
-            <div
-              className={classnames('typeTabItem', { cur: interestRateMode === 'Stable' })}
-              onClick={() => setInterestRateMode('Stable')}
-            >
-              {t('changeDialog.stableRate')}
-            </div>
-          </div>
           <div className="block">
             <div className="box">
               <div className="balance">
@@ -289,18 +278,32 @@ export default forwardRef((props, ref) => {
         </div>
       ) : (
         <div className="tabMain">
-          <div className="typeTab">
-            <div
-              className={classnames('typeTabItem', { cur: collateralMode === 'Ordinary' })}
-              onClick={() => setCollateralMode('Ordinary')}
-            >
-              {t('changeDialog.normal')}
+          <div className="typeWrap">
+            <div className="input">
+              <Select
+                defaultValue={collateralMode}
+                dropdownClassName={classnames('customSelect', currentThemeName)}
+                onChange={(v) => setCollateralMode(v)}
+                bordered={false}
+                suffixIcon={<Icon name="arrow" />}
+              >
+                <Option value="Ordinary">{t('changeDialog.normal')}</Option>
+                <Option value="Collateral">{t('changeDialog.collateral')}</Option>
+              </Select>
             </div>
-            <div
-              className={classnames('typeTabItem', { cur: collateralMode === 'Collateral' })}
-              onClick={() => setCollateralMode('Collateral')}
-            >
-              {t('changeDialog.collateral')}
+            <div className="typeTab">
+              <div
+                className={classnames('typeTabItem', { cur: interestRateMode === 'Variable' })}
+                onClick={() => setInterestRateMode('Variable')}
+              >
+                {t('changeDialog.variableRate')}
+              </div>
+              <div
+                className={classnames('typeTabItem', { cur: interestRateMode === 'Stable' })}
+                onClick={() => setInterestRateMode('Stable')}
+              >
+                {t('changeDialog.stableRate')}
+              </div>
             </div>
           </div>
           <div className="block">

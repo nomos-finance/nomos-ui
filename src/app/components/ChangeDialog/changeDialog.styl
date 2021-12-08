@@ -65,26 +65,55 @@
             border-bottom-left-radius: 15px
             border-bottom-right-radius: 15px
 
-            .typeTab
+            .typeWrap
                 display: flex
-                border-radius: 20px
-                overflow: hidden
-                font-size: 16px
-                text-align: center
-                margin: 0 80px 16px
+                margin: 0 0 16px
 
-                .typeTabItem
-                    background: var(--var-dialog-bg)
-                    flex: 1
-                    height: 40px
-                    line-height: @height
+                .input
+                    placeholder(16px)
+
+                    .ant-select
+                        height: 40px
+                        height: @min-height
+                        background: var(--var-block-bg)
+                        border-radius: 20px
+
+                        .ant-select-selector
+                            height: 40px
+                            line-height: @height
+                            padding: 0 15px 0 20px
+
+                        .ant-select-selection-item
+                            color: var(--var-text-color)
+                            font-size: 16px
+                            height: 40px
+                            line-height: @height
+
+                        .ant-select-arrow
+                            .icon
+                                size: 12px
+
+                .typeTab
+                    display: flex
+                    border-radius: 20px
+                    overflow: hidden
+                    font-size: 16px
                     text-align: center
-                    color: var(--var-tab-button-color)
-                    cursor: pointer
+                    margin: 0 0 0 10px
 
-                    &.cur
-                        background: #FFD84E
-                        color: #333
+                    .typeTabItem
+                        background: var(--var-dialog-bg)
+                        flex: 1
+                        height: 40px
+                        line-height: @height
+                        text-align: center
+                        color: var(--var-tab-button-color)
+                        cursor: pointer
+                        padding: 0 10px
+
+                        &.cur
+                            background: #FFD84E
+                            color: #333
 
             .blockTitle
                 margin: 0 0 8px
@@ -146,7 +175,7 @@
                 .collateral
                     justifyContentSpaceBetween()
                     border-bottom: 1px solid var(--var-border)
-                    padding: 0 40px  17px
+                    padding: 0 40px 17px
                     margin: 0 0 6px
 
                     .value
@@ -206,9 +235,9 @@
                 border: 0 none
 
                 &[disabled]
-                    background: rgba(#FFD84E, .5)
-                    cursor not-allowed
-                    color: rgba(#0C0E11, .5)
+                    background: rgba(#FFD84E, 0.5)
+                    cursor: not-allowed
+                    color: rgba(#0C0E11, 0.5)
 
         .swapHeader
             text-align: center

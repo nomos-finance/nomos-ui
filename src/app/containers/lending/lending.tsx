@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import Icon from '../../../assets/icons';
 import Layout from '../../components/Layout';
-import { Swap, ISwapDialog } from '../../components/ChangeDialog';
+import { Swap, ISwapDialog, Claim, IClaimDialog } from 'app/components/ChangeDialog/';
 import useProtocolDataWithRpc from '../../hooks/usePoolData';
 import useNetworkInfo from '../../hooks/useNetworkInfo';
 import useWalletBalance from '../../hooks/useWalletBalance';
@@ -30,6 +30,7 @@ export default function Markets() {
   const [totalDeposit, setTotalDeposit] = useState('');
   const [totalBorrow, setTotalBorrow] = useState('');
   const SwapDialogRef = useRef<ISwapDialog>();
+  const ClaimDialogRef = useRef<IClaimDialog>();
   const [networkInfo] = useNetworkInfo();
   const { currentThemeName } = useThemeContext();
   const { data, refresh } = useProtocolDataWithRpc();
@@ -127,7 +128,9 @@ export default function Markets() {
           <div className="block userInfo">
             <div className="title">
               <span>{t('lending.myAddress')}</span>
-              <span className="btn">{t('lending.claim')}</span>
+              <span className="btn" onClick={() => ClaimDialogRef.current?.show({ claim: 10000 })}>
+                {t('lending.claim')}
+              </span>
             </div>
             <div className="main">
               <div className="item">
@@ -217,6 +220,7 @@ export default function Markets() {
         />
       )}
       <Swap ref={SwapDialogRef} />
+      <Claim ref={ClaimDialogRef} />
     </Layout>
   );
 }

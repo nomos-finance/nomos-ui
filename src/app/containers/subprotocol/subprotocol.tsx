@@ -17,10 +17,10 @@ export default function Markets() {
   const { currentThemeName } = useThemeContext();
   const { account } = useSelector((store: IRootState) => store.base);
   const [t] = useTranslation();
-  const number = '15%';
 
   return (
     <Layout className="page-protocol">
+      <div>我的子协议 收益 链接钱包 创建子协议 领取</div>
       <div className="block ruleBlock">
         <div className="blockTitle">{t('subprotocol.rules')}</div>
         <div className="main">

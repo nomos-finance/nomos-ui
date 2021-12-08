@@ -140,6 +140,8 @@ export default function MarketTable(props: IProps) {
               <th>{t('lending.depositAsset')}</th>
               <th>{t('lending.depositAPY')}</th>
               <th>{t('lending.rewardAPR')}</th>
+              <th>抵押品上限</th>
+              <th>抵押品剩余额度</th>
               <th>{t('lending.walletBalance')}</th>
             </tr>
           </thead>
@@ -164,6 +166,8 @@ export default function MarketTable(props: IProps) {
                   </div>
                 </td>
                 <td>{formatDecimal(item.depositAPY * 100)}%</td>
+                <td>xxx</td>
+                <td>xxx</td>
                 <td>xxx</td>
                 <td>
                   <div className="money">
