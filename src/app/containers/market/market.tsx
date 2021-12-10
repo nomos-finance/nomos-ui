@@ -36,6 +36,10 @@ export default function Markets() {
   const [totalBorrow, setTotalBorrow] = useState<number>(0);
   const [totalBorrowUSD, setTotalBorrowUSD] = useState<number>(0);
 
+  const [depositTopData, setDepositTopData] = useState<any[]>([]);
+  const [totalDeposit, setTotalDeposit] = useState<number>(0);
+  const [totalDepositUSD, setTotalDepositUSD] = useState<number>(0);
+
   const columns: Array<ColumnProps<any>> = [
     {
       title: 'Market',
@@ -128,6 +132,8 @@ export default function Markets() {
           setTotalBorrow((i) => totalBorrows + i);
           setTotalBorrowUSD((i) => valueToBigNumber(totalBorrowsInUSD).plus(i).toNumber());
 
+          setTotalDeposit((i) => +valueToBigNumber(reserve.availableLiquidity).plus(i));
+
           return {
             reserve,
             totalLiquidity,
@@ -156,10 +162,15 @@ export default function Markets() {
 
       setSortedData(sortedData);
 
-      const tmpData = sortedData.concat([]);
-      tmpData.sort((a, b) => b.totalBorrows - a.totalBorrows);
+      const borrowTmpData = sortedData.concat([]);
+      borrowTmpData.sort((a, b) => b.totalBorrows - a.totalBorrows);
+      setBorrowTopData(borrowTmpData);
 
-      setBorrowTopData(tmpData);
+      const depositTmpData = sortedData.concat([]);
+      depositTmpData.sort(
+        (a, b) => Number(b.reserve.availableLiquidity) - Number(a.reserve.availableLiquidity)
+      );
+      setDepositTopData(depositTmpData);
     }
 
     return () => {
@@ -178,9 +189,17 @@ export default function Markets() {
             </div>
             <div className="main">
               <div className="title">Top 3 markets</div>
-              <div className="item">{progress('BTC', 20)}</div>
-              <div className="item">{progress('BTC', 30)}</div>
-              <div className="item">{progress('BTC', 40)}</div>
+              {depositTopData.map((item, index) => {
+                if (index > 2) return null;
+                return (
+                  <div className="item" key={item.id}>
+                    {progress(
+                      item.currencySymbol,
+                      (item.reserve.availableLiquidity / totalDeposit) * 100
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="proportionItem">

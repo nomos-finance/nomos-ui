@@ -20,7 +20,21 @@ export default function Markets() {
 
   return (
     <Layout className="page-protocol">
-      <div>我的子协议 收益 链接钱包 创建子协议 领取</div>
+      <div className="block myBlock">
+        <div className="info">
+          <div className="mySubProtocol">
+            <div className="title">我的子协议</div>
+            <div className="txt">Nomos1348972831</div>
+          </div>
+          <div className="earnings">
+            <div className="title">收益</div>
+            <div className="txt">$34,163.00</div>
+            <div className="num">（≈100.00 NOMO）</div>
+          </div>
+        </div>
+        <div className="btn">链接钱包</div>
+        {/* 创建子协议 领取 */}
+      </div>
       <div className="block ruleBlock">
         <div className="blockTitle">{t('subprotocol.rules')}</div>
         <div className="main">

@@ -58,6 +58,7 @@ export default function MySavingLoad(props: IProps) {
     let depositArr: ComputedUserReserve[] = [];
     let borrowArr: ComputedUserReserve[] = [];
     props.user.reservesData.forEach((item) => {
+      console.log(item);
       if (Number(item?.underlyingBalance)) {
         depositArr.push(item);
       }

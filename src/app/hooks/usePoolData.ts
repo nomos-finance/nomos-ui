@@ -163,6 +163,7 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
     try {
       setLoading(true);
       const Contracts = IUiPoolDataProviderFactory(poolDataProvider, network);
+      console.log(poolAddress, userAddress);
       const result = await Contracts.getReservesData(poolAddress, userAddress);
 
       console.log(result);
@@ -182,6 +183,8 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
         usdPriceEth,
       });
 
+      // console.log(userReserves);
+
       const rawReserves = formatData.formattedReservesData;
       const rawUserReserves = formatData.formattedUserReserves;
       const rewardsEmissionEndTimestamp = rewardsData.emissionEndTimestamp;
@@ -189,8 +192,6 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
       // const userId = userAddress !== ethers.constants.AddressZero ? userAddress : undefined;
       const formattedUsdPriceEth = normalize(normalize(formatData.formattedUsdPriceEth, 18), -18);
       const currentTimestamp = dayjs().unix();
-
-      console.log(formatData.formattedUsdPriceEth, usdPriceEth);
 
       const rewardReserve = rawReserves.find(
         (reserve: any) =>

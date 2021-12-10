@@ -22,6 +22,10 @@ export interface INetworkData {
     REPAY_WITH_COLLATERAL_ADAPTER?: string;
     FAUCET?: string;
     PERMISSION_MANAGER?: string;
+    Nomos?: string;
+    veNomos?: string;
+    VotingEscrowReward?: string;
+    LendingDAO?: string;
   };
   incentives?: {
     INCENTIVES_CONTROLLER: string;
@@ -144,23 +148,27 @@ export const NETWORK: INetwork = {
     publicJsonRPCUrl: 'https://rinkeby.arbitrum.io/rpc',
     chainKey: 'arbitrum_rinkeby',
     chainName: 'Arbitrum Rinkeby',
-    walletBalanceProvider: '0x642038fA1B55EA72Fc57b5F6CA4df90c4Da65Ea2',
-    uiPoolDataProvider: '0x714d6FF01740e7e6a380693DE54e0f2546C44771',
+    walletBalanceProvider: '0x35196997299F6B5EAa621C38c60c9728DcA968A8',
+    uiPoolDataProvider: '0x1BEeb7d42bbE40157e5B9Bf79e746b490CB2F9E3',
     baseUniswapAdapter: '',
     rewardTokenSymbol: 'stkAAVE',
     rewardTokenAddress: '0xb597cd8d3217ea6477232f9217fa70837ff667af',
     rewardTokenDecimals: 18,
     incentivePrecision: 18,
     addresses: {
-      LENDING_POOL_ADDRESS_PROVIDER: '0x6C862e4eC71Bb46e42762236165B2484A29B56DF',
-      LENDING_POOL: '0x64c84Fa0413831190CB083f6948915be3443a7FA',
-      WETH_GATEWAY: '0x92D39dB316a05536F48ca9E11B3Cf46Ef53818F8',
+      LENDING_POOL_ADDRESS_PROVIDER: '0xd09E6705210924dd5465af93Ce34580D6e0672A3',
+      LENDING_POOL: '0xd1810e4bE9bf1dA552c6167514622d41d168b266',
+      WETH_GATEWAY: '0xfB3B2E4Be1c2d40Ad83eb588A27fD4CAD57e489c',
       FAUCET: '0x600103d518cC5E8f3319D532eB4e5C268D32e604', //
+      Nomos: '0xE2892084f7bbBB485F869930D10f52c19fD450Fb',
+      veNomos: '0xe4303e401dcf9257FB477621b7dB96189516dFd0',
+      VotingEscrowReward: '0xcfc0E1167BA7e462b6063F68FcB04cfcFB3F24cf',
+      LendingDAO: '0x77C136034d5B3D5E3556B13fc73B6F86f88D4F3D',
     },
     incentives: {
       //
-      INCENTIVES_CONTROLLER: '0x01d83fe6a10d2f2b7af17034343746188272cac9',
-      INCENTIVES_CONTROLLER_REWARD_TOKEN: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
+      INCENTIVES_CONTROLLER: '0x77C136034d5B3D5E3556B13fc73B6F86f88D4F3D',
+      INCENTIVES_CONTROLLER_REWARD_TOKEN: '0xe4303e401dcf9257FB477621b7dB96189516dFd0',
     },
   },
 };
