@@ -1,7 +1,9 @@
 import './dao.stylus';
+import { Contract } from 'ethers';
 import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import { valueToBigNumber, normalize, BigNumber } from '@aave/protocol-js';
+import { valueToBigNumber, normalize } from '@aave/protocol-js';
+import BigNumber from 'bignumber.js';
 import { useThemeContext } from '../../theme';
 import { Input, Button } from 'antd';
 import { Trans, useTranslation } from 'react-i18next';
@@ -11,31 +13,34 @@ import Layout from '../../components/Layout';
 
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../reducers/RootState';
-import { formatMoney } from 'app/utils/tool';
+import { formatMoney, pow10 } from 'app/utils/tool';
 import useVotingEscrowRewardContract from 'app/hooks/useVotingEscrowRewardContract';
 import useVeNomos from 'app/hooks/useVeNomos';
-
-interface IData {
-  supply: number;
-  totalSupply: number;
-  maxTime: number;
-  veNomoBalanceOf?: number;
-}
+import useNetworkInfo from 'app/hooks/useNetworkInfo';
+import useErc20Contract from 'app/hooks/useErc20Contract';
 
 export default function Markets() {
-  const { currentThemeName } = useThemeContext();
-  const { account } = useSelector((store: IRootState) => store.base);
   const [t] = useTranslation();
+  const { currentThemeName } = useThemeContext();
+  const [networkInfo] = useNetworkInfo();
+  const { account } = useSelector((store: IRootState) => store.base);
   const [votingEscrowRewardContrac, freshVotingEscrowRewardContrac] =
     useVotingEscrowRewardContract();
   const [veNomosContract, freshVeNomosContract] = useVeNomos();
+  const [, getErc20Contract] = useErc20Contract();
+  const [nomoErc20Contract, setNomoErc20Contract] = useState<Contract>();
   const [veNomosBalanceOf, setVeNomosBalanceOf] = useState<number>();
-  const [data, setData] = useState<IData>();
+  const [rewardRate, setRewardRate] = useState<BigNumber>();
+  const [nomoBalance, setNomoBalance] = useState('0');
+  const [lockNum, setLockNum] = useState<string>();
+  const [supply, setSupply] = useState<BigNumber>();
+  const [totalSupply, setTotalSupply] = useState<BigNumber>();
+  const [maxTime, setMaxTime] = useState<BigNumber>();
 
   const fetchData = async () => {
     if (!votingEscrowRewardContrac) return;
     const rewardRate = await votingEscrowRewardContrac.rewardRate();
-    console.log(rewardRate);
+    setRewardRate(new BigNumber(rewardRate.toString()));
   };
 
   useEffect(() => {
@@ -47,17 +52,49 @@ export default function Markets() {
     const supply = await veNomosContract.supply();
     const totalSupply = await veNomosContract.totalSupply();
     const MAXTIME = await veNomosContract.MAXTIME();
+    setSupply(new BigNumber(supply.toString()));
+    setTotalSupply(new BigNumber(totalSupply.toString()));
+    setMaxTime(new BigNumber(MAXTIME.toString()));
     if (account) {
       const balanceOf = await veNomosContract.balanceOf(account);
       setVeNomosBalanceOf(+balanceOf);
     }
-
-    console.log(MAXTIME.toString());
   };
 
   useEffect(() => {
     fetchVeNomosData();
   }, [veNomosContract, account]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (networkInfo?.addresses.veNomos && account) {
+        const c = await getErc20Contract(networkInfo.addresses.Nomos);
+        if (c) {
+          const balance = await c.balanceOf(account);
+          const decimals = await c.decimals();
+          setNomoBalance(pow10(+balance, decimals));
+          setNomoErc20Contract(c);
+        }
+      }
+    };
+    fetch();
+  }, [networkInfo, account]);
+
+  const lock = async (): Promise<void> => {
+    if (nomoErc20Contract && account && networkInfo) {
+      try {
+        const res = await nomoErc20Contract.allowance(account, networkInfo.addresses.veNomos);
+        if (+res < +Number(lockNum)) {
+          const max = new BigNumber(0xffffffffffffffffffffffffffffffff).toFixed();
+          console.log(nomoErc20Contract);
+          nomoErc20Contract.approve(networkInfo.addresses.veNomos, max);
+        }
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <Layout className="page-dao">
@@ -70,25 +107,37 @@ export default function Markets() {
           <div className="left">
             <div className="item">
               <div className="text">{t('dao.NOMOLockeds')}</div>
-              <div className="number">{formatMoney(11111)}</div>
+              <div className="number">{supply?.toFixed(2)}</div>
             </div>
             <div className="item">
               <div className="text">{t('dao.totalVeNOMO')}</div>
-              <div className="number">1212</div>
+              <div className="number">{totalSupply?.toFixed(2)}</div>
             </div>
             <div className="item">
               <div className="text">{t('dao.lock-upTerm')}</div>
-              <div className="number">totalSupply / supply * maxtime</div>
+              <div className="number">
+                $
+                {totalSupply && supply && maxTime && +totalSupply && +supply && +maxTime
+                  ? totalSupply.dividedBy(supply.multipliedBy(maxTime)).toFixed(2)
+                  : '0.00'}
+              </div>
             </div>
           </div>
           <div className="right">
             <div className="item">
               <div className="text">{t('dao.NOMOPayouts')}</div>
-              <div className="number">rewardRate * 60 * 60 * 24</div>
+              <div className="number">{rewardRate?.multipliedBy(60 * 60 * 24).toFixed(2)}</div>
             </div>
             <div className="item">
               <div className="text">{t('dao.apy')}</div>
-              <div className="number">rewardRate() * 365 *24 * 60 * 60</div>
+              <div className="number">
+                {supply && rewardRate && +supply && +rewardRate
+                  ? `${rewardRate
+                      .dividedBy(supply.multipliedBy(365 * 24 * 60 * 60))
+                      .multipliedBy(100)
+                      .toFixed(2)}%`
+                  : '0.00%'}
+              </div>
             </div>
           </div>
         </div>
@@ -134,19 +183,19 @@ export default function Markets() {
           <div className="box">
             <div className="wrap">
               <div className="balance">
-                <span className="balanceLabel">{t('dao.myVeNOMO')}</span>
-                <i className="balanceNumber">0</i>
+                <span className="balanceLabel">{t('dao.walletBalance')}</span>
+                <i className="balanceNumber">{nomoBalance} NOMO</i>
               </div>
-              <div className={classnames('input', { error: !!`depositValidationMessage` })}>
-                <div className="max" onClick={() => `setDepositAmount(veNomosBalanceOf)`}>
+              <div className={classnames('input', { error: !!lockNum })}>
+                <div className="max" onClick={() => setLockNum(nomoBalance)}>
                   MAX
                 </div>
                 <Input
                   bordered={false}
                   placeholder="请输入金额"
-                  // value={depositAmount}
+                  value={lockNum}
                   onChange={(event) => {
-                    //   handleDepositAmountChange(event.target.value);
+                    setLockNum(event.target.value);
                   }}
                 />
               </div>
@@ -155,13 +204,15 @@ export default function Markets() {
           <div className="footer">
             <div className="text">
               <div>
-                {t('dao.estimatedVeNOMO')}：<strong>121212</strong>
+                {t('dao.estimatedVeNOMO')}: <strong>121212</strong>
               </div>
               <div>
-                {t('dao.estimatedBoost')}：<strong>1212%</strong>
+                {t('dao.estimatedBoost')}: <strong>1212%</strong>
               </div>
             </div>
-            <Button className="btn">{t('dao.submit')}</Button>
+            <Button className="btn" onClick={() => lock()}>
+              {t('dao.submit')}
+            </Button>
           </div>
         </div>
       </div>

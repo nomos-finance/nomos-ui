@@ -90,6 +90,7 @@
   "dao.chooseLock-upTermItem1": "Same lock-up term for all orders: {{number}} year(s)",
   "dao.chooseLock-upTermItem2": "New extended lock-up term for ALL ORDERS: {{number}} year(s)",
   "dao.submit": "Submit",
+  "dao.walletBalance":"Balance",
   "staking.stakingText":"Stake LP tokens to earn NOMO. Redemption is available after 14 days. Rewards can be claimed instantly.",
   "staking.claim": "Claim",
   "staking.totalValueStaked": "Total Value Staked",

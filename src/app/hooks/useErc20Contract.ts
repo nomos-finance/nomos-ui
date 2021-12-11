@@ -2,23 +2,28 @@ import { useEffect, useState } from 'react';
 import Erc20Contract from '../contracts/Erc20Contract';
 import useNetworkInfo from './useNetworkInfo';
 import { Contract } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
+import { useSelector } from 'react-redux';
+import { IRootState } from 'app/reducers/RootState';
 
-const useLendingPoolContract = (): [Contract | undefined] => {
+const useErc20Contract = (
+  address?: string
+): [Contract | undefined, (address?: string) => Promise<Contract | undefined>] => {
   const [networkInfo] = useNetworkInfo();
   const [contract, setContract] = useState<Contract>();
-  const { account } = useWeb3React();
+  const { account } = useSelector((store: IRootState) => store.base);
 
-  const fetchData = async () => {
-    if (!networkInfo?.addresses || !account) return;
-    setContract(Erc20Contract(account, networkInfo?.chainKey));
+  const fetchData = async (address?: string) => {
+    if (!networkInfo || !address || !account) return;
+    const res = Erc20Contract(address, networkInfo?.chainKey, account);
+    setContract(res);
+    return res;
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(address);
   }, [networkInfo, account]);
 
-  return [contract];
+  return [contract, fetchData];
 };
 
-export default useLendingPoolContract;
+export default useErc20Contract;

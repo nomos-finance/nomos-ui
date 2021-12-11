@@ -94,18 +94,22 @@ export default function MySavingLoad(props: IProps) {
     <div className="block assetBlock">
       <div className="header">
         <div className="tab">
-          <div
-            className={classnames('tabItem', { cur: tab === 'deposit' })}
-            onClick={() => setTab('deposit')}
-          >
-            {t('lending.myDeposits')}
-          </div>
-          <div
-            className={classnames('tabItem', { cur: tab === 'borrow' })}
-            onClick={() => setTab('borrow')}
-          >
-            {t('lending.myLoans')}
-          </div>
+          {depositDataTmp?.length ? (
+            <div
+              className={classnames('tabItem', { cur: tab === 'deposit' })}
+              onClick={() => setTab('deposit')}
+            >
+              {t('lending.myDeposits')}
+            </div>
+          ) : null}
+          {borrowDataTmp?.length ? (
+            <div
+              className={classnames('tabItem', { cur: tab === 'borrow' })}
+              onClick={() => setTab('borrow')}
+            >
+              {t('lending.myLoans')}
+            </div>
+          ) : null}
         </div>
         <div className="more" onClick={() => SwapDialogRef.current?.show()}>
           {t('lending.one-click')} &gt;
