@@ -17,8 +17,10 @@ import { useWeb3React } from '@web3-react/core';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../reducers/RootState';
 
-import IUiPoolDataProviderFactory from '../contracts/IPoolDataProviderContract';
 import useNetworkInfo from '../hooks/useNetworkInfo';
+
+import abi from 'abi/UiPoolDataProvider.json';
+import { contract as appContract, Contract } from 'app/contracts/contract';
 
 function formatObjectWithBNFields(obj: object): any {
   return Object.keys(obj).reduce((acc, key) => {
@@ -156,13 +158,13 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
   const [networkInfo] = useNetworkInfo();
   const { account } = useSelector((store: IRootState) => store.base);
 
-  const fetchData = async (poolAddress: string, network: string, poolDataProvider: string) => {
+  const fetchData = async (poolAddress: string, poolDataProvider: string) => {
     if (!networkInfo) return;
     const userAddress = account || ethers.constants.AddressZero;
 
     try {
       setLoading(true);
-      const Contracts = IUiPoolDataProviderFactory(poolDataProvider, network);
+      const Contracts = await appContract(abi, poolDataProvider, account);
       console.log(poolAddress, userAddress);
       const result = await Contracts.getReservesData(poolAddress, userAddress);
 
@@ -245,16 +247,11 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
   useEffect(() => {
     if (!networkInfo) return;
 
-    fetchData(
-      networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-      networkInfo.chainKey,
-      networkInfo.uiPoolDataProvider
-    );
+    fetchData(networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER, networkInfo.uiPoolDataProvider);
     const intervalID = setInterval(
       () =>
         fetchData(
           networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-          networkInfo.chainKey,
           networkInfo.uiPoolDataProvider
         ),
       30 * 1000
@@ -272,7 +269,6 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
       if (!networkInfo) return;
       fetchData(
         networkInfo.addresses.LENDING_POOL_ADDRESS_PROVIDER,
-        networkInfo.chainKey,
         networkInfo.uiPoolDataProvider
       );
     },

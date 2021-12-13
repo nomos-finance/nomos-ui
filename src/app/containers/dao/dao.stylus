@@ -43,6 +43,11 @@
             cursor: pointer
             border: 0 none
 
+            &[disabled]
+                background: rgba(#FFD84E, 0.5)
+                cursor: not-allowed
+                color: rgba(#0C0E11, 0.5)
+
     .infoBlock
         .main
             display: flex
@@ -100,12 +105,11 @@
             border-radius: 8px
 
             .wrap
-                width: 400px
+                width: 500px
                 margin: 0 auto
                 justifyContentSpaceBetween()
 
                 .balance
-                    width: 150px
                     padding: 0 10px 0 0
 
                     .balanceLabel

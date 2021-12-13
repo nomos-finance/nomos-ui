@@ -39,7 +39,6 @@ export default function Markets() {
   const [balance, fetchBalance] = useWalletBalance(
     networkInfo?.walletBalanceProvider,
     account,
-    networkInfo?.chainKey,
     networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
   );
 

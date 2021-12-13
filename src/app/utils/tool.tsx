@@ -5,9 +5,9 @@ export function pow10(num: number | string | undefined, decimals = 18): string {
   return new BigNumber(num).dividedBy(new BigNumber(10).pow(decimals)).toFixed();
 }
 
-export function original(num: number | string | undefined, decimals = 18): string {
-  if (!num) return '0';
-  return new BigNumber(num).multipliedBy(new BigNumber(10).pow(decimals)).toFixed();
+export function original(num: number | string | undefined, decimals = 18): BigNumber {
+  if (!num) return new BigNumber('0');
+  return new BigNumber(num).multipliedBy(new BigNumber(10).pow(decimals));
 }
 
 export const formatDecimal = (number: number | string | undefined, decimal: number = 2): string => {

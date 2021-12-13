@@ -1,5 +1,5 @@
 import { LendingPoolInterfaceV2, TxBuilderV2 } from '@aave/protocol-js';
-import { getProvider } from '../contracts/provider';
+import { getProvider } from '../contracts/contract';
 
 import { useEffect, useState } from 'react';
 import useNetworkInfo from './useNetworkInfo';
@@ -19,15 +19,11 @@ const useLendingPoolContract = (): [LendingPoolInterfaceV2 | undefined] => {
 
   const fetchData = async () => {
     if (networkInfo) {
-      const txBuilder = new TxBuilderV2(
-        networkInfo.chainKey as any,
-        getProvider(networkInfo.chainKey),
-        undefined,
-        {
-          lendingPool: lendingPoolConfig,
-          incentives,
-        }
-      );
+      const provider = await getProvider();
+      const txBuilder = new TxBuilderV2(networkInfo.chainKey as any, provider, undefined, {
+        lendingPool: lendingPoolConfig,
+        incentives,
+      });
 
       const lendingPool = txBuilder.getLendingPool(`proto_${networkInfo.chainKey}`);
 

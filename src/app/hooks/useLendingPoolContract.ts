@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import LendingPoolProviderContract from '../contracts/LendingPoolProviderContract';
 import useNetworkInfo from './useNetworkInfo';
-import { Contract } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
+import abi from 'abi/LendingPool.json';
+import { contract as appContract, Contract } from 'app/contracts/contract';
 
 const useLendingPoolContract = (): [Contract | undefined] => {
   const [networkInfo] = useNetworkInfo();
@@ -11,13 +11,8 @@ const useLendingPoolContract = (): [Contract | undefined] => {
 
   const fetchData = async () => {
     if (!networkInfo?.addresses) return;
-    setContract(
-      LendingPoolProviderContract(
-        networkInfo?.addresses.LENDING_POOL,
-        networkInfo?.chainKey,
-        account
-      )
-    );
+    const res = await appContract(abi, networkInfo.addresses.LENDING_POOL, account);
+    setContract(res);
   };
 
   useEffect(() => {

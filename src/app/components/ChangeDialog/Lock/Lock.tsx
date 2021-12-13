@@ -1,4 +1,4 @@
-import './Claim.styl';
+import './Lock.styl';
 /*eslint-disable import/no-anonymous-default-export */
 
 import classnames from 'classnames';
@@ -7,15 +7,13 @@ import { Modal, Input, Button } from 'antd';
 import { useThemeContext } from '../../../theme';
 import { useTranslation } from 'react-i18next';
 import { useWeb3React } from '@web3-react/core';
-import SymbolIcon from '../../SymbolIcon';
 
-import { formatMoney } from 'app/utils/tool';
-import useVotingEscrowRewardContract from 'app/hooks/useVotingEscrowRewardContract';
-
-import Logo from './img/logo.png';
+import useVeNomos from 'app/hooks/useVeNomos';
 
 interface IProps {
-  claim: number;
+  lock: number;
+  maxTime: number;
+  end: string;
 }
 
 export interface IDialog {
@@ -30,9 +28,9 @@ export default forwardRef((props, ref) => {
   const [params, setParams] = useState<IProps>();
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [increaseTime, setIncreaseTime] = useState(false);
 
-  const [votingEscrowRewardContract, freshVotingEscrowRewardContract] =
-    useVotingEscrowRewardContract();
+  const [veNomosContract, freshVeNomosContract] = useVeNomos();
 
   const hide = () => {
     setShow(false);
@@ -49,12 +47,14 @@ export default forwardRef((props, ref) => {
   }));
 
   const handleSubmit = async () => {
-    if (account && params && votingEscrowRewardContract) {
+    if (account && params && veNomosContract) {
       try {
         setLoading(true);
-        const lastEpoch = await votingEscrowRewardContract.lastEpoch();
-        const res = await votingEscrowRewardContract.claimReward(lastEpoch.toString());
-        console.log(res);
+        if (increaseTime) {
+          const res = await veNomosContract.increase_unlock_time(params.maxTime);
+          await res.wait();
+        }
+        const res = await veNomosContract.increase_amount(params.lock);
         await res.wait();
         hide();
       } catch (error) {
@@ -74,18 +74,25 @@ export default forwardRef((props, ref) => {
       destroyOnClose={true}
       closable={false}
     >
-      <div className="symbol">
-        <SymbolIcon src={Logo} size={96} />
-        <div className="text">NOMO</div>
+      <div className="lock">
+        <div className="title">请选择锁仓时间</div>
+        <div className="select">
+          <div
+            className={classnames('item', { cur: !increaseTime })}
+            onClick={() => setIncreaseTime(false)}
+          >
+            本次锁仓后，不延长锁仓时间，即整体解锁时间为{params?.end}年
+          </div>
+          <div
+            className={classnames('item', { cur: increaseTime })}
+            onClick={() => setIncreaseTime(true)}
+          >
+            本次锁仓后，整体锁仓时间为5年
+          </div>
+        </div>
       </div>
-      <div className="claim">可领取: {formatMoney(params ? params.claim : 0)} NOMO</div>
       <div className="dialogFooter">
-        <Button
-          disabled={!(params ? params.claim : 0)}
-          loading={loading}
-          className="submit"
-          onClick={() => handleSubmit()}
-        >
+        <Button loading={loading} className="submit" onClick={() => handleSubmit()}>
           {t('changeDialog.submit')}
         </Button>
       </div>

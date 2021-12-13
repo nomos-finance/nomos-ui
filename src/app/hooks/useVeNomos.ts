@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react';
-import BigNumber from 'bignumber.js';
-import VeNomos from '../contracts/VeNomos';
-import { ethers } from 'ethers';
 import useNetworkInfo from './useNetworkInfo';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../reducers/RootState';
+import abi from 'abi/veNomos.json';
+import { contract as appContract, Contract } from 'app/contracts/contract';
 
-const useVeNomos = (): [any | undefined, () => void] => {
-  const [contract, setContract] = useState<any>();
+const useVeNomos = (): [Contract | undefined, () => void] => {
+  const [contract, setContract] = useState<Contract>();
   const [networkInfo] = useNetworkInfo();
   const { account } = useSelector((store: IRootState) => store.base);
 
   const fetchData = async () => {
-    if (!networkInfo?.addresses.veNomos) return;
+    if (!networkInfo?.addresses.veNomos || !account) return;
 
     try {
-      const res: any = await VeNomos(networkInfo.addresses.veNomos, networkInfo.chainKey);
+      const res = await appContract(abi, networkInfo.addresses.veNomos, account);
       setContract(res);
       return res;
     } catch (error) {
