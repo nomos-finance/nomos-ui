@@ -51,7 +51,7 @@ export default forwardRef((props, ref) => {
       try {
         setLoading(true);
         if (increaseTime) {
-          const res = await veNomosContract.increase_unlock_time(params.maxTime);
+          const res = await veNomosContract.increase_unlock_time(1);
           await res.wait();
         }
         const res = await veNomosContract.increase_amount(params.lock);

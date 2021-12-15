@@ -15,6 +15,7 @@ import MarketTable from './marketTable';
 import MySavingLoad from './mySavingLoad';
 import Chart from '../../components/Chart';
 import { CompactNumber } from '../../components/CompactNumber';
+import Lock from './lock';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { IRootState } from 'app/reducers/RootState';
@@ -122,82 +123,66 @@ export default function Markets() {
         </div>
       </div>
 
-      {account && (data?.user?.totalLiquidityUSD || data?.user?.totalBorrowsUSD) ? (
-        <div className="userBlock">
-          <div className="block userInfo">
-            <div className="title">
-              <span>{t('lending.myAddress')}</span>
-              <span className="btn" onClick={() => ClaimDialogRef.current?.show({ claim: 10000 })}>
-                {t('lending.claim')}
-              </span>
-            </div>
-            <div className="main">
-              <div className="item">
-                <Icon name="deposit" />
-                <div className="text">{t('lending.myDeposits')}</div>
-                <div className="number">${formatMoney(data?.user?.totalLiquidityUSD)}</div>
-              </div>
-              <div className="item">
-                <Icon name="loan" />
-                <div className="text">{t('lending.myLoans')}</div>
-                <div className="number">${formatMoney(data?.user?.totalBorrowsUSD)}</div>
-              </div>
-              <div className="item">
-                <Icon name="rate" />
-                <div className="text">{t('lending.totalAPR')}</div>
-                <div className="number">--</div>
-              </div>
-              <div className="item">
-                <Icon name="reward" />
-                <div className="text">{t('lending.claimable')}</div>
-                <div className="number">${formatMoney(data?.user?.totalRewardsUSD)}</div>
-              </div>
-            </div>
+      <div className="userBlock">
+        <div className="block userInfo">
+          <div className="title">
+            <span>{t('lending.myAddress')}</span>
+            <span className="btn" onClick={() => ClaimDialogRef.current?.show({ claim: 10000 })}>
+              {t('lending.claim')}
+            </span>
           </div>
-          <div className="block charts">
-            <div className="title">
-              <span>{t('lending.healthFactor')}</span>
+          <div className="main">
+            <div className="item">
+              <Icon name="deposit" />
+              <div className="text">{t('lending.myDeposits')}</div>
+              <div className="number">
+                {account && data?.user ? `$${formatMoney(data.user.totalLiquidityUSD)}` : '$0.00'}
+              </div>
             </div>
-            <div className="main">
-              <Chart
-                percentage={60}
-                text={`${t('lending.maxBorrowLimit')}<br />$${
-                  data && data.user
-                    ? formatMoney(
-                        new BigNumber(data.user.availableBorrowsETH)
-                          .multipliedBy(data.usdPriceEth)
-                          .toString()
-                      )
-                    : 0
-                }`}
-              />
+            <div className="item">
+              <Icon name="loan" />
+              <div className="text">{t('lending.myLoans')}</div>
+              <div className="number">
+                {account && data?.user ? `$${formatMoney(data.user.totalBorrowsUSD)}` : '$0.00'}
+              </div>
+            </div>
+            <div className="item">
+              <Icon name="rate" />
+              <div className="text">{t('lending.totalAPR')}</div>
+              <div className="number">--</div>
+            </div>
+            <div className="item">
+              <Icon name="reward" />
+              <div className="text">{t('lending.claimable')}</div>
+              <div className="number">
+                {account && data?.user ? `$${formatMoney(data.user.totalRewardsUSD)}` : '$0.00'}
+              </div>
             </div>
           </div>
         </div>
-      ) : null}
-
-      <div className="block voteBlock">
-        <div className="header">
-          <div className="text">
-            <span>{t('lending.nomoLock-up')}</span>
-            <i>{t('lending.getBonusRewards')}</i>
+        <div className="block charts">
+          <div className="title">
+            <span>{t('lending.healthFactor')}</span>
           </div>
-          <div className="more">{t('lending.details')} &gt;</div>
-        </div>
-        <div className="main">
-          <div className="item">
-            <span>{t('lending.nomoLocked')}</span>
-            <i>10,000.00</i>
-          </div>
-          <div className="item">
-            <span>{t('lending.myBoost')}</span>
-            <i>1.5x</i>
-          </div>
-          <div className="btn" onClick={() => history.push('/dao')}>
-            {t('lending.DAO&Safety')}
+          <div className="main">
+            <Chart
+              percentage={account && data && data.user ? data.user.healthFactor : 0}
+              account={account}
+              text={`${t('lending.maxBorrowLimit')}<br />$${
+                data && data.user
+                  ? formatMoney(
+                      new BigNumber(data.user.availableBorrowsETH)
+                        .multipliedBy(data.usdPriceEth)
+                        .toString()
+                    )
+                  : 0
+              }`}
+            />
           </div>
         </div>
       </div>
+
+      <Lock />
 
       {data?.user &&
       balance &&

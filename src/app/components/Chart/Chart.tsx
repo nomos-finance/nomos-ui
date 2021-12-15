@@ -9,6 +9,7 @@ import { useThemeContext } from '../../theme';
 interface IChart {
   percentage: number | string;
   text?: string;
+  account?: string;
 }
 export default (props: IChart): React.ReactElement => {
   const { currentThemeName } = useThemeContext();
@@ -94,19 +95,30 @@ export default (props: IChart): React.ReactElement => {
               y: 0,
               x2: 0,
               y2: 1,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: '#FFDD34', // 0% 处的颜色
-                },
-                {
-                  offset: 1,
-                  color: '#FBA807', // 100% 处的颜色
-                },
-              ],
+              colorStops: props.account
+                ? [
+                    {
+                      offset: 0,
+                      color: '#FFDD34', // 0% 处的颜色
+                    },
+                    {
+                      offset: 1,
+                      color: '#FBA807', // 100% 处的颜色
+                    },
+                  ]
+                : [
+                    {
+                      offset: 0,
+                      color: '#ddd', // 0% 处的颜色
+                    },
+                    {
+                      offset: 1,
+                      color: '#ddd', // 100% 处的颜色
+                    },
+                  ],
               global: false, // 缺省为 false
             },
-            shadowColor: 'rgba(255, 216, 78, 0.5)',
+            shadowColor: props.account ? 'rgba(255, 216, 78, 0.5)' : 'rgba(0, 0, 0, 0.1)',
             shadowBlur: 10,
           },
         },

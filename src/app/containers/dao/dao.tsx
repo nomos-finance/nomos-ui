@@ -48,14 +48,14 @@ const FooterText = (
         {t('dao.estimatedVeNOMO')}:
         <strong>
           {/* 锁仓金额 * MAXTIME /（锁仓时间 / 7*24*60*60 * 7*24*60*60） */}
-          {formatMoney(veNomos.toString())}
+          {+veNomos ? `0->${formatMoney(veNomos.toString())}` : 0}
         </strong>
       </div>
       <div>
         {t('dao.estimatedBoost')}:
         <strong>
           {/* (veNOMO.balanceOf + 预计获得veNOMO) / (veNOMO.totalSupply + 预计获得veNOMO) */}
-          {formatMoney(boost.toString())} X
+          {+veNomos ? `0->${formatMoney(boost.toString())} X` : 0}
         </strong>
       </div>
     </div>

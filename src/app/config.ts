@@ -15,17 +15,7 @@ export interface INetworkData {
   incentivePrecision: number;
   // market
   addresses: {
-    LENDING_POOL_ADDRESS_PROVIDER: string;
-    LENDING_POOL: string;
-    WETH_GATEWAY?: string;
-    SWAP_COLLATERAL_ADAPTER?: string;
-    REPAY_WITH_COLLATERAL_ADAPTER?: string;
-    FAUCET?: string;
-    PERMISSION_MANAGER?: string;
-    Nomos?: string;
-    veNomos?: string;
-    VotingEscrowReward?: string;
-    LendingDAO?: string;
+    [key: string]: string;
   };
   incentives?: {
     INCENTIVES_CONTROLLER: string;
@@ -164,6 +154,7 @@ export const NETWORK: INetwork = {
       veNomos: '0xe4303e401dcf9257FB477621b7dB96189516dFd0',
       VotingEscrowReward: '0xcfc0E1167BA7e462b6063F68FcB04cfcFB3F24cf',
       LendingDAO: '0x77C136034d5B3D5E3556B13fc73B6F86f88D4F3D',
+      AaveOracle: '0x3DBf9Fb6929D573C07EAD7F75f26248648c4C89C',
     },
     incentives: {
       //

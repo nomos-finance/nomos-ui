@@ -18,9 +18,12 @@ import { useSelector } from 'react-redux';
 import { IRootState } from '../reducers/RootState';
 
 import useNetworkInfo from '../hooks/useNetworkInfo';
+import usePriceOracle from 'app/hooks/usePriceOracle';
 
 import abi from 'abi/UiPoolDataProvider.json';
 import { contract as appContract, Contract } from 'app/contracts/contract';
+
+import priceOrcleAbi from 'abi/AaveOracle.json';
 
 function formatObjectWithBNFields(obj: object): any {
   return Object.keys(obj).reduce((acc, key) => {
@@ -157,6 +160,7 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
   const [poolData, setPoolData] = useState<DynamicPoolDataContextData | undefined>(undefined);
   const [networkInfo] = useNetworkInfo();
   const { account } = useSelector((store: IRootState) => store.base);
+  const [priceOracleContract] = usePriceOracle();
 
   const fetchData = async (poolAddress: string, poolDataProvider: string) => {
     if (!networkInfo) return;
@@ -165,10 +169,11 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
     try {
       setLoading(true);
       const Contracts = await appContract(abi, poolDataProvider, account);
-      console.log(poolAddress, userAddress);
       const result = await Contracts.getReservesData(poolAddress, userAddress);
-
-      console.log(result);
+      const priceOracleContract = await appContract(
+        priceOrcleAbi,
+        networkInfo.addresses.AaveOracle
+      );
 
       const { 0: rawReservesData, 1: userReserves, 2: usdPriceEth, 3: rawRewardsData } = result;
 
@@ -184,8 +189,6 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
         userAddress,
         usdPriceEth,
       });
-
-      // console.log(userReserves);
 
       const rawReserves = formatData.formattedReservesData;
       const rawUserReserves = formatData.formattedUserReserves;
@@ -222,8 +225,6 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
             )
           : undefined;
 
-      // console.log(userId, rawUserReserves);
-
       const formattedPoolReserves = formatReserves(
         rawReserves,
         currentTimestamp,
@@ -231,6 +232,13 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
         rewardTokenPriceEth,
         rewardsEmissionEndTimestamp
       );
+
+      console.log(priceOracleContract, formattedPoolReserves);
+
+      let address: string[] = [];
+      formattedPoolReserves.forEach((item) => address.push(item.underlyingAsset));
+      let USD = await priceOracleContract.getAssetsPrices(address);
+      console.log(USD);
 
       setPoolData({
         user: computedUserData,

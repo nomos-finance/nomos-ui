@@ -21,7 +21,7 @@ export interface IBaseState {
 
 export const baseState: IBaseState = {
   viewWidth: document.body.clientWidth,
-  network: storage.get('network'),
+  network: storage.get('network') || process.env.REACT_APP_DEFAULT_ETHEREUM_NETWORK,
   providerName: storage.get('providerName'),
   account: storage.get('account'),
   refreshUIPoolData: false,
