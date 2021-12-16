@@ -26,6 +26,7 @@ interface IProps {
   user: UserSummaryData;
   balance: IBalance;
   usdPriceEth: string;
+  healthFactor: string;
 }
 
 interface IBalance {
@@ -146,6 +147,7 @@ export default function MySavingLoad(props: IProps) {
                           marketRefPriceInUsd,
                           user: props.user,
                           balance: props.balance[item.reserve.underlyingAsset],
+                          healthFactor: props.healthFactor,
                         })
                       }
                     >
@@ -174,7 +176,7 @@ export default function MySavingLoad(props: IProps) {
                             UsageAsCollateralRef.current?.show({
                               status,
                               data: obj[item.reserve.symbol],
-                              healthFactor: 111,
+                              healthFactor: props.healthFactor,
                             })
                           }
                         ></Switch>

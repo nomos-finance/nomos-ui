@@ -25,6 +25,7 @@ interface IProps {
   usdPriceEth: string;
   balance: IBalance;
   user?: UserSummaryData;
+  healthFactor: string;
 }
 
 interface IBalance {
@@ -156,6 +157,7 @@ export default function MarketTable(props: IProps) {
                     balance: props.balance[item.underlyingAsset],
                     marketRefPriceInUsd,
                     user: props.user,
+                    healthFactor: props.healthFactor,
                   })
                 }
               >

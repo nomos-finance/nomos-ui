@@ -222,6 +222,7 @@ export default function Markets() {
           reserves={data.reserves}
           user={data.user}
           usdPriceEth={data.usdPriceEth}
+          healthFactor={healthFactor}
         />
       ) : null}
       {data && balance && (
@@ -230,6 +231,7 @@ export default function Markets() {
           reserves={data.reserves}
           usdPriceEth={data.usdPriceEth}
           user={data?.user}
+          healthFactor={healthFactor}
         />
       )}
       <Swap ref={SwapDialogRef} />

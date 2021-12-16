@@ -30,6 +30,7 @@ interface IProps {
   user?: UserSummaryData;
   balance?: string;
   marketRefPriceInUsd: string;
+  healthFactor?: string;
 }
 
 export interface IDialog {
@@ -258,7 +259,7 @@ export default forwardRef((props, ref) => {
           <div className="info">
             <div className="item">
               <div className="key">{t('changeDialog.healthFactor')}</div>
-              <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
+              <div className="value">{formatDecimal(params?.healthFactor)}%</div>
             </div>
             <div className="item">
               <div className="key">{t('changeDialog.depositInfo')}</div>
@@ -345,7 +346,7 @@ export default forwardRef((props, ref) => {
           <div className="info">
             <div className="item">
               <div className="key">{t('changeDialog.healthFactor')}</div>
-              <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
+              <div className="value">{formatDecimal(params?.healthFactor)}%</div>
             </div>
             <div className="item">
               <div className="key">{t('changeDialog.depositInfo')}</div>
