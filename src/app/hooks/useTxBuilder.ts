@@ -4,7 +4,7 @@ import { getProvider } from '../contracts/contract';
 import { useEffect, useState } from 'react';
 import useNetworkInfo from './useNetworkInfo';
 
-const useLendingPoolContract = (): [LendingPoolInterfaceV2 | undefined] => {
+const useTxBuilder = (): [LendingPoolInterfaceV2 | undefined] => {
   const [networkInfo, NETWORK] = useNetworkInfo();
   const [contract, setContract] = useState<LendingPoolInterfaceV2>();
   const lendingPoolConfig: any = {};
@@ -38,4 +38,4 @@ const useLendingPoolContract = (): [LendingPoolInterfaceV2 | undefined] => {
   return [contract];
 };
 
-export default useLendingPoolContract;
+export default useTxBuilder;

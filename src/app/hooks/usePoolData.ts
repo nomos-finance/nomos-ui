@@ -227,7 +227,7 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
             )
           : undefined;
 
-      console.log(rawUserReserves, rawReserves);
+      console.log(computedUserData);
 
       const formattedPoolReserves = formatReserves(
         rawReserves,

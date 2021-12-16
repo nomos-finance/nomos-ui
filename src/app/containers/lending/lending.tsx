@@ -20,7 +20,8 @@ import Lock from './lock';
 import { useSelector, useDispatch } from 'react-redux';
 import { IRootState } from 'app/reducers/RootState';
 import { setRefreshUIPoolData } from 'app/actions/baseAction';
-import { formatMoney } from 'app/utils/tool';
+import { formatMoney, pow10 } from 'app/utils/tool';
+import useLendingPoolContract from 'app/hooks/useLendingPoolContract';
 
 export default function Markets() {
   const [t] = useTranslation();
@@ -39,11 +40,32 @@ export default function Markets() {
   const [myTotalDeposit, setMyTotalDeposit] = useState('');
   const [myTotalBorrow, setMyTotalBorrow] = useState('');
 
+  const [healthFactor, setHealthFactor] = useState<string>('0.00');
+
   const [balance, fetchBalance] = useWalletBalance(
     networkInfo?.walletBalanceProvider,
     account,
     networkInfo?.addresses.LENDING_POOL_ADDRESS_PROVIDER
   );
+
+  const [lendingPoolContract] = useLendingPoolContract();
+
+  useEffect(() => {
+    const fetch = async (): Promise<void> => {
+      if (lendingPoolContract && account) {
+        const {
+          totalCollateralBase,
+          totalDebtBase,
+          availableBorrowsBase,
+          currentLiquidationThreshold,
+          ltv,
+          healthFactor,
+        } = await lendingPoolContract.getUserAccountData(account);
+        setHealthFactor(new BigNumber(1).dividedBy(pow10(healthFactor.toString(), 18)).toFixed(2));
+      }
+    };
+    fetch();
+  }, [lendingPoolContract, account]);
 
   useEffect(() => {
     if (!data) return;
@@ -173,7 +195,7 @@ export default function Markets() {
           </div>
           <div className="main">
             <Chart
-              percentage={account && data && data.user ? data.user.healthFactor : 0}
+              percentage={healthFactor}
               account={account}
               text={`${t('lending.maxBorrowLimit')}<br />$${
                 data && data.user
