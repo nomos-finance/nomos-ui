@@ -21,21 +21,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { IRootState } from 'app/reducers/RootState';
 import { setRefreshUIPoolData } from 'app/actions/baseAction';
 import { formatMoney } from 'app/utils/tool';
-import { useHistory } from 'react-router';
 
 export default function Markets() {
-  const history = useHistory();
   const [t] = useTranslation();
   const dispatch = useDispatch();
-  const [totalLiquidity, setTotalLiquidity] = useState('');
-  const [totalDeposit, setTotalDeposit] = useState('');
-  const [totalBorrow, setTotalBorrow] = useState('');
   const SwapDialogRef = useRef<ISwapDialog>();
   const ClaimDialogRef = useRef<IClaimDialog>();
   const [networkInfo] = useNetworkInfo();
   const { currentThemeName } = useThemeContext();
   const { data, refresh } = useProtocolDataWithRpc();
   const { account, refreshUIPoolData } = useSelector((store: IRootState) => store.base);
+
+  const [totalLiquidity, setTotalLiquidity] = useState('');
+  const [totalDeposit, setTotalDeposit] = useState('');
+  const [totalBorrow, setTotalBorrow] = useState('');
+
+  const [myTotalDeposit, setMyTotalDeposit] = useState('');
+  const [myTotalBorrow, setMyTotalBorrow] = useState('');
 
   const [balance, fetchBalance] = useWalletBalance(
     networkInfo?.walletBalanceProvider,
@@ -45,29 +47,34 @@ export default function Markets() {
 
   useEffect(() => {
     if (!data) return;
-    const marketRefPriceInUsd = normalize(data.usdPriceEth, 18);
     let liquidity = new BigNumber(0);
     let totalLiquidityInUSD = new BigNumber(0);
     let totalBorrowsInUSD = new BigNumber(0);
 
+    fetchBalance();
+
     data.reserves.forEach((item) => {
       liquidity = liquidity.plus(item.availableLiquidity);
       totalLiquidityInUSD = totalLiquidityInUSD.plus(
-        valueToBigNumber(item.totalLiquidity)
-          .multipliedBy(item.price.priceInEth)
-          .dividedBy(marketRefPriceInUsd)
+        valueToBigNumber(item.totalLiquidity).multipliedBy(data.symbolUsd[item.symbol])
       );
       totalBorrowsInUSD = totalBorrowsInUSD.plus(
-        valueToBigNumber(item.totalDebt)
-          .multipliedBy(item.price.priceInEth)
-          .dividedBy(marketRefPriceInUsd)
-          .toNumber()
+        valueToBigNumber(item.totalDebt).multipliedBy(data.symbolUsd[item.symbol])
       );
     });
     setTotalLiquidity(liquidity.toString());
     setTotalDeposit(totalLiquidityInUSD.toString());
     setTotalBorrow(totalBorrowsInUSD.toString());
-    fetchBalance();
+
+    let myTotalLiquidityInUSD = new BigNumber(0);
+    let myTotalBorrowsInUSD = new BigNumber(0);
+
+    data.user?.reservesData.forEach((item) => {
+      myTotalLiquidityInUSD = myTotalLiquidityInUSD.plus(
+        valueToBigNumber(item.underlyingBalance).multipliedBy(data.symbolUsd[item.reserve.symbol])
+      );
+    });
+    setMyTotalDeposit(myTotalLiquidityInUSD.toString());
   }, [data]);
 
   useEffect(() => {
@@ -117,7 +124,7 @@ export default function Markets() {
             </div>
             <div className="number">
               <i>$</i>
-              {/* <CompactNumber value={totalBorrow} /> */}
+              <CompactNumber value={totalBorrow} />
             </div>
           </div>
         </div>
@@ -136,7 +143,7 @@ export default function Markets() {
               <Icon name="deposit" />
               <div className="text">{t('lending.myDeposits')}</div>
               <div className="number">
-                {account && data?.user ? `$${formatMoney(data.user.totalLiquidityUSD)}` : '$0.00'}
+                $<CompactNumber value={myTotalDeposit} />
               </div>
             </div>
             <div className="item">
