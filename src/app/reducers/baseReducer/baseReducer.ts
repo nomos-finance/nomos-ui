@@ -9,6 +9,7 @@ export enum BASE {
   SET_PROVIDER_NAME = 'SET_PROVIDER_NAME',
   SET_ACCOUNT = 'SET_ACCOUNT',
   SET_REFRESH_UI_POOL_DATA = 'SET_REFRESH_UI_POOL_DATA',
+  SET_LOGIN_DIALOG_SHOW = 'SET_LOGIN_DIALOG_SHOW',
 }
 
 export interface IBaseState {
@@ -17,6 +18,7 @@ export interface IBaseState {
   providerName: string;
   account: string;
   refreshUIPoolData: boolean;
+  loginDialogShow: boolean;
 }
 
 export const baseState: IBaseState = {
@@ -25,6 +27,7 @@ export const baseState: IBaseState = {
   providerName: storage.get('providerName'),
   account: storage.get('account'),
   refreshUIPoolData: false,
+  loginDialogShow: false,
 };
 
 const reducer = {
@@ -55,6 +58,12 @@ const reducer = {
   [BASE.SET_REFRESH_UI_POOL_DATA]: {
     next: produce((draft: IBaseState, action: { payload: boolean }) => {
       draft.refreshUIPoolData = action.payload;
+    }),
+    throw: (state: any, action: any) => errorHandle(state, action),
+  },
+  [BASE.SET_LOGIN_DIALOG_SHOW]: {
+    next: produce((draft: IBaseState, action: { payload: boolean }) => {
+      draft.loginDialogShow = action.payload;
     }),
     throw: (state: any, action: any) => errorHandle(state, action),
   },

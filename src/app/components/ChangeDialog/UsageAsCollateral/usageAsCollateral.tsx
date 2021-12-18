@@ -102,7 +102,12 @@ export default forwardRef((props, ref) => {
         <div className="notice">健康因子大于90%，所以无法取消该资产作为抵押品</div>
       </div>
       <div className="dialogFooter">
-        <Button loading={loading} className="submit" onClick={() => handleSubmit()}>
+        <Button
+          disabled={Number(params?.healthFactor) > 90}
+          loading={loading}
+          className="submit"
+          onClick={() => handleSubmit()}
+        >
           {t('changeDialog.submit')}
         </Button>
       </div>

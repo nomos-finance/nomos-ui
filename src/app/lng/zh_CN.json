@@ -91,7 +91,10 @@
     "dao.chooseLock-upTermItem2":"本次锁仓后，整体锁仓时间更新为{{number}}年",
     "dao.submit": "提交",
     "dao.walletBalance":"钱包余额",
+    "dao.years": "年",
+    "dao.connectWallet": "链接钱包",
     "staking.claim": "领取奖励",
+    "staking.connectWallet": "链接钱包",
     "staking.stakingText":"Staking LP Token 获得NOMO奖励，质押后可在14天后赎回，奖励可实时领取",
     "staking.totalValueStaked": "Staking总价值",
     "staking.APR": "APY",
@@ -138,5 +141,6 @@
     "changeDialog.repay": "还款",
     "changeDialog.submit": "提交",
     "changeDialog.enterAmount": "请输入金额",
-    "changeDialog.walletBalance": "钱包余额"
+    "changeDialog.walletBalance": "钱包余额",
+    "changeDialog.redeemable": "可赎回数量"
 }

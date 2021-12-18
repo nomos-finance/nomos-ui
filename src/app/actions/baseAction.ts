@@ -12,3 +12,5 @@ export const setAccount = (data: string): Action<string> =>
   createAction(BASE.SET_ACCOUNT, () => data)();
 export const setRefreshUIPoolData = (data: boolean): Action<boolean> =>
   createAction(BASE.SET_REFRESH_UI_POOL_DATA, () => data)();
+export const setLoginDialogShow = (data: boolean): Action<boolean> =>
+  createAction(BASE.SET_LOGIN_DIALOG_SHOW, () => data)();

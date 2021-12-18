@@ -53,7 +53,7 @@ export default forwardRef((props, ref) => {
   const [borrowAmount, setBorrowAmount] = useState<string | number>('');
   const [repayAmount, setRepayAmount] = useState<string | number>('');
   const [loading, setLoading] = useState(false);
-  const [interestRateMode, setInterestRateMode] = useState('Stable');
+  const [interestRateMode, setInterestRateMode] = useState('Variable');
   const [maxAmountToBorrow, setMaxAmountToBorrow] = useState<number>(0);
   const [userAssetInfo, setUserAssetInfo] = useState<ComputedUserReserve>();
   const [isMax, setMax] = useState(false);
@@ -122,6 +122,7 @@ export default forwardRef((props, ref) => {
   const handleBorrowSubmit = async () => {
     if (!lendingPool || !params?.data || !account || !borrowAmount) return;
     try {
+      console.log(interestRateMode);
       setLoading(true);
       const txs = await lendingPool.borrow({
         interestRateMode: interestRateMode as any,
@@ -198,17 +199,33 @@ export default forwardRef((props, ref) => {
           className={classnames('tabItem', { cur: type === 'Borrow' })}
           onClick={() => setType('Borrow')}
         >
-          {t('changeDialog.variableRate')}
+          {t('changeDialog.borrow')}
         </div>
         <div
           className={classnames('tabItem', { cur: type === 'Repay' })}
           onClick={() => setType('Repay')}
         >
-          {t('changeDialog.stableRate')}
+          {t('changeDialog.repay')}
         </div>
       </div>
       {type === 'Borrow' ? (
         <div className="tabMain">
+          <div className="typeWrap">
+            <div className="typeTab">
+              <div
+                className={classnames('typeTabItem', { cur: interestRateMode === 'Variable' })}
+                onClick={() => setInterestRateMode('Variable')}
+              >
+                {t('changeDialog.variableRate')}
+              </div>
+              <div
+                className={classnames('typeTabItem', { cur: interestRateMode === 'Stable' })}
+                onClick={() => setInterestRateMode('Stable')}
+              >
+                {t('changeDialog.stableRate')}
+              </div>
+            </div>
+          </div>
           <div className="block">
             <div className="box">
               <div className="balance">

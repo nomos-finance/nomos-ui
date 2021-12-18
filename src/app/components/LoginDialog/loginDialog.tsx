@@ -4,7 +4,6 @@ import { useWeb3React } from '@web3-react/core';
 import { Dropdown, Menu, Modal, Input } from 'antd';
 import classNames from 'classnames';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { ethers } from 'ethers';
 
 import { NETWORK, SupportedNetworks, getFortmaticKeyByNetwork } from '../../config';
@@ -15,7 +14,14 @@ import * as icons from './img';
 import storage from '../../utils/storage';
 import useInactiveListener from './hooks/useInactiveListener';
 
-import { setNetwork, setProviderName, setAccount } from '../../actions/baseAction';
+import { useSelector, useDispatch } from 'react-redux';
+import { IRootState } from 'app/reducers/RootState';
+import {
+  setNetwork,
+  setProviderName,
+  setAccount,
+  setLoginDialogShow,
+} from 'app/actions/baseAction';
 export interface IDialog {
   show(): void;
   hide(): void;
@@ -54,7 +60,6 @@ const getWeb3ProviderFromBrowser = (): ethers.providers.Web3Provider | undefined
 export default forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const { currentThemeName } = useThemeContext();
-  const [dialogOpen, setDialogOpen] = useState(false);
   const { account, activate } = useWeb3React();
   const [preferredNetwork, setPreferredNetwork] = useState<string>(SupportedNetworks[0].chainKey);
   const providerName = storage.get('providerName');
@@ -63,6 +68,7 @@ export default forwardRef((props, ref) => {
   const isImToken = !!window.imToken;
   const browserWalletProvider = getWeb3ProviderFromBrowser();
   const [selectProviderName, setSelectProviderName] = useState<string>();
+  const { loginDialogShow } = useSelector((store: IRootState) => store.base);
 
   const wallets: Wallet[] = [
     {
@@ -151,7 +157,7 @@ export default forwardRef((props, ref) => {
       storage.set('providerName', providerName);
       storage.set('network', network);
       storage.set('isLogout', '');
-      setDialogOpen(false);
+      dispatch(setLoginDialogShow(false));
       dispatch(setNetwork(network));
       dispatch(setProviderName(network));
     } catch (error) {
@@ -163,15 +169,6 @@ export default forwardRef((props, ref) => {
     dispatch(setProviderName(network));
     storage.set('providerName', providerName);
   };
-
-  useImperativeHandle(ref, () => ({
-    show: () => {
-      setDialogOpen(true);
-    },
-    hide: () => {
-      setDialogOpen(false);
-    },
-  }));
 
   useInactiveListener(providerName ? getWeb3Connector(providerName, network) : undefined, !account);
 
@@ -198,8 +195,8 @@ export default forwardRef((props, ref) => {
 
   return (
     <Modal
-      visible={dialogOpen}
-      onCancel={() => setDialogOpen(false)}
+      visible={loginDialogShow}
+      onCancel={() => dispatch(setLoginDialogShow(false))}
       footer={null}
       wrapClassName={classNames('customDialog', 'loginDialog', currentThemeName)}
       centered

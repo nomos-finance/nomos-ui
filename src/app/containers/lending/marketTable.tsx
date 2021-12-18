@@ -19,6 +19,8 @@ import Icon from '../../../assets/icons';
 import classnames from 'classnames';
 import SymbolIcon from '../../components/SymbolIcon';
 import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+import { IRootState } from 'app/reducers/RootState';
 
 interface IProps {
   reserves: ComputedReserveData[];
@@ -40,9 +42,16 @@ export default function MarketTable(props: IProps) {
   const DepositDialogRef = useRef<IDepositDialog>();
   const [borrowType, setBorrowType] = useState('USD');
   const [tab, setTab] = useState('deposit');
+  const { account } = useSelector((store: IRootState) => store.base);
+  const [keyword, setKeyword] = useState('');
 
   let sortedData = props.reserves
     .filter((res) => res.isActive)
+    .filter((res) => {
+      const reg = new RegExp(keyword, 'ig');
+      if (reg.test(res.underlyingAsset) || reg.test(res.symbol)) return true;
+      return false;
+    })
     .map((reserve) => {
       totalLockedInUsd = totalLockedInUsd.plus(
         valueToBigNumber(reserve.totalLiquidity)
@@ -109,7 +118,11 @@ export default function MarketTable(props: IProps) {
           <em>
             <Icon name="search" />
           </em>
-          <Input bordered={false} placeholder={t('lending.search')} />
+          <Input
+            bordered={false}
+            placeholder={t('lending.search')}
+            onChange={(v) => setKeyword(v.target.value)}
+          />
           <span>
             所有资产
             <i>
@@ -173,7 +186,11 @@ export default function MarketTable(props: IProps) {
                 <td>xxx</td>
                 <td>
                   <div className="money">
-                    {formatMoney(pow10(props.balance[item.underlyingAsset], item.reserve.decimals))}
+                    {account
+                      ? formatMoney(
+                          pow10(props.balance[item.underlyingAsset], item.reserve.decimals)
+                        )
+                      : '--'}
                   </div>
                 </td>
               </tr>

@@ -19,7 +19,6 @@ const handleTX = async (extendedTxData: transactionType | undefined, provider: a
     return;
   }
   const txHash = txResponse?.hash;
-  console.log(txHash);
   if (txResponse) {
     try {
       const txReceipt = await txResponse.wait(1);

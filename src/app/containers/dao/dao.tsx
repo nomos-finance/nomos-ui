@@ -13,14 +13,16 @@ import Icon from '../../../assets/icons';
 import Layout from '../../components/Layout';
 import { Claim, IClaimDialog, Lock, ILockDialog } from 'app/components/ChangeDialog/';
 
-import { useSelector } from 'react-redux';
-import { IRootState } from '../../reducers/RootState';
 import { formatMoney, pow10, original, filterInput } from 'app/utils/tool';
 import useVotingEscrowRewardContract from 'app/hooks/useVotingEscrowRewardContract';
 import useVeNomos from 'app/hooks/useVeNomos';
 import useNetworkInfo from 'app/hooks/useNetworkInfo';
 import useErc20Contract from 'app/hooks/useErc20Contract';
 import dayjs from 'dayjs';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { IRootState } from 'app/reducers/RootState';
+import { setLoginDialogShow } from 'app/actions/baseAction';
 
 const FooterText = (
   lockNum?: string,
@@ -69,6 +71,8 @@ export default function Markets() {
   const { currentThemeName } = useThemeContext();
   const [networkInfo] = useNetworkInfo();
   const { account } = useSelector((store: IRootState) => store.base);
+  const dispatch = useDispatch();
+
   const [votingEscrowRewardContract, freshVotingEscrowRewardContract] =
     useVotingEscrowRewardContract();
   const [veNomosContract, freshVeNomosContract] = useVeNomos();
@@ -239,29 +243,39 @@ export default function Markets() {
       <div className="block infoBlock myBlock">
         <div className="blockTitle">
           <strong>{t('dao.myStats')}</strong>
-          <Button
-            className="btn"
-            onClick={() =>
-              ClaimDialogRef.current?.show({
-                claim: userEpochReward ? Number(pow10(+userEpochReward, nomoDecimals)) : 0,
-              })
-            }
-          >
-            {t('dao.claim')}
-          </Button>
+          {account ? (
+            <Button
+              className="btn"
+              onClick={() =>
+                ClaimDialogRef.current?.show({
+                  claim: userEpochReward ? Number(pow10(+userEpochReward, nomoDecimals)) : 0,
+                })
+              }
+            >
+              {t('dao.claim')}
+            </Button>
+          ) : (
+            <Button className="btn" onClick={() => dispatch(setLoginDialogShow(true))}>
+              {t('dao.connectWallet')}
+            </Button>
+          )}
         </div>
         <div className="main">
           <div className="left">
             <div className="item">
               <div className="text">{t('dao.NOMOLocked')}</div>
               <div className="number">
-                {locked ? formatMoney(pow10(+locked.amount, nomoDecimals)) : 0}
+                {account ? (locked ? formatMoney(pow10(+locked.amount, nomoDecimals)) : 0) : '--'}
               </div>
             </div>
             <div className="item">
               <div className="text">{t('dao.myVeNOMO')}</div>
               <div className="number">
-                {veNomosBalanceOf ? formatMoney(pow10(+veNomosBalanceOf, veNomoDecimals)) : '0.00'}
+                {account
+                  ? veNomosBalanceOf
+                    ? formatMoney(pow10(+veNomosBalanceOf, veNomoDecimals))
+                    : '0.00'
+                  : '--'}
               </div>
             </div>
           </div>
@@ -269,26 +283,31 @@ export default function Markets() {
             <div className="item">
               <div className="text">{t('dao.boost')}</div>
               <div className="number">
-                {totalSupply && veNomosBalanceOf && +totalSupply && +veNomosBalanceOf
-                  ? `${veNomosBalanceOf.dividedBy(totalSupply).toFixed(2)} x`
-                  : '0.00 x'}
+                {account
+                  ? totalSupply && veNomosBalanceOf && +totalSupply && +veNomosBalanceOf
+                    ? `${veNomosBalanceOf.dividedBy(totalSupply).toFixed(2)} x`
+                    : '0.00 x'
+                  : '--'}
               </div>
             </div>
             <div className="item">
               <div className="text">{t('dao.timeToRelease')}</div>
               <div className="number">
                 {locked
-                  ? new BigNumber(+locked.end - dayjs().unix())
+                  ? `${new BigNumber(+locked.end - dayjs().unix())
                       .dividedBy(365 * 24 * 60 * 60)
-                      .toFixed(2)
-                  : '--'}{' '}
-                年
+                      .toFixed(2)} t('dao.years')`
+                  : '--'}
               </div>
             </div>
             <div className="item">
               <div className="text">{t('dao.claimableNOMO')}</div>
               <div className="number">
-                {userEpochReward ? formatMoney(pow10(+userEpochReward, nomoDecimals)) : '0.00'}
+                {account
+                  ? userEpochReward
+                    ? formatMoney(pow10(+userEpochReward, nomoDecimals))
+                    : '0.00'
+                  : '--'}
               </div>
             </div>
           </div>

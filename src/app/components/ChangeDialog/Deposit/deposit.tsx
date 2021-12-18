@@ -313,7 +313,7 @@ export default forwardRef((props, ref) => {
           <div className="block">
             <div className="box">
               <div className="balance">
-                <span className="balanceLabel">可赎回数量</span>
+                <span className="balanceLabel">{t('changeDialog.redeemable')}</span>
                 <i className="balanceNumber">
                   <em>{formatMoney(userAssetInfo?.underlyingBalance || 0)}</em>
                   {params?.data?.symbol}

@@ -5,12 +5,10 @@ import classnames from 'classnames';
 import React, { useRef, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { IRootState } from '../../reducers/RootState';
 import { Popover } from 'antd';
 import { useTranslation } from 'react-i18next';
 
-import LoginDialog, { IDialog as ILoginDialog } from '../LoginDialog';
+import LoginDialog from '../LoginDialog';
 import LogoutDialog, { IDialog as ILogoutDialog } from '../LogoutDialog';
 import { useThemeContext } from '../../theme';
 import { getShortenAddress } from '../../utils/tool';
@@ -19,12 +17,14 @@ import Dark from './img/dark.png';
 import Default from './img/default.png';
 import { disconnectWeb3Connector } from '../../connector';
 import storage from '../../utils/storage';
-import { setAccount } from '../../actions/baseAction';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { IRootState } from 'app/reducers/RootState';
+import { setAccount, setLoginDialogShow } from 'app/actions/baseAction';
 
 export default (): React.ReactElement => {
   const [t] = useTranslation();
   const history = useHistory();
-  const LoginDialogRef = useRef<ILoginDialog>();
   const LogoutDialogRef = useRef<ILogoutDialog>();
   const { changeTheme, currentThemeName } = useThemeContext();
   const { account, network } = useSelector((store: IRootState) => store.base);
@@ -76,12 +76,7 @@ export default (): React.ReactElement => {
             overlayClassName={classnames('headerUserMenu', currentThemeName)}
             onVisibleChange={(v) => setPopoverVisible(v)}
           >
-            <div
-              className="user"
-              // onClick={() => {
-              //   return LogoutDialogRef.current?.show();
-              // }}
-            >
+            <div className="user">
               <div>{network}</div>
               <div>{getShortenAddress(account)}</div>
               <span className={classnames('arrow', { up: popoverVisible })}>
@@ -93,14 +88,14 @@ export default (): React.ReactElement => {
           <div
             className="connect"
             onClick={() => {
-              return LoginDialogRef.current?.show();
+              dispatch(setLoginDialogShow(true));
             }}
           >
             <span>{t('header.connectWallet')}</span>
           </div>
         )}
       </div>
-      <LoginDialog ref={LoginDialogRef} />
+      <LoginDialog />
       <LogoutDialog ref={LogoutDialogRef} />
     </header>
   );
