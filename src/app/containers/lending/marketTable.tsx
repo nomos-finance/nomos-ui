@@ -1,10 +1,5 @@
 import React, { useRef, useState } from 'react';
-import {
-  valueToBigNumber,
-  normalize,
-  ComputedReserveData,
-  UserSummaryData,
-} from '@aave/protocol-js';
+import { ComputedReserveData, UserSummaryData } from '../../hooks/utils/types';
 import { Input, Table } from 'antd';
 import {
   Borrow,
@@ -14,7 +9,7 @@ import {
   IDepositDialog,
   ISwapDialog,
 } from '../../components/ChangeDialog/';
-import { formatDecimal, formatMoney, pow10 } from '../../utils/tool';
+import { formatDecimal, formatMoney, pow10, valueToBigNumber, normalize } from '../../utils/tool';
 import Icon from '../../../assets/icons';
 import classnames from 'classnames';
 import SymbolIcon from '../../components/SymbolIcon';
@@ -24,7 +19,6 @@ import { IRootState } from 'app/reducers/RootState';
 
 interface IProps {
   reserves: ComputedReserveData[];
-  usdPriceEth: string;
   balance: IBalance;
   user?: UserSummaryData;
   healthFactor: string;
@@ -36,8 +30,6 @@ interface IBalance {
 
 export default function MarketTable(props: IProps) {
   const [t] = useTranslation();
-  let totalLockedInUsd = valueToBigNumber('0');
-  const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
   const BorrowDialogRef = useRef<IBorrowDialog>();
   const DepositDialogRef = useRef<IDepositDialog>();
   const [borrowType, setBorrowType] = useState('USD');
@@ -53,41 +45,23 @@ export default function MarketTable(props: IProps) {
       return false;
     })
     .map((reserve) => {
-      totalLockedInUsd = totalLockedInUsd.plus(
-        valueToBigNumber(reserve.totalLiquidity)
-          .multipliedBy(reserve.price.priceInEth)
-          .dividedBy(marketRefPriceInUsd)
-      );
-
       const totalLiquidity = Number(reserve.totalLiquidity);
-      const totalLiquidityInUSD = valueToBigNumber(reserve.totalLiquidity)
-        .multipliedBy(reserve.price.priceInEth)
-        .dividedBy(marketRefPriceInUsd)
-        .toNumber();
 
       const totalBorrows = Number(reserve.totalDebt);
-      const totalBorrowsInUSD = valueToBigNumber(reserve.totalDebt)
-        .multipliedBy(reserve.price.priceInEth)
-        .dividedBy(marketRefPriceInUsd)
-        .toNumber();
 
       return {
         reserve,
         totalLiquidity,
-        totalLiquidityInUSD,
         totalBorrows: reserve.borrowingEnabled ? totalBorrows : -1,
-        totalBorrowsInUSD: reserve.borrowingEnabled ? totalBorrowsInUSD : -1,
         id: reserve.id,
         underlyingAsset: reserve.underlyingAsset,
         currencySymbol: reserve.symbol,
         depositAPY: reserve.borrowingEnabled ? Number(reserve.liquidityRate) : -1,
-        avg30DaysLiquidityRate: Number(reserve.avg30DaysLiquidityRate),
         stableBorrowRate:
           reserve.stableBorrowRateEnabled && reserve.borrowingEnabled
             ? Number(reserve.stableBorrowRate)
             : -1,
         variableBorrowRate: reserve.borrowingEnabled ? Number(reserve.variableBorrowRate) : -1,
-        avg30DaysVariableRate: Number(reserve.avg30DaysVariableBorrowRate),
         borrowingEnabled: reserve.borrowingEnabled,
         stableBorrowRateEnabled: reserve.stableBorrowRateEnabled,
         isFreezed: reserve.isFrozen,
@@ -168,7 +142,6 @@ export default function MarketTable(props: IProps) {
                     type: 'Deposit',
                     data: item.reserve,
                     balance: props.balance[item.underlyingAsset],
-                    marketRefPriceInUsd,
                     user: props.user,
                     healthFactor: props.healthFactor,
                   })
@@ -220,6 +193,7 @@ export default function MarketTable(props: IProps) {
                     type: 'Borrow',
                     data: item.reserve,
                     user: props.user,
+                    healthFactor: props.healthFactor,
                   })
                 }
               >
@@ -238,10 +212,7 @@ export default function MarketTable(props: IProps) {
                 <td>xxx</td>
                 <td>xxx</td>
                 <td>
-                  {formatMoney(
-                    borrowType === 'USD' ? item.totalLiquidityInUSD : item.totalLiquidity,
-                    2
-                  )}
+                  {formatMoney(borrowType === 'USD' ? item.totalLiquidity : item.totalLiquidity, 2)}
                 </td>
               </tr>
             ))}

@@ -172,7 +172,7 @@ export default function Markets() {
               <Icon name="loan" />
               <div className="text">{t('lending.myLoans')}</div>
               <div className="number">
-                {account && data?.user ? `$${formatMoney(data.user.totalBorrowsUSD)}` : '$0.00'}
+                {/* {account && data?.user ? `$${formatMoney(data.user.totalBorrowsUSD)}` : '$0.00'} */}
               </div>
             </div>
             <div className="item">
@@ -184,7 +184,7 @@ export default function Markets() {
               <Icon name="reward" />
               <div className="text">{t('lending.claimable')}</div>
               <div className="number">
-                {account && data?.user ? `$${formatMoney(data.user.totalRewardsUSD)}` : '$0.00'}
+                {/* {account && data?.user ? `$${formatMoney(data.user.totalRewardsUSD)}` : '$0.00'} */}
               </div>
             </div>
           </div>
@@ -200,9 +200,10 @@ export default function Markets() {
               text={`${t('lending.maxBorrowLimit')}<br />$${
                 data && data.user
                   ? formatMoney(
-                      new BigNumber(data.user.availableBorrowsETH)
-                        .multipliedBy(data.usdPriceEth)
-                        .toString()
+                      0
+                      // new BigNumber(data.user.availableBorrowsETH)
+                      //   .multipliedBy(data.usdPriceEth)
+                      //   .toString()
                     )
                   : 0
               }`}
@@ -213,23 +214,18 @@ export default function Markets() {
 
       <Lock />
 
-      {data?.user &&
-      balance &&
-      account &&
-      (data?.user?.totalLiquidityUSD || data?.user?.totalBorrowsUSD) ? (
+      {data?.user && balance && account && (
         <MySavingLoad
           balance={balance}
           reserves={data.reserves}
           user={data.user}
-          usdPriceEth={data.usdPriceEth}
           healthFactor={healthFactor}
         />
-      ) : null}
+      )}
       {data && balance && (
         <MarketTable
           balance={balance}
           reserves={data.reserves}
-          usdPriceEth={data.usdPriceEth}
           user={data?.user}
           healthFactor={healthFactor}
         />

@@ -28,14 +28,12 @@ const progress = (name: string, num: number) => (
 );
 
 export default function Markets() {
-  const { currentThemeName } = useThemeContext();
   const { account } = useSelector((store: IRootState) => store.base);
   const { data, refresh } = useProtocolDataWithRpc();
   const [sortedData, setSortedData] = useState<any[]>([]);
   const [borrowTopData, setBorrowTopData] = useState<any[]>([]);
   const [totalBorrow, setTotalBorrow] = useState<number>(0);
   const [totalBorrowUSD, setTotalBorrowUSD] = useState<number>(0);
-
   const [depositTopData, setDepositTopData] = useState<any[]>([]);
   const [totalDeposit, setTotalDeposit] = useState<number>(0);
   const [totalDepositUSD, setTotalDepositUSD] = useState<number>(0);
@@ -106,51 +104,30 @@ export default function Markets() {
 
   useEffect(() => {
     if (data) {
-      const marketRefPriceInUsd = normalize(data.usdPriceEth, 18);
-      let totalLockedInUsd = valueToBigNumber('0');
       let sortedData = data.reserves
         .filter((res) => res.isActive)
         .map((reserve) => {
-          totalLockedInUsd = totalLockedInUsd.plus(
-            valueToBigNumber(reserve.totalLiquidity)
-              .multipliedBy(reserve.price.priceInEth)
-              .dividedBy(marketRefPriceInUsd)
-          );
-
           const totalLiquidity = Number(reserve.totalLiquidity);
-          const totalLiquidityInUSD = valueToBigNumber(reserve.totalLiquidity)
-            .multipliedBy(reserve.price.priceInEth)
-            .dividedBy(marketRefPriceInUsd)
-            .toNumber();
 
           const totalBorrows = Number(reserve.totalDebt);
-          const totalBorrowsInUSD = valueToBigNumber(reserve.totalDebt)
-            .multipliedBy(reserve.price.priceInEth)
-            .dividedBy(marketRefPriceInUsd)
-            .toNumber();
 
           setTotalBorrow((i) => totalBorrows + i);
-          setTotalBorrowUSD((i) => valueToBigNumber(totalBorrowsInUSD).plus(i).toNumber());
 
           setTotalDeposit((i) => +valueToBigNumber(reserve.availableLiquidity).plus(i));
 
           return {
             reserve,
             totalLiquidity,
-            totalLiquidityInUSD,
             totalBorrows: reserve.borrowingEnabled ? totalBorrows : -1,
-            totalBorrowsInUSD: reserve.borrowingEnabled ? totalBorrowsInUSD : -1,
             id: reserve.id,
             underlyingAsset: reserve.underlyingAsset,
             currencySymbol: reserve.symbol,
             depositAPY: reserve.borrowingEnabled ? Number(reserve.liquidityRate) : -1,
-            avg30DaysLiquidityRate: Number(reserve.avg30DaysLiquidityRate),
             stableBorrowRate:
               reserve.stableBorrowRateEnabled && reserve.borrowingEnabled
                 ? Number(reserve.stableBorrowRate)
                 : -1,
             variableBorrowRate: reserve.borrowingEnabled ? Number(reserve.variableBorrowRate) : -1,
-            avg30DaysVariableRate: Number(reserve.avg30DaysVariableBorrowRate),
             borrowingEnabled: reserve.borrowingEnabled,
             stableBorrowRateEnabled: reserve.stableBorrowRateEnabled,
             isFreezed: reserve.isFrozen,

@@ -1,11 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import {
-  ComputedReserveData,
-  UserSummaryData,
-  normalize,
-  ComputedUserReserve,
-} from '@aave/protocol-js';
+import { ComputedReserveData, UserSummaryData, ComputedUserReserve } from '../../hooks/utils/types';
 import SymbolIcon from '../../components/SymbolIcon';
 import {
   Borrow,
@@ -17,7 +12,7 @@ import {
   ISwapDialog,
   IUsageAsCollateralDialog,
 } from '../../components/ChangeDialog/';
-import { formatDecimal, formatMoney, chunk } from 'app/utils/tool';
+import { formatDecimal, formatMoney, chunk, normalize } from 'app/utils/tool';
 import { Switch } from 'antd';
 import { useTranslation } from 'react-i18next';
 
@@ -25,7 +20,6 @@ interface IProps {
   reserves: ComputedReserveData[];
   user: UserSummaryData;
   balance: IBalance;
-  usdPriceEth: string;
   healthFactor: string;
 }
 
@@ -52,8 +46,6 @@ export default function MySavingLoad(props: IProps) {
     const poolReserve = props.reserves.find((res) => res.symbol === userReserve.reserve.symbol);
     obj[userReserve.reserve.symbol] = poolReserve;
   });
-
-  const marketRefPriceInUsd = normalize(props.usdPriceEth, 18);
 
   useEffect(() => {
     let depositArr: ComputedUserReserve[] = [];
@@ -144,7 +136,6 @@ export default function MySavingLoad(props: IProps) {
                         DepositDialogRef.current?.show({
                           type: 'Withdraw',
                           data: obj[item.reserve.symbol],
-                          marketRefPriceInUsd,
                           user: props.user,
                           balance: props.balance[item.reserve.underlyingAsset],
                           healthFactor: props.healthFactor,
@@ -227,6 +218,7 @@ export default function MySavingLoad(props: IProps) {
                           type: 'Repay',
                           data: obj[item.reserve.symbol],
                           user: props.user,
+                          healthFactor: props.healthFactor,
                         })
                       }
                     >

@@ -1,5 +1,6 @@
 import './borrow.styl';
 /*eslint-disable import/no-anonymous-default-export */
+import BigNumber from 'bignumber.js';
 
 import classnames from 'classnames';
 import React, { forwardRef, useState, useImperativeHandle, useEffect } from 'react';
@@ -7,17 +8,18 @@ import { Modal, Input, Button, Select } from 'antd';
 import { useThemeContext } from '../../../theme';
 import { useTranslation } from 'react-i18next';
 
-import {
-  ComputedReserveData,
-  valueToBigNumber,
-  BigNumber,
-  UserSummaryData,
-  ComputedUserReserve,
-} from '@aave/protocol-js';
+import { ComputedReserveData, UserSummaryData, ComputedUserReserve } from 'app/hooks/utils/types';
+
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { handleSend } from '../helper/txHelper';
 import { useWeb3React } from '@web3-react/core';
-import { formatDecimal, pow10, formatMoney, filterInput } from '../../../utils/tool';
+import {
+  formatDecimal,
+  pow10,
+  formatMoney,
+  filterInput,
+  valueToBigNumber,
+} from '../../../utils/tool';
 import storage from '../../../utils/storage';
 import SymbolIcon from '../../SymbolIcon';
 import SelectToken from 'app/components/SelectToken/selectToken';
@@ -30,6 +32,7 @@ interface IProps {
   type: 'Borrow' | 'Repay';
   data?: ComputedReserveData;
   user?: UserSummaryData;
+  healthFactor?: string;
 }
 
 export interface IDialog {
@@ -82,23 +85,23 @@ export default forwardRef((props, ref) => {
 
   useEffect(() => {
     if (!params || !params.data || !params.user || !account) return;
-    const maxUserAmountToBorrow = valueToBigNumber(params.user?.availableBorrowsETH || 0).div(
-      params.data.price.priceInEth
-    );
-    let maxAmountToBorrow = BigNumber.max(
-      BigNumber.min(params.data.availableLiquidity, maxUserAmountToBorrow),
-      0
-    );
-    if (
-      maxAmountToBorrow.gt(0) &&
-      params.user?.totalBorrowsETH !== '0' &&
-      maxUserAmountToBorrow.lt(
-        valueToBigNumber(params.data.availableLiquidity).multipliedBy('1.01')
-      )
-    ) {
-      maxAmountToBorrow = maxAmountToBorrow.multipliedBy('0.99');
-    }
-    setMaxAmountToBorrow(+maxAmountToBorrow);
+    // const maxUserAmountToBorrow = valueToBigNumber(params.user?.availableBorrowsETH || 0).div(
+    //   params.data.price.priceInEth
+    // );
+    // let maxAmountToBorrow = BigNumber.max(
+    //   BigNumber.min(params.data.availableLiquidity, maxUserAmountToBorrow),
+    //   0
+    // );
+    // if (
+    //   maxAmountToBorrow.gt(0) &&
+    //   params.user?.totalBorrowsETH !== '0' &&
+    //   maxUserAmountToBorrow.lt(
+    //     valueToBigNumber(params.data.availableLiquidity).multipliedBy('1.01')
+    //   )
+    // ) {
+    //   maxAmountToBorrow = maxAmountToBorrow.multipliedBy('0.99');
+    // }
+    // setMaxAmountToBorrow(+maxAmountToBorrow);
     if (params?.user?.reservesData && params?.data?.underlyingAsset) {
       const asset = params.user.reservesData.filter(
         (item) => item.reserve.underlyingAsset === params.data?.underlyingAsset
@@ -256,14 +259,25 @@ export default forwardRef((props, ref) => {
           <div className="info">
             <div className="item">
               <div className="key">{t('changeDialog.healthFactor')}</div>
-              <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
+              <div className="value">{formatDecimal(params?.healthFactor)}%</div>
             </div>
             <div className="item">
               <div className="key">{t('changeDialog.loanInfo')}</div>
               <div className="subItem">
-                <div className="key">{t('changeDialog.variableBorrowAPR')}</div>
+                <div className="key">
+                  {interestRateMode === 'Variable'
+                    ? t('changeDialog.variableLoanAPR')
+                    : t('changeDialog.stableLoanAPR')}
+                </div>
                 <div className="value">
-                  {formatDecimal(Number(params?.data?.variableBorrowAPR) * 100)}%
+                  {formatDecimal(
+                    Number(
+                      interestRateMode === 'Variable'
+                        ? params?.data?.variableBorrowAPR
+                        : params?.data?.stableBorrowAPR
+                    ) * 100
+                  )}
+                  %
                 </div>
               </div>
               <div className="subItem">
@@ -288,7 +302,12 @@ export default forwardRef((props, ref) => {
             </div>
           </div>
           <div className="dialogFooter">
-            <Button loading={loading} className="submit" onClick={() => handleBorrowSubmit()}>
+            <Button
+              disabled={!isMax && borrowAmount > Number(maxAmountToBorrow)}
+              loading={loading}
+              className="submit"
+              onClick={() => handleBorrowSubmit()}
+            >
               {t('changeDialog.submit')}
             </Button>
           </div>
@@ -373,7 +392,7 @@ export default forwardRef((props, ref) => {
           <div className="info">
             <div className="item">
               <div className="key">{t('changeDialog.healthFactor')}</div>
-              <div className="value">{formatDecimal(params?.user?.healthFactor)}</div>
+              <div className="value">{formatDecimal(params?.healthFactor)}%</div>
             </div>
             <div className="item">
               <div className="key">{t('changeDialog.loanInfo')}</div>
@@ -405,7 +424,21 @@ export default forwardRef((props, ref) => {
             </div>
           </div>
           <div className="dialogFooter">
-            <Button loading={loading} className="submit" onClick={() => handleRepaySubmit()}>
+            <Button
+              disabled={
+                !isMax &&
+                userAssetInfo &&
+                repayAmount >
+                  Number(
+                    interestRateMode === 'Variable'
+                      ? userAssetInfo.variableBorrows
+                      : userAssetInfo.stableBorrows
+                  )
+              }
+              loading={loading}
+              className="submit"
+              onClick={() => handleRepaySubmit()}
+            >
               {t('changeDialog.submit')}
             </Button>
           </div>

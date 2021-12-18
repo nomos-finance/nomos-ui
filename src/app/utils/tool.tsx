@@ -1,5 +1,19 @@
 import BigNumber from 'bignumber.js';
 
+export type BigNumberValue = string | number | BigNumber;
+
+export function valueToBigNumber(amount: BigNumberValue): BigNumber {
+  return new BigNumber(amount);
+}
+
+export function normalize(n: BigNumberValue, decimals: number): string {
+  return normalizeBN(n, decimals).toString(10);
+}
+
+export function normalizeBN(n: BigNumberValue, decimals: number): BigNumber {
+  return valueToBigNumber(n).dividedBy(pow10(decimals));
+}
+
 export function pow10(num: number | string | undefined, decimals = 18): string {
   if (!num) return '0';
   return new BigNumber(num).dividedBy(new BigNumber(10).pow(decimals)).toFixed();

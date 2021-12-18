@@ -7,15 +7,17 @@ import { Modal, Input, Button } from 'antd';
 import { useThemeContext } from '../../../theme';
 import { useTranslation } from 'react-i18next';
 
-import {
-  ComputedReserveData,
-  valueToBigNumber,
-  UserSummaryData,
-  ComputedUserReserve,
-} from '@aave/protocol-js';
+import { ComputedReserveData, UserSummaryData, ComputedUserReserve } from 'app/hooks/utils/types';
+
 import useTxBuilder from '../../../hooks/useTxBuilder';
 import { useWeb3React } from '@web3-react/core';
-import { pow10, formatMoney, filterInput, formatDecimal } from '../../../utils/tool';
+import {
+  pow10,
+  formatMoney,
+  filterInput,
+  formatDecimal,
+  valueToBigNumber,
+} from '../../../utils/tool';
 import storage from '../../../utils/storage';
 import { handleSend } from '../helper/txHelper';
 import SymbolIcon from '../../SymbolIcon';
@@ -29,7 +31,6 @@ interface IProps {
   data?: ComputedReserveData;
   user?: UserSummaryData;
   balance?: string;
-  marketRefPriceInUsd: string;
   healthFactor?: string;
 }
 
@@ -142,48 +143,7 @@ export default forwardRef((props, ref) => {
 
   useEffect(() => {
     const poolReserve = params?.data;
-    const marketRefPriceInUsd = params?.marketRefPriceInUsd;
-    if (!poolReserve || !marketRefPriceInUsd) return;
-    const totalLiquidityInUsd = valueToBigNumber(poolReserve.totalLiquidity)
-      .multipliedBy(poolReserve.price.priceInEth)
-      .dividedBy(marketRefPriceInUsd)
-      .toString();
-    const totalBorrowsInUsd = valueToBigNumber(poolReserve.totalDebt)
-      .multipliedBy(poolReserve.price.priceInEth)
-      .dividedBy(marketRefPriceInUsd)
-      .toString();
-    const availableLiquidityInUsd = valueToBigNumber(poolReserve.availableLiquidity)
-      .multipliedBy(poolReserve.price.priceInEth)
-      .dividedBy(marketRefPriceInUsd)
-      .toString();
-
-    const reserveOverviewData = {
-      totalLiquidityInUsd,
-      totalBorrowsInUsd,
-      availableLiquidityInUsd,
-      totalLiquidity: poolReserve.totalLiquidity,
-      totalBorrows: poolReserve.totalDebt,
-      availableLiquidity: poolReserve.availableLiquidity,
-      liquidityRate: Number(poolReserve.liquidityRate),
-      avg30DaysLiquidityRate: Number(poolReserve.avg30DaysLiquidityRate),
-      stableRate: Number(poolReserve.stableBorrowRate),
-      variableRate: Number(poolReserve.variableBorrowRate),
-      stableOverTotal: valueToBigNumber(poolReserve.totalStableDebt)
-        .dividedBy(poolReserve.totalDebt)
-        .toNumber(),
-      variableOverTotal: valueToBigNumber(poolReserve.totalVariableDebt)
-        .dividedBy(poolReserve.totalDebt)
-        .toNumber(),
-      avg30DaysVariableRate: Number(poolReserve.avg30DaysVariableBorrowRate),
-      utilizationRate: Number(poolReserve.utilizationRate),
-      baseLTVasCollateral: Number(poolReserve.baseLTVasCollateral),
-      liquidationThreshold: Number(poolReserve.reserveLiquidationThreshold),
-      liquidationBonus: Number(poolReserve.reserveLiquidationBonus),
-      usageAsCollateralEnabled: poolReserve.usageAsCollateralEnabled,
-      stableBorrowRateEnabled: poolReserve.stableBorrowRateEnabled,
-      borrowingEnabled: poolReserve.borrowingEnabled,
-    };
-    // console.log(reserveOverviewData);
+    if (!poolReserve) return;
     if (params?.user?.reservesData && params?.data?.underlyingAsset) {
       const asset = params.user.reservesData.filter(
         (item) => item.reserve.underlyingAsset === params.data?.underlyingAsset
