@@ -53,10 +53,6 @@ export function computeUserReserveData(
   userReserve: UserReserveData,
   currentTimestamp: number
 ): ComputedUserReserve {
-  const {
-    price: { priceInEth },
-    decimals,
-  } = poolReserve;
   const underlyingBalance = getLinearBalance(
     userReserve.scaledATokenBalance,
     poolReserve.liquidityIndex,
@@ -116,16 +112,6 @@ export function computeRawUserSummaryData(
   userId: string,
   currentTimestamp: number
 ): UserSummaryData {
-  let totalLiquidityETH = valueToZDBigNumber('0');
-  let totalCollateralETH = valueToZDBigNumber('0');
-  let totalBorrowsETH = valueToZDBigNumber('0');
-  let currentLtv = valueToBigNumber('0');
-  let currentLiquidationThreshold = valueToBigNumber('0');
-
-  let totalRewards = valueToBigNumber('0');
-  let totalRewardsETH = valueToBigNumber('0');
-  let totalRewardsUSD = valueToBigNumber('0');
-
   const userReservesData = rawUserReserves
     .map((userReserve) => {
       const poolReserve = poolReservesData.find((reserve) => reserve.id === userReserve.reserve.id);
@@ -144,20 +130,8 @@ export function computeRawUserSummaryData(
       a.reserve.symbol > b.reserve.symbol ? 1 : a.reserve.symbol < b.reserve.symbol ? -1 : 0
     );
 
-  if (currentLtv.gt(0)) {
-    currentLtv = currentLtv.div(totalCollateralETH).decimalPlaces(0, BigNumber.ROUND_DOWN);
-  }
-  if (currentLiquidationThreshold.gt(0)) {
-    currentLiquidationThreshold = currentLiquidationThreshold
-      .div(totalCollateralETH)
-      .decimalPlaces(0, BigNumber.ROUND_DOWN);
-  }
-
   return {
-    totalRewards: totalRewards.toString(),
     id: userId,
-    currentLoanToValue: currentLtv.toString(),
-    currentLiquidationThreshold: currentLiquidationThreshold.toString(),
     reservesData: userReservesData,
   };
 }
@@ -206,9 +180,6 @@ export function formatUserSummaryData(
   return {
     id: userData.id,
     reservesData: userReservesData,
-    currentLoanToValue: normalize(userData.currentLoanToValue, 4),
-    currentLiquidationThreshold: normalize(userData.currentLiquidationThreshold, 4),
-    totalRewards: userData.totalRewards,
   };
 }
 
@@ -245,10 +216,8 @@ export function calculateReserveDebt(reserve: ReserveData, currentTimestamp: num
 
 export function formatReserves(
   reserves: ReserveData[],
-  currentTimestamp?: number,
-  emissionEndTimestamp?: number
+  currentTimestamp?: number
 ): ComputedReserveData[] {
-  const rewardTokenPriceEth = '0';
   return reserves.map((reserve) => {
     const availableLiquidity = normalize(reserve.availableLiquidity, reserve.decimals);
 
@@ -262,40 +231,6 @@ export function formatReserves(
     const totalLiquidity = totalDebt.plus(availableLiquidity).toString();
     const utilizationRate =
       totalLiquidity !== '0' ? totalDebt.dividedBy(totalLiquidity).toString() : '0';
-
-    const hasEmission =
-      emissionEndTimestamp &&
-      emissionEndTimestamp > (currentTimestamp || Math.floor(Date.now() / 1000));
-
-    const aIncentivesAPY =
-      hasEmission && totalLiquidity !== '0'
-        ? calculateIncentivesAPY(
-            reserve.aEmissionPerSecond,
-            rewardTokenPriceEth,
-            totalLiquidity,
-            reserve.price.priceInEth
-          )
-        : '0';
-
-    const vIncentivesAPY =
-      hasEmission && totalVariableDebt !== '0'
-        ? calculateIncentivesAPY(
-            reserve.vEmissionPerSecond,
-            rewardTokenPriceEth,
-            totalVariableDebt,
-            reserve.price.priceInEth
-          )
-        : '0';
-
-    const sIncentivesAPY =
-      hasEmission && totalStableDebt !== '0'
-        ? calculateIncentivesAPY(
-            reserve.sEmissionPerSecond,
-            rewardTokenPriceEth,
-            totalStableDebt,
-            reserve.price.priceInEth
-          )
-        : '0';
 
     const supplyAPY = rayPow(
       valueToZDBigNumber(reserve.liquidityRate).dividedBy(SECONDS_PER_YEAR).plus(RAY),
@@ -319,14 +254,7 @@ export function formatReserves(
       totalLiquidity,
       availableLiquidity,
       utilizationRate,
-      aIncentivesAPY,
-      vIncentivesAPY,
-      sIncentivesAPY,
       totalDebt: totalDebt.toString(),
-      price: {
-        ...reserve.price,
-        priceInEth: normalize(reserve.price.priceInEth, ETH_DECIMALS),
-      },
       baseLTVasCollateral: normalize(reserve.baseLTVasCollateral, LTV_PRECISION),
       reserveFactor: normalize(reserve.reserveFactor, LTV_PRECISION),
       variableBorrowAPR: normalize(reserve.variableBorrowRate, RAY_DECIMALS),

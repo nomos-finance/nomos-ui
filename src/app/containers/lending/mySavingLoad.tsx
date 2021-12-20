@@ -82,7 +82,7 @@ export default function MySavingLoad(props: IProps) {
     setBorrowIndex(borrowIndex + 1);
   };
 
-  return (
+  return depositDataTmp?.length && depositDataTmp?.length ? (
     <div className="block assetBlock">
       <div className="header">
         <div className="tab">
@@ -272,5 +272,5 @@ export default function MySavingLoad(props: IProps) {
       <Swap ref={SwapDialogRef} />
       <UsageAsCollateral ref={UsageAsCollateralRef} />
     </div>
-  );
+  ) : null;
 }

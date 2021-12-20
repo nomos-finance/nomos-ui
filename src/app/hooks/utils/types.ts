@@ -64,9 +64,6 @@ export type ReserveData = {
   totalPrincipalStableDebt: string;
   totalScaledVariableDebt: string;
   lastUpdateTimestamp: number;
-  price: {
-    priceInEth: string;
-  };
   aEmissionPerSecond: string;
   vEmissionPerSecond: string;
   sEmissionPerSecond: string;
@@ -76,6 +73,8 @@ export type ReserveData = {
   aTokenIncentivesIndex: string;
   vTokenIncentivesIndex: string;
   sTokenIncentivesIndex: string;
+  borrowCap: string;
+  collateralCap: string;
 };
 
 export type ComputedReserveData = {
@@ -90,9 +89,6 @@ export type ComputedReserveData = {
   variableBorrowAPR: string;
   stableBorrowAPY: string;
   stableBorrowAPR: string;
-  aIncentivesAPY: string;
-  vIncentivesAPY: string;
-  sIncentivesAPY: string;
 } & ReserveData;
 
 export type Supplies = {
@@ -134,8 +130,5 @@ export type ComputedUserReserve = UserReserveData & {
 
 export type UserSummaryData = {
   id: string;
-  currentLoanToValue: string;
-  currentLiquidationThreshold: string;
   reservesData: ComputedUserReserve[];
-  totalRewards: string;
 };

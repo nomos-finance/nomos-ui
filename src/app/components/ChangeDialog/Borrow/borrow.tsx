@@ -102,6 +102,7 @@ export default forwardRef((props, ref) => {
     //   maxAmountToBorrow = maxAmountToBorrow.multipliedBy('0.99');
     // }
     // setMaxAmountToBorrow(+maxAmountToBorrow);
+    setMaxAmountToBorrow(+params.data.availableLiquidity);
     if (params?.user?.reservesData && params?.data?.underlyingAsset) {
       const asset = params.user.reservesData.filter(
         (item) => item.reserve.underlyingAsset === params.data?.underlyingAsset

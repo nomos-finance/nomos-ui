@@ -5,6 +5,7 @@ import { valueToBigNumber, normalize, ComputedReserveData } from '@aave/protocol
 import { useThemeContext } from '../../theme';
 import { Input, Button, Form, Table } from 'antd';
 import { ColumnProps } from 'antd/es/table';
+import BigNumber from 'bignumber.js';
 
 import Icon from '../../../assets/icons';
 import Layout from '../../components/Layout';
@@ -14,6 +15,7 @@ import { IRootState } from '../../reducers/RootState';
 import { formatDecimal, formatMoney } from 'app/utils/tool';
 import useProtocolDataWithRpc from 'app/hooks/usePoolData';
 import SymbolIcon from '../../components/SymbolIcon';
+import { CompactNumber } from 'app/components/CompactNumber';
 
 const progress = (name: string, num: number) => (
   <div className="progress">
@@ -33,10 +35,10 @@ export default function Markets() {
   const [sortedData, setSortedData] = useState<any[]>([]);
   const [borrowTopData, setBorrowTopData] = useState<any[]>([]);
   const [totalBorrow, setTotalBorrow] = useState<number>(0);
-  const [totalBorrowUSD, setTotalBorrowUSD] = useState<number>(0);
+  const [totalBorrowUSD, setTotalBorrowUSD] = useState<BigNumber>(new BigNumber(0));
   const [depositTopData, setDepositTopData] = useState<any[]>([]);
   const [totalDeposit, setTotalDeposit] = useState<number>(0);
-  const [totalDepositUSD, setTotalDepositUSD] = useState<number>(0);
+  const [totalLiquidityUSD, setTotalLiquidityUSD] = useState<BigNumber>(new BigNumber(0));
 
   const columns: Array<ColumnProps<any>> = [
     {
@@ -57,14 +59,9 @@ export default function Markets() {
     },
     {
       title: 'Total Supply',
-      sorter: true,
+      sorter: (a, b) => a.totalLiquidity - b.totalLiquidity,
       render: (item) => {
-        return (
-          <div>
-            <div>{item.name}</div>
-            <div>xxx</div>
-          </div>
-        );
+        return <div>{formatDecimal(item.totalLiquidity)}</div>;
       },
     },
     {
@@ -77,9 +74,9 @@ export default function Markets() {
 
     {
       title: 'Total Borrow',
-      sorter: true,
+      sorter: (a, b) => a.reserve.totalDebt - b.reserve.totalDebt,
       render: (item) => {
-        return <div>{formatDecimal(item.totalLiquidity)}</div>;
+        return <div>{formatDecimal(item.reserve.totalDebt)}</div>;
       },
     },
     {
@@ -108,12 +105,18 @@ export default function Markets() {
         .filter((res) => res.isActive)
         .map((reserve) => {
           const totalLiquidity = Number(reserve.totalLiquidity);
-
           const totalBorrows = Number(reserve.totalDebt);
 
           setTotalBorrow((i) => totalBorrows + i);
-
           setTotalDeposit((i) => +valueToBigNumber(reserve.availableLiquidity).plus(i));
+          setTotalLiquidityUSD((i) =>
+            i.plus(
+              new BigNumber(reserve.totalLiquidity).multipliedBy(data.symbolUsd[reserve.symbol])
+            )
+          );
+          setTotalBorrowUSD((i) =>
+            i.plus(new BigNumber(reserve.totalDebt).multipliedBy(data.symbolUsd[reserve.symbol]))
+          );
 
           return {
             reserve,
@@ -131,9 +134,6 @@ export default function Markets() {
             borrowingEnabled: reserve.borrowingEnabled,
             stableBorrowRateEnabled: reserve.stableBorrowRateEnabled,
             isFreezed: reserve.isFrozen,
-            aIncentivesAPY: reserve.aIncentivesAPY,
-            vIncentivesAPY: reserve.vIncentivesAPY,
-            sIncentivesAPY: reserve.sIncentivesAPY,
           };
         });
 
@@ -152,6 +152,12 @@ export default function Markets() {
 
     return () => {
       setSortedData([]);
+      setBorrowTopData([]);
+      setTotalBorrow(0);
+      setTotalBorrowUSD(new BigNumber(0));
+      setDepositTopData([]);
+      setTotalDeposit(0);
+      setTotalLiquidityUSD(new BigNumber(0));
     };
   }, [data]);
 
@@ -162,7 +168,9 @@ export default function Markets() {
           <div className="proportionItem">
             <div className="header">
               <div className="text">Total Supply</div>
-              <div className="number">$34,163.00</div>
+              <div className="number">
+                $<CompactNumber value={totalLiquidityUSD.toString()} />
+              </div>
             </div>
             <div className="main">
               <div className="title">Top 3 markets</div>
@@ -182,7 +190,9 @@ export default function Markets() {
           <div className="proportionItem">
             <div className="header">
               <div className="text">Total Borrow</div>
-              <div className="number">${formatMoney(totalBorrowUSD)}</div>
+              <div className="number">
+                $<CompactNumber value={totalBorrowUSD.toString()} />
+              </div>
             </div>
             <div className="main">
               <div className="title">Top 3 markets</div>

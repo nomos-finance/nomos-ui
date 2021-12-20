@@ -14,7 +14,7 @@ import useWalletBalance from '../../hooks/useWalletBalance';
 import MarketTable from './marketTable';
 import MySavingLoad from './mySavingLoad';
 import Chart from '../../components/Chart';
-import { CompactNumber } from '../../components/CompactNumber';
+import { CompactNumber } from 'app/components/CompactNumber';
 import Lock from './lock';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -69,14 +69,14 @@ export default function Markets() {
 
   useEffect(() => {
     if (!data) return;
-    let liquidity = new BigNumber(0);
+    fetchBalance();
+
+    let liquidityInUSD = new BigNumber(0);
     let totalLiquidityInUSD = new BigNumber(0);
     let totalBorrowsInUSD = new BigNumber(0);
 
-    fetchBalance();
-
     data.reserves.forEach((item) => {
-      liquidity = liquidity.plus(item.availableLiquidity);
+      liquidityInUSD = liquidityInUSD.plus(item.availableLiquidity);
       totalLiquidityInUSD = totalLiquidityInUSD.plus(
         valueToBigNumber(item.totalLiquidity).multipliedBy(data.symbolUsd[item.symbol])
       );
@@ -84,7 +84,7 @@ export default function Markets() {
         valueToBigNumber(item.totalDebt).multipliedBy(data.symbolUsd[item.symbol])
       );
     });
-    setTotalLiquidity(liquidity.toString());
+    setTotalLiquidity(liquidityInUSD.toString());
     setTotalDeposit(totalLiquidityInUSD.toString());
     setTotalBorrow(totalBorrowsInUSD.toString());
 
@@ -95,8 +95,12 @@ export default function Markets() {
       myTotalLiquidityInUSD = myTotalLiquidityInUSD.plus(
         valueToBigNumber(item.underlyingBalance).multipliedBy(data.symbolUsd[item.reserve.symbol])
       );
+      myTotalBorrowsInUSD = myTotalBorrowsInUSD.plus(
+        valueToBigNumber(item.totalBorrows).multipliedBy(data.symbolUsd[item.reserve.symbol])
+      );
     });
     setMyTotalDeposit(myTotalLiquidityInUSD.toString());
+    setMyTotalBorrow(myTotalBorrowsInUSD.toString());
   }, [data]);
 
   useEffect(() => {
@@ -172,7 +176,7 @@ export default function Markets() {
               <Icon name="loan" />
               <div className="text">{t('lending.myLoans')}</div>
               <div className="number">
-                {/* {account && data?.user ? `$${formatMoney(data.user.totalBorrowsUSD)}` : '$0.00'} */}
+                $<CompactNumber value={myTotalBorrow} />
               </div>
             </div>
             <div className="item">
@@ -228,6 +232,7 @@ export default function Markets() {
           reserves={data.reserves}
           user={data?.user}
           healthFactor={healthFactor}
+          symbolUsd={data.symbolUsd}
         />
       )}
       <Swap ref={SwapDialogRef} />

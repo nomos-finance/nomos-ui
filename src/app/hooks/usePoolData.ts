@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import dayjs from 'dayjs';
 import { formatUserSummaryData, formatReserves } from './utils/computations-and-formatting';
-import { UserSummaryData, ComputedReserveData, RewardsInformation } from './utils/types';
+import { UserSummaryData, ComputedReserveData } from './utils/types';
 
 import { useSelector } from 'react-redux';
 import { IRootState } from '../reducers/RootState';
@@ -15,7 +15,7 @@ import abi from 'abi/UiPoolDataProvider.json';
 import { contract as appContract } from 'app/contracts/contract';
 import priceOrcleAbi from 'abi/AaveOracle.json';
 
-import { pow10, normalize } from 'app/utils/tool';
+import { pow10 } from 'app/utils/tool';
 
 export interface DynamicPoolDataContextData {
   reserves: ComputedReserveData[];
@@ -50,11 +50,6 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
 
       const { 0: rawReservesData, 1: userReserves } = result;
 
-      const rewardsData = {
-        userUnclaimedRewards: 0,
-        emissionEndTimestamp: 0,
-      };
-
       const formatData = handleFormatData({
         rawReservesData,
         userReserves,
@@ -62,9 +57,10 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
         userAddress,
       });
 
+      console.log(formatData);
+
       const rawReserves = formatData.formattedReservesData;
       const rawUserReserves = formatData.formattedUserReserves;
-      const rewardsEmissionEndTimestamp = rewardsData.emissionEndTimestamp;
       const currentTimestamp = dayjs().unix();
 
       const computedUserData = formatUserSummaryData(
@@ -74,11 +70,9 @@ function useProtocolDataWithRpc(): PoolReservesWithRPC {
         currentTimestamp
       );
 
-      const formattedPoolReserves = formatReserves(
-        rawReserves,
-        currentTimestamp,
-        rewardsEmissionEndTimestamp
-      );
+      const formattedPoolReserves = formatReserves(rawReserves, currentTimestamp);
+
+      console.log(formattedPoolReserves);
 
       let address: string[] = [];
       let symbolUsd: { [key: string]: string } = {};

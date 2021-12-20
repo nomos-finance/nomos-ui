@@ -22,6 +22,9 @@ interface IProps {
   balance: IBalance;
   user?: UserSummaryData;
   healthFactor: string;
+  symbolUsd: {
+    [key: string]: string;
+  };
 }
 
 interface IBalance {
@@ -65,9 +68,6 @@ export default function MarketTable(props: IProps) {
         borrowingEnabled: reserve.borrowingEnabled,
         stableBorrowRateEnabled: reserve.stableBorrowRateEnabled,
         isFreezed: reserve.isFrozen,
-        aIncentivesAPY: reserve.aIncentivesAPY,
-        vIncentivesAPY: reserve.vIncentivesAPY,
-        sIncentivesAPY: reserve.sIncentivesAPY,
       };
     });
 
@@ -155,7 +155,7 @@ export default function MarketTable(props: IProps) {
                 </td>
                 <td>{formatDecimal(item.depositAPY * 100)}%</td>
                 <td>xxx</td>
-                <td>xxx</td>
+                <td>{item.reserve.collateralCap === '0' ? '--' : item.reserve.collateralCap}</td>
                 <td>xxx</td>
                 <td>
                   <div className="money">
@@ -209,10 +209,17 @@ export default function MarketTable(props: IProps) {
                 </td>
                 <td>{formatDecimal(item.variableBorrowRate * 100)}%</td>
                 <td>xxx</td>
-                <td>xxx</td>
+                <td>{item.reserve.borrowCap === '0' ? '--' : item.reserve.borrowCap}</td>
                 <td>xxx</td>
                 <td>
-                  {formatMoney(borrowType === 'USD' ? item.totalLiquidity : item.totalLiquidity, 2)}
+                  {formatMoney(
+                    borrowType === 'USD'
+                      ? valueToBigNumber(item.totalLiquidity)
+                          .multipliedBy(props.symbolUsd[item.reserve.symbol])
+                          .toString()
+                      : item.totalLiquidity,
+                    2
+                  )}
                 </td>
               </tr>
             ))}

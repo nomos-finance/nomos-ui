@@ -39,7 +39,6 @@ export const handleFormatData = ({
       formattedReserve.symbol = rawReserve.symbol.toUpperCase();
       formattedReserve.id = (rawReserve.underlyingAsset + poolAddress).toLowerCase();
       formattedReserve.underlyingAsset = rawReserve.underlyingAsset.toLowerCase();
-      formattedReserve.price = { priceInEth: rawReserve.priceInEth.toString() };
       return formattedReserve;
     })
     .map((reserve: any) => ({
@@ -78,16 +77,9 @@ export const handleFormatData = ({
       },
     }));
 
-  const fr = JSON.parse(JSON.stringify(formattedReservesData));
-  const fur =
-    userAddress !== ethers.constants.AddressZero
-      ? JSON.parse(JSON.stringify(formattedUserReserves))
-      : [];
-
   return {
-    formattedReservesData: fr.map((reserve: any) => {
+    formattedReservesData: JSON.parse(JSON.stringify(formattedReservesData)).map((reserve: any) => {
       if (reserve.symbol.toUpperCase() === `WETH`) {
-        // TODO
         return {
           ...reserve,
           symbol: 'ETH',
@@ -97,19 +89,22 @@ export const handleFormatData = ({
       }
       return reserve;
     }),
-    formattedUserReserves: fur.map((userReserve: any) => {
-      if (userReserve.reserve.symbol.toUpperCase() === `WETH`) {
-        return {
-          ...userReserve,
-          reserve: {
-            ...userReserve.reserve,
-            symbol: 'ETH',
-            originAddress: userReserve.reserve.underlyingAsset,
-            underlyingAsset: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'.toLowerCase(),
-          },
-        };
-      }
-      return userReserve;
-    }),
+    formattedUserReserves:
+      userAddress !== ethers.constants.AddressZero
+        ? JSON.parse(JSON.stringify(formattedUserReserves)).map((userReserve: any) => {
+            if (userReserve.reserve.symbol.toUpperCase() === `WETH`) {
+              return {
+                ...userReserve,
+                reserve: {
+                  ...userReserve.reserve,
+                  symbol: 'ETH',
+                  originAddress: userReserve.reserve.underlyingAsset,
+                  underlyingAsset: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'.toLowerCase(),
+                },
+              };
+            }
+            return userReserve;
+          })
+        : [],
   };
 };
