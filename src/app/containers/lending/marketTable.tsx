@@ -156,7 +156,7 @@ export default function MarketTable(props: IProps) {
                 <td>{formatDecimal(item.depositAPY * 100)}%</td>
                 <td>xxx</td>
                 <td>{item.reserve.collateralCap === '0' ? '--' : item.reserve.collateralCap}</td>
-                <td>xxx</td>
+                <td>{item.reserve.collateralCap === '0' ? '--' : 'xxx'}</td>
                 <td>
                   <div className="money">
                     {account
@@ -210,7 +210,7 @@ export default function MarketTable(props: IProps) {
                 <td>{formatDecimal(item.variableBorrowRate * 100)}%</td>
                 <td>xxx</td>
                 <td>{item.reserve.borrowCap === '0' ? '--' : item.reserve.borrowCap}</td>
-                <td>xxx</td>
+                <td>{item.reserve.borrowCap === '0' ? '--' : 'xxx'}</td>
                 <td>
                   {formatMoney(
                     borrowType === 'USD'

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import useNetworkInfo from './useNetworkInfo';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../reducers/RootState';
-import abi from 'abi/veNomos.json';
+import abi from 'abi/VotingEscrow.json';
 import { contract as appContract, Contract } from 'app/contracts/contract';
 
 const useVeNomos = (): [Contract | undefined, () => void] => {

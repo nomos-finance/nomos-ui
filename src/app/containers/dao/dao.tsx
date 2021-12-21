@@ -218,7 +218,7 @@ export default function Markets() {
               <div className="text">{t('dao.lock-upTerm')}</div>
               <div className="number">
                 {totalSupply && supply && maxTime && +totalSupply && +supply && +maxTime
-                  ? totalSupply.dividedBy(supply.multipliedBy(maxTime)).toString()
+                  ? totalSupply.dividedBy(supply.multipliedBy(maxTime)).toFixed(2)
                   : '0'}
                 年
               </div>
@@ -296,7 +296,7 @@ export default function Markets() {
                 {locked
                   ? `${new BigNumber(+locked.end - dayjs().unix())
                       .dividedBy(365 * 24 * 60 * 60)
-                      .toFixed(2)} t('dao.years')`
+                      .toFixed(2)} ${t('dao.years')}`
                   : '--'}
               </div>
             </div>

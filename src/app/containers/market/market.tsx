@@ -12,10 +12,11 @@ import Layout from '../../components/Layout';
 
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../reducers/RootState';
-import { formatDecimal, formatMoney } from 'app/utils/tool';
+import { formatDecimal, formatMoney, pow10 } from 'app/utils/tool';
 import useProtocolDataWithRpc from 'app/hooks/usePoolData';
 import SymbolIcon from '../../components/SymbolIcon';
 import { CompactNumber } from 'app/components/CompactNumber';
+import useVeNomos from 'app/hooks/useVeNomos';
 
 const progress = (name: string, num: number) => (
   <div className="progress">
@@ -39,6 +40,9 @@ export default function Markets() {
   const [depositTopData, setDepositTopData] = useState<any[]>([]);
   const [totalDeposit, setTotalDeposit] = useState<number>(0);
   const [totalLiquidityUSD, setTotalLiquidityUSD] = useState<BigNumber>(new BigNumber(0));
+  const [veNomosContract, freshVeNomosContract] = useVeNomos();
+  const [totalSupply, setTotalSupply] = useState<BigNumber>();
+  const [veNomoDecimals, setVeNomoDecimals] = useState<number>(18);
 
   const columns: Array<ColumnProps<any>> = [
     {
@@ -161,6 +165,22 @@ export default function Markets() {
     };
   }, [data]);
 
+  const fetchVeNomosData = async () => {
+    if (!veNomosContract) return;
+    try {
+      const totalSupply = await veNomosContract.totalSupply();
+      const veNomoDecimals = await veNomosContract.decimals();
+      setTotalSupply(new BigNumber(totalSupply.toString()));
+      setVeNomoDecimals(+veNomoDecimals);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchVeNomosData();
+  }, [veNomosContract, account]);
+
   return (
     <Layout className="page-data">
       <div className="block ranking">
@@ -210,7 +230,9 @@ export default function Markets() {
         <div className="totalBox">
           <div className="item">
             <div className="text">Total veNOMO</div>
-            <div className="number">36,089,587.22</div>
+            <div className="number">
+              {totalSupply ? formatMoney(pow10(+totalSupply, veNomoDecimals)) : '0.00'}
+            </div>
           </div>
           <div className="item">
             <div className="text">Average Lock Time</div>
